@@ -3,6 +3,10 @@
 // Lib
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+
+// Images
+import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-light.svg'
 
 // Include in project
 import path from '@/lib/path'
@@ -33,13 +37,13 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`sticky bg-background transition-all duration-300 ${
+      className={`h-[100px] sticky bg-foreground transition-all duration-300 rounded-b-xl ${
         isShow ? 'top-0' : 'top-[-12rem]'
-      } left-0 border-b border-dark`}
+      } left-0`}
     >
-      <div className="container mx-auto flex items-center justify-between py-6">
+      <div className="container mx-auto flex items-center justify-between h-full">
         <Link href={'/'}>
-          <h4>YOUR LOGO</h4>
+          <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={55} />
         </Link>
         <div className="space-x-4">
           {path?.map((ele, index) => (

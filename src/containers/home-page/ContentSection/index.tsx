@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // Images
-import DuckWalkingGIF from '@/images/common/duck-walking.gif'
+import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-dark.svg'
 
 // Include in project
 import social from '@/lib/social'
@@ -13,7 +13,7 @@ const ContentSection: React.FC = () => {
   return (
     <div className="container mx-auto py-20">
       <div className="flex flex-col items-center space-y-8 text-center">
-        <Image src={DuckWalkingGIF} alt="DuckWalkingGIF" height={200} />
+        <Image src={HadormyLogoSVG} alt="DuckWalkingGIF" height={200} />
         <div>
           <h3>TEMPLATE NEXTJS, TAILWINDCSS, SHADCN</h3>
           <h4>
