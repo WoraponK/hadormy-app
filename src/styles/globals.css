@@ -29,6 +29,18 @@
     --destructive: #ee1045;
     --destructive-foreground: #ffffff;
 
+    --success: #56e45b;
+    --success-foreground: #ffffff;
+
+    --alert: #ee1045;
+    --alert-foreground: #ffffff;
+
+    --info: #9747ff;
+    --info-foreground: #ffffff;
+
+    --warning: #ffb800;
+    --warning-foreground: #ffffff;
+
     --border: #f4f4f4;
     --input: #ffffff;
     --ring: #2d3142;

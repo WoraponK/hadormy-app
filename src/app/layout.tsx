@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn('min-h-screen bg-main', font.className)} suppressHydrationWarning={true}>
         <Navbar />
-        <main>{children}</main>
+        <main className="py-16">{children}</main>
         <Footer />
       </body>
     </html>

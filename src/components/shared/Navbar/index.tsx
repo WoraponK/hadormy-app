@@ -45,9 +45,9 @@ const Navbar: React.FC = () => {
         <Link href={'/'}>
           <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={55} />
         </Link>
-        <div className="space-x-4">
+        <div className="space-x-4 ">
           {path?.map((ele, index) => (
-            <Link href={ele.href} key={index}>
+            <Link href={ele.href} key={index} className="text-background">
               {ele.title}
             </Link>
           ))}

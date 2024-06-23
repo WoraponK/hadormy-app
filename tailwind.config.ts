@@ -48,6 +48,22 @@ const config = {
           DEFAULT: 'var(--card)',
           foreground: 'var(--card-foreground)',
         },
+        success: {
+          DEFAULT: 'var(--success)',
+          foreground: 'var(--success-foreground)',
+        },
+        alert: {
+          DEFAULT: 'var(--alert)',
+          foreground: 'var(--alert-foreground)',
+        },
+        info: {
+          DEFAULT: 'var(--info)',
+          foreground: 'var(--info-foreground)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning)',
+          foreground: 'var(--warning-foreground)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
