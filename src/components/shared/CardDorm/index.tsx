@@ -38,7 +38,12 @@ const CardDorm: React.FC<Props> = ({
     >
       <div className="flex flex-col justify-between">
         <div className="h-[120px] w-full object-cover object-center rounded-lg shadow-md overflow-hidden">
-          <img src={thumbnail} alt={`${name}-ตัวอย่าง`} className="transition-transform group-hover:scale-110" />
+          <img
+            src={thumbnail}
+            alt={`${name}-ตัวอย่าง`}
+            className="transition-transform group-hover:scale-110"
+            loading="lazy"
+          />
         </div>
         <div className="flex justify-center items-center gap-2">
           <Image src={IconVerifiedSVG} alt="IconVerifiedSVG" />
