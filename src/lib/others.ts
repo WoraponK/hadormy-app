@@ -1,3 +1,5 @@
+export const imagePlaceholder = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'
+
 export const convertNumberToString = (inputNumber: number): string => {
   const formatNumber = inputNumber.toLocaleString()
   return formatNumber
