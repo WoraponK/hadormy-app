@@ -11,7 +11,7 @@ const CardBookingSection: React.FC = () => {
     <div className="space-y-4">
       <h2 className="break-words">CardBooking</h2>
       <h6>
-        The <span className="text-primary">CardBooking</span> have no props.
+        The <span className="text-primary">CardBooking</span> have props name, price, isUnavailable.
       </h6>
       <div className="bg-background rounded-lg p-4 flex flex-wrap gap-6 justify-center">
         <CardBooking name="Room 39" price={3000} />

@@ -186,11 +186,11 @@ const RegisterTab: React.FC = () => {
                 </FormControl>
                 <FormLabel>
                   ยอมรับเงื่อนไข{' '}
-                  <Link href={'/'} className="text-primary underline">
+                  <Link href={'/terms-of-use'} className="text-primary underline">
                     ข้อตกลงการใช้งาน
                   </Link>{' '}
                   และ{' '}
-                  <Link href={'/'} className="text-primary underline">
+                  <Link href={'/privacy-policy'} className="text-primary underline">
                     นโยบายความเป็นส่วนตัว
                   </Link>{' '}
                   <span className="text-destructive">*</span>

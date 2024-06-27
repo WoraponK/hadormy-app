@@ -44,7 +44,7 @@ const ModalAnnounce: React.FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <div>
-          <Button size="default" className="space-x-2">
+          <Button size="lg" className="space-x-2 px-5">
             <h5>ประกาศ</h5>
             <Image src={IconMegaphoneWhiteSVG} alt="IconMegaphoneWhiteSVG" />
           </Button>
@@ -101,7 +101,7 @@ const ModalAnnounce: React.FC = () => {
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>เพิ่มรูปภาพ</FormLabel>
+                  <FormLabel>เพิ่มรูปภาพ (เพิ่มหรือไม่เพิ่มก็ได้)</FormLabel>
                   <FormControl>
                     <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} />
                   </FormControl>

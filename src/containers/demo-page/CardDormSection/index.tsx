@@ -4,7 +4,7 @@
 import React from 'react'
 
 // Include in project
-import { CardDorm } from '@/components/shared'
+import { CardDorm, CardDormSkeleton } from '@/components/shared'
 
 const CardDormSection: React.FC = () => {
   return (
@@ -25,15 +25,7 @@ const CardDormSection: React.FC = () => {
           distance={8000}
           onClick={() => console.log('clicked!')}
         />
-        <CardDorm
-          name="อพาร์ทเม้นท์สีฟ้า"
-          address="ต.พะเยา อ.พะเยา จ.พะเยา"
-          priceStart={3000}
-          priceEnd={4000}
-          timestamp="2024-06-23T16:04:18Z"
-          distance={8000}
-          onClick={() => console.log('clicked!')}
-        />
+        <CardDormSkeleton/>
       </div>
     </div>
   )
