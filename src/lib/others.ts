@@ -1,4 +1,6 @@
-export const imagePlaceholder = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'
+import thumbnailPlaceholderSVG from '@/images/common/thumbnail-placeholder.svg'
+
+export const imagePlaceholder = thumbnailPlaceholderSVG
 
 export const convertNumberToString = (inputNumber: number): string => {
   const formatNumber = inputNumber.toLocaleString()

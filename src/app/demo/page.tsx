@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import React from 'react'
 
 // Include in project
-import { CardDormSection, CardAnnouncementSection, CardBookingSection } from '@/containers/demo-page'
+import { CardDormSection, CardAnnouncementSection, CardBookingSection, ModalSignSection } from '@/containers/demo-page'
 
 const Demo: NextPage = () => {
   return (
@@ -12,6 +12,7 @@ const Demo: NextPage = () => {
         <CardDormSection />
         <CardAnnouncementSection />
         <CardBookingSection />
+        <ModalSignSection />
       </div>
     </div>
   )

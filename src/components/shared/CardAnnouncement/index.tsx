@@ -1,7 +1,6 @@
 // Lib
 import React from 'react'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
-import { Avatar } from '@/components/ui/avatar'
+import Image from 'next/image'
 
 // Images
 import { FaEarthAsia } from 'react-icons/fa6'
@@ -11,9 +10,16 @@ import { imagePlaceholder } from '@/lib/others'
 // Include in project
 import { TUserRole } from '@/lib/type'
 import { convertDateFormat } from '@/lib/others'
-import Image from 'next/image'
-import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog'
-import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 
 type Props = {
   title: string
@@ -34,7 +40,7 @@ const CardAnnouncement: React.FC<Props> = ({
 }) => {
   const Preview = () => {
     return (
-      <div className="w-full max-w-[305px] h-[175px] bg-yellow-200/50 p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2 max-md:flex max-md:flex-col max-md:h-[260px] max-md:justify-between">
+      <div className="w-full max-w-[305px] h-[175px] bg-[#FFFADE] p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2 max-md:flex max-md:flex-col max-md:h-[260px] max-md:justify-between">
         <div className="grid grid-cols-[105px_1fr] gap-3 max-md:grid-cols-1">
           <div className="rounded-lg overflow-hidden shadow-md max-md:h-[105px]">
             <Image
@@ -72,16 +78,18 @@ const CardAnnouncement: React.FC<Props> = ({
           <Preview />
         </div>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogDescription className="flex items-center gap-2">
-            <Avatar>
-              <AvatarImage src={thumbnail} alt={`${title}-ตัวอย่าง`} />
-            </Avatar>
-            <p>{author}</p>
-          </DialogDescription>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+      <DialogContent className="bg-[#FFFADE]">
+        <DialogHeader className="space-y-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <Image src={thumbnail} alt={`${title}-ตัวอย่าง`} />
+              </Avatar>
+              <p>{author}</p>
+            </div>
+          </div>
+          <DialogTitle className="text-3xl">{title}</DialogTitle>
+          <DialogDescription className="text-lg">{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <div className="flex justify-between items-center w-full">

@@ -4,7 +4,6 @@ import React from 'react'
 // Include in project
 import { convertNumberToString } from '@/lib/others'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 
 type Props = {
   name: string
@@ -14,16 +13,18 @@ type Props = {
 
 const CardBooking: React.FC<Props> = ({ name, price, isUnavailable }) => {
   return (
-    <div className="max-w-[300px] w-full h-[80px] shadow-md rounded-lg grid grid-cols-[55%_45%] overflow-hidden">
-      <div className="grid grid-rows-[25px_1fr]">
-        <div className="bg-secondary px-2 flex items-center">
+    <div className="max-w-[300px] w-full h-[80px] shadow-md rounded-sm grid grid-cols-[55%_45%] overflow-hidden">
+      <div className="grid grid-rows-[30px_1fr]">
+        <div className="bg-secondary px-2 flex items-center rounded-br-lg rounded-tr-lg">
           <p className="line-clamp-1 font-semibold">{name}</p>
         </div>
         <div className="flex items-center px-2">
-          <p className="text-sm">ราคา {convertNumberToString(price)} บาท/เดือน</p>
+          <p className="text-sm">
+            <span className="max-md:hidden">ราคา</span> {convertNumberToString(price)} บาท/เดือน
+          </p>
         </div>
       </div>
-      <div className="p-2 flex flex-col items-end justify-between">
+      <div className="py-1 px-2 flex flex-col items-end justify-between">
         <Button
           size={'sm'}
           className="w-fit"
