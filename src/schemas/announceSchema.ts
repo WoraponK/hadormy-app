@@ -9,7 +9,7 @@ const announceSchema = z.object({
     .string()
     .min(6, { message: 'กรุณากรอกเนื้อหาอย่างน้อย 6 ตัว' })
     .max(25, { message: 'กรุณากรอกเนื้อหาไม่เกิน 50 ตัว' }),
-  image: z.instanceof(FileList).optional(),
+  image: z.any().optional(),
 })
 
 export default announceSchema
