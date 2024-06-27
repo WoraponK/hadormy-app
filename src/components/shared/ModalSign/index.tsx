@@ -26,7 +26,6 @@ import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-dark.svg'
 
 // Include in project
 import loginSchema from '@/schemas/loginScheme'
-import { InputPassword } from '@/components/base/InputPassword'
 import registerSchema from '@/schemas/registerSchema'
 import { Checkbox } from '@/components/ui/checkbox'
 
