@@ -200,7 +200,7 @@ const RegisterTab: React.FC = () => {
           )}
         />
         <Button type="submit" className="w-full">
-          เข้าสู่ระบบ
+          สมัครสมาชิก
         </Button>
       </form>
     </Form>

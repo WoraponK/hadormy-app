@@ -27,3 +27,25 @@ export const calDistance = (distance: number): string => {
     return `${distance} เมตร`
   }
 }
+
+export const convertDormTypeToName = (dormType: string) => {
+  switch (dormType) {
+    case 'MALE':
+      return 'หอพักชายล้วน'
+    case 'FEMALE':
+      return 'หอพักหญิงล้วน'
+    case 'ALL':
+      return 'หอพักรวม'
+  }
+}
+
+export const convertSortToName = (sort: string) => {
+  switch (sort) {
+    case 'PRICE':
+      return 'ราคา'
+    case 'DISTANCE':
+      return 'ระยะทาง'
+    case 'ANTIME':
+      return 'เวลาประกาศ'
+  }
+}

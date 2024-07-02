@@ -20,14 +20,14 @@ const CardAnnouncementSection: React.FC = () => {
           author="แอดมิน"
           description="ประกาศปิดปรับปรุงเว็บไซต์ในช่วงเวลา 15:00น. - 16:30น."
           timestamp="2024-06-23T16:04:18Z"
-          role="SUPERUSER"
+          role="ADMIN"
         />
         <CardAnnouncement
           title="หอสีเหลืองไฟดับ"
           author="หอสีเหลือง"
           description="วันนี้ไฟจะดับช่วงเวลา 15:00น. - 16:30น."
           timestamp="2024-06-23T16:04:18Z"
-          role="ADMIN"
+          role="SUPERUSER"
         />
       </div>
     </div>

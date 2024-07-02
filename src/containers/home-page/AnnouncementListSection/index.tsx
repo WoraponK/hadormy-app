@@ -7,51 +7,34 @@ import IconMegaphoneBlackSVG from '@/images/common/icon-megaphone-black.svg'
 
 // Include in project
 import { CardAnnouncement } from '@/components/shared'
+import { TCardAnnounce, TUserRole } from '@/lib/type'
 
-const AnnouncementListSection: React.FC = () => {
+type Props = {
+  cardList: TCardAnnounce[]
+}
+
+const AnnouncementListSection: React.FC<Props> = ({ cardList }) => {
   return (
-    <div className="bg-secondary p-4 rounded-lg flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <h3>ประกาศ</h3>
-        <Image src={IconMegaphoneBlackSVG} alt="IconMegaphoneBlackSVG" />
-      </div>
-      <div className="flex flex-col gap-2">
-        <CardAnnouncement
-          author="worapon"
-          title="ไฟดับ"
-          description="สวัสดีครับ"
-          role="SUPERUSER"
-          timestamp="2024-06-27T16:05Z"
-          thumbnail="https://wamu.org/wp-content/uploads/2024/05/spongebobsquarepants_key_art_wide-429bee20400a15a76c1a617985c74db87bd09d98.jpg"
-        />
-        <CardAnnouncement
-          author="worapon"
-          title="ไฟดับ"
-          description="สวัสดีครับ"
-          role="ADMIN"
-          timestamp="2024-06-27T16:05Z"
-        />
-        <CardAnnouncement
-          author="worapon"
-          title="ไฟดับ"
-          description="สวัสดีครับ"
-          role="SUPERUSER"
-          timestamp="2024-06-27T16:05Z"
-        />
-        <CardAnnouncement
-          author="worapon"
-          title="ไฟดับ"
-          description="สวัสดีครับ"
-          role="SUPERUSER"
-          timestamp="2024-06-27T16:05Z"
-        />
-        <CardAnnouncement
-          author="worapon"
-          title="ไฟดับ"
-          description="สวัสดีครับ"
-          role="SUPERUSER"
-          timestamp="2024-06-27T16:05Z"
-        />
+    <div className="space-y-2 max-lg:space-y-0">
+      <div className="h-[36px] max-lg:hidden" />
+      <div className="bg-secondary p-4 rounded-lg flex flex-col gap-4 ">
+        <div className="flex items-center gap-2">
+          <h3>ประกาศ</h3>
+          <Image src={IconMegaphoneBlackSVG} alt="IconMegaphoneBlackSVG" />
+        </div>
+        <div className="flex flex-col gap-2 max-lg:flex-row max-lg:overflow-x-auto max-lg:py-2">
+          {cardList.map((card) => (
+            <CardAnnouncement
+              key={card?.id}
+              author={card?.author}
+              title={card?.title}
+              description={card?.description}
+              role={card?.role as TUserRole}
+              timestamp={card?.timestamp}
+              thumbnail={card?.thumbnail}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

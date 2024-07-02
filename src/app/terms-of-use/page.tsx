@@ -1,8 +1,7 @@
 // Lib
-import { NextPage } from 'next'
 import React from 'react'
 
-const TermsOfUse: NextPage = () => {
+const TermsOfUse = () => {
   return <div>TermsOfUse</div>
 }
 

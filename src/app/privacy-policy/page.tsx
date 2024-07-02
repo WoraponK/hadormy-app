@@ -1,8 +1,7 @@
 // Lib
-import { NextPage } from 'next'
 import React from 'react'
 
-const PrivacyPolicy: NextPage = () => {
+const PrivacyPolicy = () => {
   return <div>PrivacyPolicy</div>
 }
 

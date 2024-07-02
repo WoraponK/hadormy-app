@@ -1,6 +1,7 @@
 // Lib
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 // Images
 import IconVerifiedSVG from '@/images/common/icon-verified.svg'
@@ -11,6 +12,7 @@ import { imagePlaceholder } from '@/lib/others'
 import { convertNumberToString, convertDateFormat, calDistance } from '@/lib/others'
 
 type Props = {
+  id?: string | number
   name: string
   thumbnail?: string
   address: string
@@ -18,10 +20,10 @@ type Props = {
   priceEnd: number
   timestamp: string
   distance: number
-  onClick?: () => void
 }
 
 const CardDorm: React.FC<Props> = ({
+  id,
   name,
   thumbnail = imagePlaceholder,
   address,
@@ -29,12 +31,11 @@ const CardDorm: React.FC<Props> = ({
   priceEnd,
   timestamp,
   distance,
-  onClick,
 }) => {
   return (
-    <div
-      className="h-[190px] w-full shadow-md rounded-lg p-4 grid grid-cols-[200px_1fr] gap-8 cursor-pointer group max-md:flex max-md:flex-col max-md:h-fit max-md:gap-4"
-      onClick={onClick}
+    <Link
+      href={`/dorm/${id}`}
+      className="h-[190px] w-full bg-background shadow-md rounded-lg p-4 grid grid-cols-[200px_1fr] gap-8 group max-md:flex max-md:flex-col max-md:h-fit max-md:gap-4"
     >
       <div className="flex flex-col justify-between gap-4">
         <div className="h-[120px] w-full rounded-lg shadow-md overflow-hidden">
@@ -71,7 +72,7 @@ const CardDorm: React.FC<Props> = ({
           </span>
         </p>
       </div>
-    </div>
+    </Link>
   )
 }
 
