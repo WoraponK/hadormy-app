@@ -42,7 +42,7 @@ const CardDorm: React.FC<Props> = ({
           <Image
             src={thumbnail}
             alt={`${name}-ตัวอย่าง`}
-            className="transition-transform group-hover:scale-110 h-full w-full object-cover object-center"
+            className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover object-center"
             loading="lazy"
             width={200}
             height={120}
@@ -55,7 +55,10 @@ const CardDorm: React.FC<Props> = ({
       </div>
       <div className="flex flex-col justify-between">
         <div>
-          <h3 className="text-primary underline-offset-4 group-hover:underline line-clamp-1">{name}</h3>
+          <div className="w-fit">
+            <h3 className="text-primary line-clamp-1">{name}</h3>
+            <div className="w-0 h-[3px] transition-all duration-300 group-hover:w-full bg-primary" />
+          </div>
           <p className="text-gray-500 line-clamp-1">{address}</p>
           <div className="flex items-end space-x-2">
             <h5>

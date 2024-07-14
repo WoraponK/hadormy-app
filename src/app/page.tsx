@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React from 'react'
+import React, { useEffect } from 'react'
 
 // Images
 
@@ -10,6 +10,10 @@ import { AnnouncementListSection, DormListSection } from '@/containers/home-page
 import { TCardAnnounce, TCardDorm } from '@/lib/type'
 
 const Home = () => {
+  useEffect(() => {
+    document.title = `หน้าหลัก - HaDormy`
+  }, [])
+
   return (
     <div className="container mx-auto flex flex-col gap-8">
       <div>

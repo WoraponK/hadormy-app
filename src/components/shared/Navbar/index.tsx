@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
   return (
     <nav
       className={`h-[100px] sticky bg-foreground transition-all duration-500 rounded-b-xl z-20 ${
-        isShow ? 'top-0' : 'top-[-12rem]'
+        isShow ? 'top-0' : 'top-[-8rem]'
       } left-0`}
     >
       <div className="container mx-auto flex items-center justify-between h-full">

@@ -15,13 +15,13 @@ const CardBookingSection: React.FC = () => {
       </h6>
       <div className="bg-background rounded-lg p-4 flex flex-wrap gap-6 justify-center">
         <CardBooking name="Room 39" price={3000} />
-        <CardBooking name="Room 39" price={3000} isUnavailable />
+        <CardBooking name="Room 39" price={3000} isAvailable />
         <CardBooking name="Room 39" price={3000} />
-        <CardBooking name="Room 39" price={3000} isUnavailable />
+        <CardBooking name="Room 39" price={3000} isAvailable />
         <CardBooking name="Room 39" price={3000} />
-        <CardBooking name="Room 39" price={3000} isUnavailable />
+        <CardBooking name="Room 39" price={3000} isAvailable />
         <CardBooking name="Room 39" price={3000} />
-        <CardBooking name="Room 39" price={3000} isUnavailable />
+        <CardBooking name="Room 39" price={3000} isAvailable />
       </div>
     </div>
   )

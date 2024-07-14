@@ -9,6 +9,7 @@ import {
   CardBookingSection,
   ModalSignSection,
   ModalAnnounceSection,
+  RatingStarSection,
 } from '@/containers/demo-page'
 
 const Demo: NextPage = () => {
@@ -20,6 +21,7 @@ const Demo: NextPage = () => {
         <CardBookingSection />
         <ModalSignSection />
         <ModalAnnounceSection />
+        <RatingStarSection />
       </div>
     </div>
   )

@@ -25,7 +25,7 @@ export default function RootLayout({
         <ToastProvider>
           <NextTopLoader color="#00bbf9" showSpinner={false} />
           <Navbar />
-          <main className="py-16">{children}</main>
+          <main className="py-16 overflow-x-hidden">{children}</main>
           <Footer />
           <Toast />
         </ToastProvider>
