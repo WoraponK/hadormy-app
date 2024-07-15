@@ -1,6 +1,6 @@
 'use client'
 // Lib
-import React, { useState } from 'react'
+import React from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,10 +9,11 @@ import { RatingStar } from '@/components/shared'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 // Images
 import { FaStar, FaRegStar } from 'react-icons/fa6'
-import { PiShootingStarFill } from 'react-icons/pi'
 
 // Include in project
 import ratingSchema from '@/schemas/ratingSchema'
@@ -22,12 +23,20 @@ type Props = {
 }
 
 const TabRating: React.FC<Props> = ({ rating }) => {
+  const router = useRouter()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof ratingSchema>>({
     resolver: zodResolver(ratingSchema),
   })
 
   const onSubmit = (values: z.infer<typeof ratingSchema>) => {
     console.log('🚀 ~ onSubmit ~ values:', values)
+    toast({
+      icon: <FaStar className="text-primary" />,
+      title: 'ให้คะแนนสำเร็จ',
+      description: 'ขอบคุณสำหรับการให้คะแนน',
+    })
+    router.refresh()
   }
 
   return (

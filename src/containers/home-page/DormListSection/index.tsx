@@ -21,11 +21,11 @@ import { FaSortAmountDown, FaSortAmountDownAlt } from 'react-icons/fa'
 
 // Include in project
 import { CardDorm } from '@/components/shared'
-import { TCardDorm } from '@/lib/type'
+import { ESort, TDorm } from '@/lib/type'
 import { convertDormTypeToName, convertSortToName } from '@/lib/others'
 
 type Props = {
-  cardList: TCardDorm[]
+  cardList: TDorm[]
 }
 
 type DormTypeSortProps = {
@@ -43,7 +43,7 @@ const DormTypeSort: React.FC<DormTypeSortProps> = ({ dormType, setDormType }) =>
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={'ghost'} className="space-x-2">
+        <Button variant={'ghost'} className="space-x-2 w-fit">
           <FaListUl />
           <p className="text-gray-400">
             ประเภทหอพัก : <span className="text-foreground">{convertDormTypeToName(dormType)}</span>
@@ -71,8 +71,8 @@ const DormTypeSort: React.FC<DormTypeSortProps> = ({ dormType, setDormType }) =>
 
 const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalSort, setGeneralSort }) => {
   return (
-    <div className="flex items-center">
-      <Button size={'icon'} variant={'ghost'} onClick={() => setMinSort(!minSort)}>
+    <div className="flex items-center gap-2">
+      <Button size={'icon'} onClick={() => setMinSort(!minSort)}>
         {minSort ? (
           <TooltipMain name="เรียงจากน้อย-มาก">
             <FaSortAmountDownAlt />
@@ -87,7 +87,7 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
         <DropdownMenuTrigger asChild>
           <Button variant={'ghost'} className="space-x-2 p-0">
             <p className="text-gray-400">
-              เรียงตาม : <span className="text-foreground">{convertSortToName(generalSort)}</span>
+              เรียงตาม : <span className="text-foreground">{convertSortToName(generalSort as ESort)}</span>
             </p>
           </Button>
         </DropdownMenuTrigger>
@@ -95,7 +95,7 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
           <DropdownMenuRadioGroup value={generalSort} onValueChange={setGeneralSort}>
             <DropdownMenuLabel>เรียงตาม</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuRadioItem value="ANTIME" className="cursor-pointer">
+            <DropdownMenuRadioItem value="TIME" className="cursor-pointer">
               เวลาประกาศ
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="PRICE" className="cursor-pointer">
@@ -114,18 +114,21 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
 const DormListSection: React.FC<Props> = ({ cardList }) => {
   const [dormType, setDormType] = useState<string>('ALL')
   const [minSort, setMinSort] = useState<boolean>(false)
-  const [generalSort, setGeneralSort] = useState<string>('ANTIME')
+  const [generalSort, setGeneralSort] = useState<string>('TIME')
 
   const packState = {
     dormType: dormType,
     minSort: minSort,
     generalSort: generalSort,
   }
+
+  const newCardList = cardList.filter((ele) => ele.type === dormType)
+
   console.log('🚀 ~ packState:', packState)
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between">
+    <div className="space-y-2 max-lg:space-y-6">
+      <div className="flex justify-between max-sm:flex-col max-sm:items-center gap-2">
         <DormTypeSort dormType={dormType} setDormType={setDormType} />
         <GeneralSort
           minSort={minSort}
@@ -134,8 +137,8 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
           setGeneralSort={setGeneralSort}
         />
       </div>
-      <div className="flex flex-col gap-4">
-        {cardList.map((card) => (
+      <div className="flex flex-col gap-4 max-lg:grid max-md:grid-cols-2 max-[548px]:grid-cols-1">
+        {newCardList.map((card) => (
           <CardDorm
             key={card.id}
             id={card.id}
@@ -145,7 +148,7 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
             priceStart={card.priceStart}
             priceEnd={card.priceEnd}
             timestamp={card.timestamp}
-            thumbnail={card.thumbnail}
+            thumbnail={card.thumbnail?.[0]}
           />
         ))}
       </div>

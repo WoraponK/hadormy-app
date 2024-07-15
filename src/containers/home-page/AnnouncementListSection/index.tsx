@@ -22,7 +22,7 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList }) => {
           <h3>ประกาศ</h3>
           <Image src={IconMegaphoneBlackSVG} alt="IconMegaphoneBlackSVG" />
         </div>
-        <div className="flex flex-col gap-2 max-lg:flex-row max-lg:overflow-x-auto max-lg:py-2">
+        <div className="flex flex-col gap-2 max-lg:flex-row max-lg:overflow-x-auto max-lg:pb-4">
           {cardList.map((card) => (
             <CardAnnouncement
               key={card?.id}

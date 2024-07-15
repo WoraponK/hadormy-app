@@ -1,4 +1,5 @@
 import thumbnailPlaceholderSVG from '@/images/common/thumbnail-placeholder.svg'
+import { ESort } from './type'
 
 export const imagePlaceholder = thumbnailPlaceholderSVG
 
@@ -39,13 +40,13 @@ export const convertDormTypeToName = (dormType: string) => {
   }
 }
 
-export const convertSortToName = (sort: string) => {
+export const convertSortToName = (sort: ESort) => {
   switch (sort) {
-    case 'PRICE':
+    case ESort.Price:
       return 'ราคา'
-    case 'DISTANCE':
+    case ESort.Distance:
       return 'ระยะทาง'
-    case 'ANTIME':
+    case ESort.Time:
       return 'เวลาประกาศ'
   }
 }

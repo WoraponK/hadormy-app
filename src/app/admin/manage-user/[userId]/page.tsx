@@ -1,7 +1,7 @@
 import React from 'react'
 
-const AdminManageUserId = () => {
+const AdminManageUserById = () => {
   return <div>ManageUserId</div>
 }
 
-export default AdminManageUserId
+export default AdminManageUserById

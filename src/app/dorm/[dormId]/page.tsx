@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 // Lib
@@ -5,11 +6,13 @@ import React, { useEffect } from 'react'
 
 // Include in project
 import { DormSection } from '@/containers/dorm-page'
-import { TDorm } from '@/lib/type'
+import { EDormType, TDorm } from '@/lib/type'
 
 const Dorm = ({ params }: { params: { dormId: string } }) => {
+  const dormName = mockupDataDorm.name
+
   useEffect(() => {
-    document.title = `หอพัก - HaDormy`
+    document.title = `${dormName} - HaDormy`
   }, [])
 
   return (
@@ -22,7 +25,9 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
 export default Dorm
 
 const mockupDataDorm: TDorm = {
-  id: '',
+  id: '1',
+  type: EDormType.All,
+  timestamp: '2024-06-27T16:05Z',
   name: 'อพาร์ทเม้นท์สีฟ้า',
   address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
   description:

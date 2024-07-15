@@ -1,5 +1,17 @@
 export type TUserRole = 'USER' | 'SUPERUSER' | 'ADMIN'
 
+export enum EDormType {
+  All = 'ALL',
+  Male = 'MALE',
+  Female = 'FEMALE',
+}
+
+export enum ESort {
+  Price = 'PRICE',
+  Distance = 'DISTANCE',
+  Time = 'TIME',
+}
+
 export type TBill = {
   water?: number
   electic?: number
@@ -17,17 +29,6 @@ export type TCardAnnounce = {
   role: TUserRole
   timestamp: string
   thumbnail?: string
-}
-
-export type TCardDorm = {
-  id: string | number
-  name: string
-  thumbnail?: string
-  address: string
-  priceStart: number
-  priceEnd: number
-  timestamp: string
-  distance: number
 }
 
 export type TRoom = {
@@ -50,4 +51,22 @@ export type TDorm = {
   rating: number
   description: string
   bill: TBill
+  timestamp: string
+  type: EDormType
+}
+
+export type TUserTable = {
+  id: string | number
+  name: string
+  phoneNumber: string
+  email: string
+  updateAt: string
+}
+
+export type TRoomTable = {
+  id: string | number
+  name: string
+  phoneNumber: string
+  room: string
+  updateAt: string
 }
