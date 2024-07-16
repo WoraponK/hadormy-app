@@ -13,7 +13,7 @@ type Props = {
 
 const CardBooking: React.FC<Props> = ({ name, price, isAvailable }) => {
   return (
-    <div className="bg-background max-w-[300px] w-full h-[80px] shadow-md rounded-sm grid grid-cols-[55%_45%] overflow-hidden">
+    <div className="bg-background w-full h-[80px] shadow-md rounded-sm grid grid-cols-[55%_45%] overflow-hidden">
       <div className="grid grid-rows-[30px_1fr]">
         <div className="bg-secondary px-2 flex items-center rounded-br-lg rounded-tr-lg">
           <p className="line-clamp-1 font-semibold">{name}</p>

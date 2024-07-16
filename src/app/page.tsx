@@ -61,14 +61,14 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '1',
     type: EDormType.All,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-05-27T16:05Z',
     name: 'อพาร์ทเม้นท์สีฟ้า',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 412,
     phoneNumber: '0630913505',
-    priceStart: 3000,
+    priceStart: 2500,
     priceEnd: 4000,
     bill: {
       bail: 0,
@@ -120,14 +120,14 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '2',
     type: EDormType.Male,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-06-22T16:05Z',
     name: 'อพาร์ทเม้นท์สีส้ม',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 150,
     phoneNumber: '0123465789',
-    priceStart: 3000,
+    priceStart: 1000,
     priceEnd: 4000,
     bill: {
       bail: 0,
@@ -179,14 +179,14 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '3',
     type: EDormType.Female,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-02-01T16:05Z',
     name: 'อพาร์ทเม้นท์สีเขียว',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 5000,
     phoneNumber: '0123465789',
-    priceStart: 3000,
+    priceStart: 2700,
     priceEnd: 4000,
     bill: {
       bail: 0,
@@ -238,14 +238,14 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '4',
     type: EDormType.All,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-03-12T16:05Z',
     name: 'อพาร์ทเม้นท์สีฟ้า',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 512,
     phoneNumber: '0630913505',
-    priceStart: 3000,
+    priceStart: 3500,
     priceEnd: 4000,
     bill: {
       bail: 0,
@@ -297,14 +297,14 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '5',
     type: EDormType.Male,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-06-25T16:05Z',
     name: 'อพาร์ทเม้นท์สีส้ม',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 350,
     phoneNumber: '0123465789',
-    priceStart: 3000,
+    priceStart: 3200,
     priceEnd: 4000,
     bill: {
       bail: 0,
@@ -356,12 +356,12 @@ const mockupDataDorm: TDorm[] = [
   {
     id: '6',
     type: EDormType.All,
-    timestamp: '2024-06-27T16:05Z',
+    timestamp: '2024-07-04T16:05Z',
     name: 'อพาร์ทเม้นท์สีเขียว',
     address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
     description:
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-    distance: 800,
+    distance: 1200,
     phoneNumber: '0123465789',
     priceStart: 3000,
     priceEnd: 4000,

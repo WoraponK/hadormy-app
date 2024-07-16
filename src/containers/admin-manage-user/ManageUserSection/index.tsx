@@ -35,14 +35,17 @@ const ManageUserSection: React.FC<Props> = ({ data }) => {
 
   return (
     <div>
-      <div className="bg-background rounded-md p-3 shadow-md space-y-4">
-        <Input
-          icon={<IoSearch />}
-          placeholder="ค้นหาชื่อผู้ใช้..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
-          className="max-w-sm border border-border"
-        />
+      <div className="bg-background rounded-md p-8 shadow-md space-y-8">
+        <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start">
+          <Input
+            icon={<IoSearch />}
+            placeholder="ค้นหาชื่อผู้ใช้..."
+            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+            className="max-w-sm border border-border"
+          />
+          <p>รายการทั้งหมด: {table.getRowModel().rows?.length}</p>
+        </div>
         <Table className="space-y-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

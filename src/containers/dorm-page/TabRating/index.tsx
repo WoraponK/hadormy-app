@@ -73,7 +73,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                       >
                         <RadioGroupItem value="1" id="rating-1" className="peer sr-only" />
                         <Label htmlFor="rating-1" className="cursor-pointer text-primary peer-checked:text-primary">
-                          <h3>
+                          <h3 className="transition-transform duration-100 active:scale-90">
                             {field.value == '1' ? (
                               <FaStar />
                             ) : field.value == '2' ? (
@@ -91,7 +91,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                         </Label>
                         <RadioGroupItem value="2" id="rating-2" className="peer sr-only" />
                         <Label htmlFor="rating-2" className="cursor-pointer text-primary peer-checked:text-primary">
-                          <h3>
+                          <h3 className="transition-transform duration-100 active:scale-90">
                             {field.value == '1' ? (
                               <FaRegStar />
                             ) : field.value == '2' ? (
@@ -109,7 +109,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                         </Label>
                         <RadioGroupItem value="3" id="rating-3" className="peer sr-only" />
                         <Label htmlFor="rating-3" className="cursor-pointer text-primary peer-checked:text-primary">
-                          <h3>
+                          <h3 className="transition-transform duration-100 active:scale-90">
                             {field.value == '1' ? (
                               <FaRegStar />
                             ) : field.value == '2' ? (
@@ -127,7 +127,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                         </Label>
                         <RadioGroupItem value="4" id="rating-4" className="peer sr-only" />
                         <Label htmlFor="rating-4" className="cursor-pointer text-primary peer-checked:text-primary">
-                          <h3>
+                          <h3 className="transition-transform duration-100 active:scale-90">
                             {field.value == '1' ? (
                               <FaRegStar />
                             ) : field.value == '2' ? (
@@ -145,7 +145,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                         </Label>
                         <RadioGroupItem value="5" id="rating-5" className="peer sr-only" />
                         <Label htmlFor="rating-5" className="cursor-pointer text-primary peer-checked:text-primary">
-                          <h3>
+                          <h3 className="transition-transform duration-100 active:scale-90">
                             {field.value == '1' ? (
                               <FaRegStar />
                             ) : field.value == '2' ? (

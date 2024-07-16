@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 // Lib
@@ -5,7 +6,6 @@ import React, { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -116,15 +116,30 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
   const [minSort, setMinSort] = useState<boolean>(false)
   const [generalSort, setGeneralSort] = useState<string>('TIME')
 
-  const packState = {
-    dormType: dormType,
-    minSort: minSort,
-    generalSort: generalSort,
-  }
-
   const newCardList = cardList.filter((ele) => ele.type === dormType)
 
-  console.log('🚀 ~ packState:', packState)
+  newCardList.sort((a: TDorm, b: TDorm): any => {
+    switch (generalSort) {
+      case 'TIME':
+        if (minSort) {
+          return (new Date(a.timestamp) as any) - (new Date(b.timestamp) as any)
+        } else {
+          return (new Date(b.timestamp) as any) - (new Date(a.timestamp) as any)
+        }
+      case 'PRICE':
+        if (minSort) {
+          return a.priceStart - b.priceStart
+        } else {
+          return b.priceStart - a.priceStart
+        }
+      case 'DISTANCE':
+        if (minSort) {
+          return a.distance - b.distance
+        } else {
+          return b.distance - a.distance
+        }
+    }
+  })
 
   return (
     <div className="space-y-2 max-lg:space-y-6">

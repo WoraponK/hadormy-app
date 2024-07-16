@@ -9,7 +9,6 @@ import Image from 'next/image'
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-light.svg'
 
 // Include in project
-import path from '@/lib/path'
 
 const Navbar: React.FC = () => {
   return (
@@ -19,11 +18,9 @@ const Navbar: React.FC = () => {
           <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} />
         </Link>
         <div className="space-x-4 ">
-          {path?.map((ele, index) => (
-            <Link href={ele.href} key={index} className="text-background">
-              {ele.title}
-            </Link>
-          ))}
+          <Link href={'/demo'} className="text-background">
+            Demo
+          </Link>
         </div>
       </div>
     </nav>

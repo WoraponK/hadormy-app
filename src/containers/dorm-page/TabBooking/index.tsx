@@ -12,8 +12,8 @@ type Props = {
 
 const TabBooking: React.FC<Props> = ({ rooms }) => {
   return (
-    <div className="flex flex-wrap gap-4 justify-center">
-      {rooms.map((ele, index) => (
+    <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1">
+      {rooms.map((ele) => (
         <CardBooking key={ele.id} name={ele.name} price={ele.price} isAvailable={ele.isAvailable} />
       ))}
     </div>

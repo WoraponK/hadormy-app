@@ -1,3 +1,4 @@
+'use client'
 // Lib
 import React from 'react'
 

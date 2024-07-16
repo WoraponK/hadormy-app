@@ -63,10 +63,18 @@ export type TUserTable = {
   updateAt: string
 }
 
-export type TRoomTable = {
+export type TRoomApproveTable = {
   id: string | number
   name: string
   phoneNumber: string
   room: string
+  updateAt: string
+}
+
+export type TDormTable = {
+  id: string | number
+  name: string
+  createdBy: string
+  phoneNumber: string
   updateAt: string
 }

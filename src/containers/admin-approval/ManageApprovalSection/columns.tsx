@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { TUserTable } from '@/lib/type'
+import { TDormTable } from '@/lib/type'
 import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
@@ -16,10 +16,9 @@ import Link from 'next/link'
 
 import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
-import { FaRegTrashCan } from 'react-icons/fa6'
-import { CgWebsite } from 'react-icons/cg'
+import { FaCheck, FaXmark } from 'react-icons/fa6'
 
-export const columns: ColumnDef<TUserTable>[] = [
+export const columns: ColumnDef<TDormTable>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -29,7 +28,7 @@ export const columns: ColumnDef<TUserTable>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="text-lg w-full"
         >
-          ชื่อ
+          ชื่อหอพัก
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -37,14 +36,14 @@ export const columns: ColumnDef<TUserTable>[] = [
     cell: ({ row }) => <div>{row.getValue('name')}</div>,
   },
   {
-    accessorKey: 'phoneNumber',
-    header: () => <div className="text-center">เบอร์โทร</div>,
-    cell: ({ row }) => <div>{formatPhoneNumber(row.getValue('phoneNumber'))}</div>,
+    accessorKey: 'createdBy',
+    header: () => <div>ชื่อผู้สร้าง</div>,
+    cell: ({ row }) => <div>{row.getValue('createdBy')}</div>,
   },
   {
-    accessorKey: 'email',
-    header: () => <div className="text-center">อีเมล</div>,
-    cell: ({ row }) => <div>{row.getValue('email')}</div>,
+    accessorKey: 'phoneNumber',
+    header: () => <div>เบอร์โทร</div>,
+    cell: ({ row }) => <div>{formatPhoneNumber(row.getValue('phoneNumber'))}</div>,
   },
   {
     accessorKey: 'updateAt',
@@ -63,31 +62,51 @@ export const columns: ColumnDef<TUserTable>[] = [
     cell: ({ row }) => <div className="text-center">{convertDateFormat(row.getValue('updateAt'))}</div>,
   },
   {
-    id: 'edit',
-    header: () => <div className="text-center text-primary">จัดการบัญชี</div>,
-    cell: ({ row }) => {
-      const user = row.original
+    id: 'submit',
+    header: () => <div className="text-center text-success">ยอมรับ</div>,
+    cell: () => {
       return (
         <div className="flex justify-center">
-          <Link href={`/admin/manage-user/${user.id}`}>
-            <Button size="icon" className="text-lg text-center">
-              <CgWebsite className="text-background" />
-            </Button>
-          </Link>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="success" size="icon" className="text-lg text-center">
+                <FaCheck className="text-background" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="space-y-2">
+              <AlertDialogHeader className="space-y-4">
+                <AlertDialogTitle asChild>
+                  <div className="flex flex-col items-center gap-4 text-success">
+                    <div className="border-2 border-success p-4 rounded-full">
+                      <FaCheck className="text-4xl" />
+                    </div>
+                    <h3 className="text-center">ต้องการอนุมัติหอพักนี้?</h3>
+                  </div>
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center">
+                  หากอนุมัติไปแล้ว ระบบจะทำการแสดงหอพักนี้เป็นสาธารณะ
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )
     },
   },
   {
-    id: 'delete',
-    header: () => <div className="text-center text-destructive">ลบบัญชี</div>,
+    id: 'decline',
+    header: () => <div className="text-center text-destructive">ปฏิเสธ</div>,
     cell: () => {
       return (
         <div className="flex justify-center">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="icon" className="text-lg text-center">
-                <FaRegTrashCan className="text-background" />
+                <FaXmark className="text-background" />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="space-y-2">
@@ -95,13 +114,13 @@ export const columns: ColumnDef<TUserTable>[] = [
                 <AlertDialogTitle asChild>
                   <div className="flex flex-col items-center gap-4 text-destructive">
                     <div className="border-2 border-destructive p-4 rounded-full">
-                      <FaRegTrashCan className="text-4xl" />
+                      <FaXmark className="text-4xl" />
                     </div>
-                    <h3 className="text-center">ต้องการลบบัญชีผู้ใช้นี้ใช่หรือไม่?</h3>
+                    <h3 className="text-center">ต้องปฏิเสธการอนุัติหอพักนี้?</h3>
                   </div>
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-center">
-                  หากลบบัญชีผู้ใช้นี้ไปแล้ว จะไม่สามารถกู้คืนได้อีก
+                  หากปฏิเสธไปแล้ว จะไม่สามารถกลับมาได้
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
