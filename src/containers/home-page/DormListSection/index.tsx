@@ -43,7 +43,7 @@ const DormTypeSort: React.FC<DormTypeSortProps> = ({ dormType, setDormType }) =>
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={'ghost'} className="space-x-2 w-fit">
+        <Button variant={'ghost'} className="space-x-2 w-fit p-0">
           <FaListUl />
           <p className="text-gray-400">
             ประเภทหอพัก : <span className="text-foreground">{convertDormTypeToName(dormType)}</span>
@@ -142,8 +142,8 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
   })
 
   return (
-    <div className="space-y-2 max-lg:space-y-6">
-      <div className="flex justify-between max-sm:flex-col max-sm:items-center gap-2">
+    <div className="space-y-2 max-lg:space-y-4">
+      <div className="flex justify-between max-sm:flex-col max-sm:items-end gap-2">
         <DormTypeSort dormType={dormType} setDormType={setDormType} />
         <GeneralSort
           minSort={minSort}
@@ -152,7 +152,7 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
           setGeneralSort={setGeneralSort}
         />
       </div>
-      <div className="flex flex-col gap-4 max-lg:grid max-md:grid-cols-2 max-[548px]:grid-cols-1">
+      <div className="grid grid-cols-1 gap-4 max-md:grid-cols-2 max-[548px]:grid-cols-1">
         {newCardList.map((card) => (
           <CardDorm
             key={card.id}

@@ -19,9 +19,7 @@ const CardBooking: React.FC<Props> = ({ name, price, isAvailable }) => {
           <p className="line-clamp-1 font-semibold">{name}</p>
         </div>
         <div className="flex items-center px-2">
-          <p className="text-sm">
-            <span className="max-md:hidden">ราคา</span> {convertNumberToString(price)} บาท/เดือน
-          </p>
+          <p className="text-sm">{convertNumberToString(price)} บาท/เดือน</p>
         </div>
       </div>
       <div className="py-2 px-2 flex flex-col items-end justify-between">

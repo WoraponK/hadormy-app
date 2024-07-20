@@ -40,7 +40,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
   }
 
   return (
-    <div className="grid grid-cols-3 divide-gray-300 divide-x-2 max-md:grid-cols-1 max-md:divide-x-0 max-md:divide-y-2">
+    <div className="grid grid-cols-2 divide-gray-300 divide-x-2 max-sm:grid-cols-1 max-sm:divide-x-0 max-sm:divide-y-2">
       <div className="flex flex-col items-center gap-4 p-8">
         <h4>คะแนนโดยรวม</h4>
         <div className="flex items-end gap-2">
@@ -49,7 +49,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
         </div>
         <RatingStar rating={rating} />
       </div>
-      <div className="p-8 col-span-2 flex justify-center items-center">
+      <div className="p-8 flex justify-center items-center">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
             <FormField

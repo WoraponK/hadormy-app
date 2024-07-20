@@ -224,7 +224,7 @@ const ModalSign: React.FC = () => {
           </DialogTitle>
           <DialogDescription className="text-foreground" asChild>
             <div>
-              <h2>ยินดีต้อนรับสู่ HaDormy!</h2>
+              <h4>ยินดีต้อนรับสู่ HaDormy!</h4>
             </div>
           </DialogDescription>
         </DialogHeader>
@@ -241,7 +241,7 @@ const ModalSign: React.FC = () => {
             <TabsContent value="login">
               <LoginTab />
             </TabsContent>
-            <TabsContent value="register">
+            <TabsContent value="register" className="max-md:max-h-[250px] overflow-auto">
               <RegisterTab />
             </TabsContent>
           </div>

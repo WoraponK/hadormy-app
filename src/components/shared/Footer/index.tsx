@@ -45,15 +45,15 @@ const Footer: React.FC = () => {
       <div className="container mx-auto text-background py-6 flex gap-8 justify-between max-md:flex-col max-md:items-center">
         <div className="flex flex-col gap-4 max-md:items-center">
           <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" />
-          <h5>© 2024 HaDormy. All Rights Reserved</h5>
+          <h5 className="text-center">© 2024 HaDormy. All Rights Reserved</h5>
         </div>
-        <div className="flex space-x-16">
+        <div className="flex gap-16 max-sm:flex-col max-sm:gap-8">
           {toolsData.map((tool) => (
             <div key={tool.title} className="space-y-2">
-              <h3>{tool.title}</h3>
-              <div>
+              <h3 className="max-sm:text-center">{tool.title}</h3>
+              <div className="flex flex-col gap-1">
                 {tool.list.map((list, index) => (
-                  <Link key={index} href={list.href}>
+                  <Link key={index} href={list.href} className="max-sm:text-center">
                     <p>{list.name}</p>
                   </Link>
                 ))}

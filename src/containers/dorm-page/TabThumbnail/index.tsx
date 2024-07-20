@@ -67,7 +67,7 @@ const TabThumbnail: React.FC<Props> = ({ priceStart, priceEnd, thumbnail, descri
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      <div className="grid grid-cols-2 gap-16 max-md:flex max-md:flex-col max-md:gap-8">
+      <div className="grid grid-cols-2 gap-16 max-md:grid-cols-1 max-md:gap-8">
         <div className="space-y-8">
           <div className="space-y-2">
             <h3>รายละเอียด</h3>
