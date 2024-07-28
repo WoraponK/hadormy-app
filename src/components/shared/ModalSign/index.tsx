@@ -220,7 +220,7 @@ const ModalSign: React.FC = () => {
       <DialogContent>
         <DialogHeader className="flex items-center gap-4">
           <DialogTitle>
-            <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" />
+            <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={80} />
           </DialogTitle>
           <DialogDescription className="text-foreground" asChild>
             <div>
@@ -238,10 +238,10 @@ const ModalSign: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           <div className="pt-4 text-foreground">
-            <TabsContent value="login">
+            <TabsContent value="login" className="max-md:max-h-[250px] overflow-auto px-2">
               <LoginTab />
             </TabsContent>
-            <TabsContent value="register" className="max-md:max-h-[250px] overflow-auto">
+            <TabsContent value="register" className="max-md:max-h-[250px] overflow-auto px-2">
               <RegisterTab />
             </TabsContent>
           </div>

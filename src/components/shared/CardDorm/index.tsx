@@ -67,7 +67,7 @@ const CardDorm: React.FC<Props> = ({
             <p className="text-gray-500 max-md:hidden">บาท/เดือน</p>
           </div>
         </div>
-        <p className="text-gray-500 line-clamp-2">ประกาศ: {convertDateFormat(timestamp)}</p>
+        <p className="text-gray-500 text-sm line-clamp-2">ประกาศ: {convertDateFormat(timestamp)}</p>
         <p className="text-gray-500 flex place-self-end items-center space-x-1">
           <MdDirectionsRun className="text-xl" />
           <span>

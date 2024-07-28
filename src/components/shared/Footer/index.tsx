@@ -53,8 +53,8 @@ const Footer: React.FC = () => {
               <h3 className="max-sm:text-center">{tool.title}</h3>
               <div className="flex flex-col gap-1">
                 {tool.list.map((list, index) => (
-                  <Link key={index} href={list.href} className="max-sm:text-center">
-                    <p>{list.name}</p>
+                  <Link key={index} href={list.href} className="max-sm:text-center underline-offset-2 hover:underline">
+                    {list.name}
                   </Link>
                 ))}
               </div>

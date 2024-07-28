@@ -13,7 +13,7 @@ const CardBookingSection: React.FC = () => {
       <h6>
         The <span className="text-primary">CardBooking</span> have props name, price, isUnavailable.
       </h6>
-      <div className="bg-background rounded-lg p-4 flex flex-wrap gap-6 justify-center">
+      <div className="bg-background rounded-lg p-4 grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1 justify-center">
         <CardBooking name="Room 39" price={3000} />
         <CardBooking name="Room 39" price={3000} isAvailable />
         <CardBooking name="Room 39" price={3000} />

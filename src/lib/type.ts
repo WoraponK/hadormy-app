@@ -12,6 +12,14 @@ export enum ESort {
   Time = 'TIME',
 }
 
+export type TUser = {
+  id: string | number
+  name: string
+  email: string
+  phoneNumber: string
+  role: TUserRole
+}
+
 export type TBill = {
   water?: number
   electic?: number
@@ -77,4 +85,11 @@ export type TDormTable = {
   createdBy: string
   phoneNumber: string
   updateAt: string
+}
+
+export type TNotification = {
+  id: string | number
+  title: string
+  updateAt: string
+  image: string
 }

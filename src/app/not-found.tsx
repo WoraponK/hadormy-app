@@ -6,9 +6,12 @@ import Image from 'next/image'
 // Images
 import NotFoundSVG from '@/images/common/404.svg'
 
+// Include in project
+import { FaqList } from '@/components/shared'
+
 const NotFound = () => {
   return (
-    <div className="container mx-auto grid place-items-center">
+    <div className="container mx-auto grid place-items-center space-y-16">
       <div className="text-center space-y-16 flex flex-col items-center">
         <Image src={NotFoundSVG} alt="NotFoundSVG" height={250} />
         <div className="text-primary animate-pulse">
@@ -25,6 +28,7 @@ const NotFound = () => {
           </p>
         </div>
       </div>
+      <FaqList />
     </div>
   )
 }
