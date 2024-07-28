@@ -10,6 +10,9 @@ import {
   ModalSignSection,
   ModalAnnounceSection,
   RatingStarSection,
+  FaqListSection,
+  PopOverNotificationSection,
+  PopOverProfileSection,
 } from '@/containers/demo-page'
 
 const Demo: NextPage = () => {
@@ -22,6 +25,9 @@ const Demo: NextPage = () => {
         <ModalSignSection />
         <ModalAnnounceSection />
         <RatingStarSection />
+        <FaqListSection />
+        <PopOverNotificationSection />
+        <PopOverProfileSection />
       </div>
     </div>
   )

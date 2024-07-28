@@ -64,56 +64,58 @@ const ModalAnnounce: React.FC = () => {
             </div>
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    หัวข้อ <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    เนื้อหา <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Description" {...field} rows={3} className="resize-none" maxLength={50} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>เพิ่มรูปภาพ (เพิ่มหรือไม่เพิ่มก็ได้)</FormLabel>
-                  <FormControl>
-                    <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">
-              ประกาศ
-            </Button>
-          </form>
-        </Form>
+        <div className="max-md:max-h-[250px] overflow-auto px-2">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      หัวข้อ <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      เนื้อหา <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Description" {...field} rows={3} className="resize-none" maxLength={50} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>เพิ่มรูปภาพ (เพิ่มหรือไม่เพิ่มก็ได้)</FormLabel>
+                    <FormControl>
+                      <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                ประกาศ
+              </Button>
+            </form>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   )

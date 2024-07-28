@@ -21,6 +21,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Avatar } from '@/components/ui/avatar'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+
 import TooltipMain from '@/components/ui/tooltip-main'
 
 type Props = {
@@ -62,7 +64,7 @@ const CardAnnouncement: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-gray-500 ">
+          <p className="text-gray-500 text-sm">
             <span>ประกาศ:</span> {convertDateFormat(timestamp)}
           </p>
           {role === 'SUPERUSER' ? (
@@ -84,21 +86,18 @@ const CardAnnouncement: React.FC<Props> = ({
           </div>
         </DialogTrigger>
         <DialogContent className="bg-[#FFFADE]">
-          <DialogHeader className="space-y-2">
-            <DialogTitle asChild>
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <Image
-                    src={role === 'ADMIN' ? HadormyLogoSVG : thumbnail}
-                    alt={`${title}-ตัวอย่าง`}
-                    width={40}
-                    height={40}
-                    loading="lazy"
-                    className={`${role === 'ADMIN' ? 'object-contain' : 'object-cover object-center'} bg-transparent`}
-                  />
-                </Avatar>
-                <p>{author}</p>
-              </div>
+          <DialogHeader className="space-y-4">
+            <DialogTitle asChild className="mt-4">
+              <AspectRatio ratio={16 / 9} className="rounded-sm overflow-hidden">
+                <Image
+                  src={role === 'ADMIN' ? HadormyLogoSVG : thumbnail}
+                  alt={`${title}-ตัวอย่าง`}
+                  width={40}
+                  height={40}
+                  loading="lazy"
+                  className="w-full h-full object-cover object-center"
+                />
+              </AspectRatio>
             </DialogTitle>
             <DialogDescription className="text-lg" asChild>
               <div>

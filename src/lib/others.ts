@@ -17,7 +17,7 @@ export const convertDateFormat = (inputDate: string): string => {
   const hour = ('0' + date.getHours()).slice(-2)
   const minute = ('0' + date.getMinutes()).slice(-2)
 
-  return `${day}/${month}/${year} ${hour}:${minute}`
+  return `${day}/${month}/${year} ${hour}:${minute}น.`
 }
 
 export const calDistance = (distance: number): string => {
