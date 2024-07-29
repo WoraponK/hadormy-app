@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+'use client'
 import { ColumnDef } from '@tanstack/react-table'
 import { TRoom } from '@/lib/type'
 import { Button } from '@/components/ui/button'
@@ -18,6 +20,8 @@ import { convertNumberToString } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { FaRegTrashCan } from 'react-icons/fa6'
 import { CgWebsite } from 'react-icons/cg'
+
+import { usePathname } from 'next/navigation'
 
 export const columns: ColumnDef<TRoom>[] = [
   {
@@ -83,7 +87,7 @@ export const columns: ColumnDef<TRoom>[] = [
       const room = row.original
       return (
         <div className="flex justify-center">
-          <Link href={`/owner/manage-room/${room.id}`}>
+          <Link href={`${usePathname()}/${room.id}`}>
             <Button size="icon" className="text-lg text-center">
               <CgWebsite className="text-background" />
             </Button>

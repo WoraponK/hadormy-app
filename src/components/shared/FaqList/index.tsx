@@ -10,7 +10,7 @@ import { FaqData } from '@/assets/faq'
 
 const FaqList: React.FC = () => {
   return (
-    <div className="w-full space-y-2 bg-background shadow-md p-8 max-sm:px-4 rounded-md">
+    <div className="w-full space-y-2 bg-background shadow-md p-8 max-sm:px-4 rounded-3xl">
       <div className="flex justify-center items-center text-primary space-x-2">
         <FaRegCircleQuestion className="text-xl" />
         <h3>คำถามที่พบบ่อย</h3>

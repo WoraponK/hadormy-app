@@ -16,6 +16,8 @@ type Props = {
 }
 
 const PopOverNotification: React.FC<Props> = ({ notifications }) => {
+  notifications.sort((a, b) => (new Date(b.updateAt) as any) - (new Date(a.updateAt) as any))
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -23,12 +25,12 @@ const PopOverNotification: React.FC<Props> = ({ notifications }) => {
           <FaRegBell className="text-2xl" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent className="overflow-hidden">
         <div className="flex items-center space-x-2 text-primary">
           <FaBell className="text-lg" />
           <h4>การแจ้งเตือน</h4>
         </div>
-        <div className="divide-y-2">
+        <div className="divide-y-2 overflow-auto h-full max-h-80">
           {notifications.map((noti, index) => (
             <div key={index} className="py-2 flex space-x-2 items-center">
               <Avatar>

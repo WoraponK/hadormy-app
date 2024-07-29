@@ -13,13 +13,18 @@ import {
   FaqListSection,
   PopOverNotificationSection,
   PopOverProfileSection,
+  PopOverManageSection,
+  SearchBarSection,
+  CardDormSearchSection,
 } from '@/containers/demo-page'
 
 const Demo: NextPage = () => {
   return (
     <div className="container mx-auto">
       <div className="flex flex-col gap-12">
+        <SearchBarSection />
         <CardDormSection />
+        <CardDormSearchSection />
         <CardAnnouncementSection />
         <CardBookingSection />
         <ModalSignSection />
@@ -28,6 +33,7 @@ const Demo: NextPage = () => {
         <FaqListSection />
         <PopOverNotificationSection />
         <PopOverProfileSection />
+        <PopOverManageSection />
       </div>
     </div>
   )
