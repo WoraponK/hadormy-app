@@ -41,7 +41,7 @@ const toolsData = [
 
 const Footer: React.FC = () => {
   return (
-    <footer className=" py-8 bg-foreground rounded-t-3xl">
+    <footer className="py-8 bg-foreground rounded-t-3xl">
       <div className="container mx-auto text-background py-6 flex gap-8 justify-between max-md:flex-col max-md:items-center">
         <div className="flex flex-col gap-4 max-md:items-center">
           <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" />

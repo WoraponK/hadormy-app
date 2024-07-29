@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { AvatarImage, Avatar } from '@/components/ui/avatar'
 
 // Images
-import { FaShop, FaUser, FaShieldHalved, FaHammer } from 'react-icons/fa6'
+import { FaShop, FaUser, FaShieldHalved } from 'react-icons/fa6'
 import { LuLogOut } from 'react-icons/lu'
 import { TUser, TUserRole } from '@/lib/type'
 
@@ -41,6 +41,10 @@ const PopOverProfile: React.FC<Props> = ({ user }) => {
     }
   }
 
+  const handleLogout = () => {
+    console.log('Logout!')
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -58,8 +62,8 @@ const PopOverProfile: React.FC<Props> = ({ user }) => {
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="space-y-2 p-2">
-        <Button variant={'destructive'} className="w-full gap-2" onClick={() => console.log('Logout!')}>
+      <PopoverContent className="space-y-2 p-2 max-w-40">
+        <Button variant={'destructive'} className="w-full gap-2" onClick={handleLogout}>
           <LuLogOut />
           ออกจากระบบ
         </Button>

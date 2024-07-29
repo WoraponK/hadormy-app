@@ -8,9 +8,9 @@ import { TUser } from '@/lib/type'
 const PopOverProfileSection: React.FC = () => {
   return (
     <div className="space-y-4">
-      <h2 className="break-words">PopOverNotification</h2>
+      <h2 className="break-words">PopOverProfile</h2>
       <h6>
-        The <span className="text-primary">PopOverNotification</span> have no props.
+        The <span className="text-primary">PopOverProfile</span> have no props.
       </h6>
       <div className="bg-foreground rounded-lg p-4 flex justify-center items-center">
         <PopOverProfile user={mockupUserData1} />
