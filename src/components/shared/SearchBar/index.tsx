@@ -2,6 +2,7 @@
 'use client'
 // Lib
 import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Dialog,
   DialogTrigger,
@@ -31,7 +32,8 @@ type Props = {
 }
 
 const SearchBar: React.FC<Props> = ({ dorms }) => {
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const isDesktop = dynamic(() => useMediaQuery('(min-width: 768px)'), { ssr: false })
 
   const form = useForm<z.infer<typeof searchSchema>>({
     resolver: zodResolver(searchSchema),
@@ -60,10 +62,10 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
     setFilteredDorms(filtered)
   }, [form.getValues().searching, dorms])
 
-  const SearchForm = () => {
+  if (isDesktop) {
     return (
-      <Form {...form}>
-        <form onChange={() => console.log(form.getValues().searching)} className="space-y-6">
+      <div className="w-full max-w-[432px] relative">
+        <Form {...form}>
           <FormField
             control={form.control}
             name="searching"
@@ -82,17 +84,9 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
               </FormItem>
             )}
           />
-        </form>
-      </Form>
-    )
-  }
-
-  if (isDesktop) {
-    return (
-      <div className="w-full max-w-[432px] relative">
-        <SearchForm />
+        </Form>
         {form.getValues().searching.length > 0 ? (
-          <div className="opacity-100 p-2 bg-background rounded-lg absolute mt-2 w-full shadow z-20 ">
+          <div className="p-2 bg-background rounded-lg absolute mt-2 w-full shadow z-20 ">
             <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
               {filteredDorms?.length > 0 ? (
                 filteredDorms?.map((dorm) => (
@@ -114,7 +108,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
             </div>
           </div>
         ) : (
-          <div className="transition-all opacity-0"></div>
+          <div></div>
         )}
       </div>
     )
@@ -133,7 +127,26 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
         <DialogHeader className="flex items-center gap-4">
           <DialogTitle asChild>
             <div className="w-full pt-4">
-              <SearchForm />
+              <Form {...form}>
+                <FormField
+                  control={form.control}
+                  name="searching"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          className="bg-background rounded-full w-full"
+                          placeholder="ค้นหาหอพัก..."
+                          icon={<IoSearch className="text-background text-2xl max-md:text-foreground" />}
+                          {...field}
+                          autoComplete="off"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Form>
             </div>
           </DialogTitle>
           <DialogDescription className="text-foreground" asChild>
