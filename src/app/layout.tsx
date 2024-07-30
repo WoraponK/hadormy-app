@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn('min-h-screen bg-main', font.className)} suppressHydrationWarning={true}>
         <NextTopLoader color="#00bbf9" showSpinner={false} />
-        <Navbar />
+        <Navbar role="ADMIN" />
         <main className="py-16 overflow-x-hidden">{children}</main>
         <Footer />
         <Toaster />

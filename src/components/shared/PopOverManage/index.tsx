@@ -12,7 +12,7 @@ import { TUserRole } from '@/lib/type'
 
 type Props = {
   role: TUserRole
-  dormId: string
+  dormId?: string
   isCreated?: boolean
 }
 

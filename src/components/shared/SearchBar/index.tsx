@@ -2,7 +2,6 @@
 'use client'
 // Lib
 import React, { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
 import {
   Dialog,
   DialogTrigger,
@@ -17,7 +16,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { useMediaQuery } from '@uidotdev/usehooks'
 
 // Images
 import { IoSearch } from 'react-icons/io5'
@@ -32,8 +30,20 @@ type Props = {
 }
 
 const SearchBar: React.FC<Props> = ({ dorms }) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const isDesktop = dynamic(() => useMediaQuery('(min-width: 768px)') as any, { ssr: false })
+  const [isDesktop, setIsDesktop] = useState<boolean>(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowWidth = window.innerWidth
+      if (windowWidth >= 768) {
+        setIsDesktop(true)
+      } else {
+        setIsDesktop(false)
+      }
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+  }, [])
 
   const form = useForm<z.infer<typeof searchSchema>>({
     resolver: zodResolver(searchSchema),
@@ -149,9 +159,9 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
               </Form>
             </div>
           </DialogTitle>
-          <DialogDescription className="text-foreground" asChild>
-            <div className="w-full">
-              {form.getValues().searching.length > 0 ? (
+          {form.getValues().searching.length > 0 && (
+            <DialogDescription className="text-foreground" asChild>
+              <div className="w-full">
                 <div className="bg-background rounded-lg w-full z-20 ">
                   <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
                     {filteredDorms?.length > 0 ? (
@@ -173,11 +183,9 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
                     )}
                   </div>
                 </div>
-              ) : (
-                <div></div>
-              )}
-            </div>
-          </DialogDescription>
+              </div>
+            </DialogDescription>
+          )}
         </DialogHeader>
       </DialogContent>
     </Dialog>
