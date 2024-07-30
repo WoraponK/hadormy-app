@@ -33,7 +33,7 @@ type Props = {
 
 const SearchBar: React.FC<Props> = ({ dorms }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const isDesktop = dynamic(() => useMediaQuery('(min-width: 768px)'), { ssr: false })
+  const isDesktop = dynamic(() => useMediaQuery('(min-width: 768px)') as any, { ssr: false })
 
   const form = useForm<z.infer<typeof searchSchema>>({
     resolver: zodResolver(searchSchema),
