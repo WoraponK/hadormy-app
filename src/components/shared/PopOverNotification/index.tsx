@@ -21,27 +21,33 @@ const PopOverNotification: React.FC<Props> = ({ notifications }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="bg-transparent transition-colors hover:text-gray-300">
+        <Button size={'icon'} className="bg-transparent transition-colors hover:text-gray-300 shadow-none">
           <FaRegBell className="text-2xl" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="overflow-hidden">
+      <PopoverContent className="overflow-hidden mt-3">
         <div className="flex items-center space-x-2 text-primary">
           <FaBell className="text-lg" />
           <h4>การแจ้งเตือน</h4>
         </div>
         <div className="divide-y-2 overflow-auto h-full max-h-80">
-          {notifications.map((noti, index) => (
-            <div key={index} className="py-2 flex space-x-2 items-center">
-              <Avatar>
-                <AvatarImage src={noti.image} alt={`${noti.title}-noti`} className="object-cover object-center" />
-              </Avatar>
-              <div>
-                <h6>{noti.title}</h6>
-                <p className="text-gray-400 text-sm">{convertDateFormat(noti.updateAt)}</p>
+          {notifications.length > 0 ? (
+            notifications.map((noti, index) => (
+              <div key={index} className="py-2 flex space-x-2 items-center">
+                <Avatar>
+                  <AvatarImage src={noti.image} alt={`${noti.title}-noti`} className="object-cover object-center" />
+                </Avatar>
+                <div>
+                  <h6>{noti.title}</h6>
+                  <p className="text-gray-400 text-sm">{convertDateFormat(noti.updateAt)}</p>
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="py-4">
+              <p className="text-center">ไม่พบการแจ้งเตือน...</p>
             </div>
-          ))}
+          )}
         </div>
       </PopoverContent>
     </Popover>

@@ -44,7 +44,7 @@ const ModalAnnounce: React.FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <div>
-          <Button size="lg" className="space-x-2 px-5">
+          <Button size="lg" className="space-x-2">
             <h5>ประกาศ</h5>
             <Image src={IconMegaphoneWhiteSVG} alt="IconMegaphoneWhiteSVG" />
           </Button>

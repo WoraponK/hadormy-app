@@ -12,7 +12,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import Link from 'next/link'
 
 import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
