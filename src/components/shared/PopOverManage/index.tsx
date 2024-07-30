@@ -80,7 +80,7 @@ const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="bg-transparent transition-colors h-fit hover:text-gray-300">
+        <Button className="bg-transparent transition-colors h-fit hover:text-gray-300 shadow-none">
           <h6 className="flex items-center space-x-2">
             <span>จัดการ</span>
             <FiGrid className="text-2xl" />

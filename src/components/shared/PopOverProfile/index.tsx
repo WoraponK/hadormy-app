@@ -48,7 +48,7 @@ const PopOverProfile: React.FC<Props> = ({ user }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="bg-transparent transition-colors h-fit w-full max-w-64">
+        <Button className="bg-transparent transition-colors h-fit w-full max-w-64 shadow-none">
           <div className="flex w-full items-center space-x-4">
             <Avatar>
               <AvatarImage

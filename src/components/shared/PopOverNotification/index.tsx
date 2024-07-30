@@ -21,7 +21,7 @@ const PopOverNotification: React.FC<Props> = ({ notifications }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="bg-transparent transition-colors hover:text-gray-300">
+        <Button className="bg-transparent transition-colors hover:text-gray-300 shadow-none">
           <FaRegBell className="text-2xl" />
         </Button>
       </PopoverTrigger>
