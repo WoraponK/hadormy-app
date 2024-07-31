@@ -80,7 +80,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
 
   return (
     <nav className={`py-5 sticky bg-foreground rounded-b-3xl z-20 left-0 top-0`}>
-      <div className="container mx-auto grid grid-cols-2 h-full">
+      <div className="container mx-auto grid grid-cols-2 gap-4 h-full">
         <div className="flex items-center space-x-8 max-lg:space-x-4">
           <Link href={'/'}>
             <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} />
