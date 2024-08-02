@@ -1,3 +1,5 @@
+'use client'
+// Lib
 import React from 'react'
 
 const OwnerManageRoomById = () => {

@@ -2,8 +2,15 @@
 // Lib
 import React from 'react'
 
+// Include in project
+import { CreateDormSection } from '@/containers/owner-create-dorm'
+
 const OwnerCreateDorm = () => {
-  return <div>OwnerCreateDorm</div>
+  return (
+    <div className="container mx-auto">
+      <CreateDormSection />
+    </div>
+  )
 }
 
 export default OwnerCreateDorm

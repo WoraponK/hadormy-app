@@ -1,7 +1,9 @@
+'use client'
+// Lib
 import React from 'react'
 
 const AdminManageUserById = () => {
-  return <div>ManageUserId</div>
+  return <div>AdminManageUserById</div>
 }
 
 export default AdminManageUserById
