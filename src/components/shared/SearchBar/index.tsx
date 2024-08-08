@@ -35,7 +35,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
   useEffect(() => {
     const handleResize = () => {
       const windowWidth = window.innerWidth
-      if (windowWidth >= 768) {
+      if (windowWidth >= 1024) {
         setIsDesktop(true)
       } else {
         setIsDesktop(false)
@@ -85,7 +85,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
                   <Input
                     className="bg-background rounded-full w-full"
                     placeholder="ค้นหาหอพัก..."
-                    icon={<IoSearch className="text-background text-2xl max-md:text-foreground" />}
+                    icon={<IoSearch className="text-background text-2xl max-lg:text-foreground" />}
                     {...field}
                     autoComplete="off"
                   />
@@ -147,7 +147,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
                         <Input
                           className="bg-background rounded-full w-full"
                           placeholder="ค้นหาหอพัก..."
-                          icon={<IoSearch className="text-background text-2xl max-md:text-foreground" />}
+                          icon={<IoSearch className="text-background text-2xl max-lg:text-foreground" />}
                           {...field}
                           autoComplete="off"
                         />

@@ -1,7 +1,9 @@
+'use client'
+// Lib
 import React from 'react'
 
-const OwnerEditDormById = () => {
-  return <div>OwnerEditDormById</div>
+const OwnerManageDorm = () => {
+  return <div>OwnerManageDorm</div>
 }
 
-export default OwnerEditDormById
+export default OwnerManageDorm

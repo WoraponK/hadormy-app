@@ -53,7 +53,7 @@ const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated }) => {
               <Link href={'/owner/create-dorm'}>
                 <Button variant={'outline'} className="w-full">
                   <h6 className="flex items-center space-x-2">
-                    <span>สร้างหอพัก</span>
+                    <span>เพิ่มหอพัก</span>
                   </h6>
                 </Button>
               </Link>

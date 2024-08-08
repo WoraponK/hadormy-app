@@ -1,4 +1,9 @@
 export type TUserRole = 'USER' | 'SUPERUSER' | 'ADMIN'
+export enum EUserRole {
+  User = 'USER',
+  Superuser = 'SUPERUSER',
+  Admin = 'ADMIN',
+}
 
 export enum EDormType {
   All = 'ALL',
