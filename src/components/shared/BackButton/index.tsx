@@ -12,7 +12,7 @@ const BackButton: React.FC = () => {
   const router = useRouter()
 
   return (
-    <div className="cursor-pointer text-gray-500" onClick={() => router.back()}>
+    <div className="cursor-pointer text-gray-400 transition-all hover:opacity-50" onClick={() => router.back()}>
       <h5 className="flex gap-2 items-center">
         <IoChevronBack />
         <span>กลับ</span>

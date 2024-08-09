@@ -1,9 +1,19 @@
 'use client'
 // Lib
-import React from 'react'
+import React, { useEffect } from 'react'
+
+// Include in project
+import { ManageDormSection } from '@/containers/owner-manage-dorm'
 
 const OwnerManageDorm = () => {
-  return <div>OwnerManageDorm</div>
+  useEffect(() => {
+    document.title = `แก้ไขหอพัก - HaDormy`
+  }, [])
+  return (
+    <div className="container mx-auto">
+      <ManageDormSection />
+    </div>
+  )
 }
 
 export default OwnerManageDorm
