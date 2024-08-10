@@ -1,13 +1,13 @@
 'use client'
 // Lib
 import { useAuth } from '@/context/authContext'
-import { useRouter } from 'next/navigation'
 
 // Include in project
 import { LoadingSpinner } from '../shared'
 import { getUserById } from '@/collections/usersCollection'
 import { useEffect, useState } from 'react'
 import { TUser } from '@/lib/type'
+import NotFound from '@/app/not-found'
 
 interface RoleBasedAccessProps {
   allowedRoles: string[]
@@ -15,7 +15,6 @@ interface RoleBasedAccessProps {
 }
 
 const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, children }) => {
-  const router = useRouter()
   const { user, loading } = useAuth()
   const [userData, setUserData] = useState<TUser | null>(null)
 
@@ -47,15 +46,7 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, childre
   }
 
   if (!allowedRoles.includes(userRole || '')) {
-    router.push('/')
-    return (
-      <div className="min-h-screen grid place-items-center">
-        <div className="text-center space-y-4">
-          <h1 className="text-primary">ไม่สามารถเข้าใช้งานหน้านี้ได้</h1>
-          <h3>กำลังกลับไปยังหน้าหลัก...</h3>
-        </div>
-      </div>
-    )
+    return <NotFound />
   }
 
   return <>{children}</>
