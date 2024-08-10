@@ -10,6 +10,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { usePathname } from 'next/navigation'
 
 // Images
 import { IoSearch } from 'react-icons/io5'
@@ -18,6 +19,8 @@ import { IoSearch } from 'react-icons/io5'
 import { TRoom } from '@/lib/type'
 import { columns } from './columns'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 type Props = {
   data: TRoom[]
@@ -34,7 +37,12 @@ const ManageRoomSection: React.FC<Props> = ({ data }) => {
   })
 
   return (
-    <div>
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Link href={`${usePathname()}/create`}>
+          <Button>เพิ่มห้องพัก</Button>
+        </Link>
+      </div>
       <div className="bg-background rounded-md p-8 shadow-md space-y-8">
         <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start">
           <Input
