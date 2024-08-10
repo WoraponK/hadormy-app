@@ -10,7 +10,7 @@ const manageDormSchema = z
     name: z.string({ message: 'กรุณากรอกชื่อหอพัก' }).min(2, { message: 'ชื่อหอพักอย่างน้อย 2 ตัวอักษร' }),
     priceStart: z.number({ message: 'กรุณากรอกราคาต่ำสุด' }).gte(0, { message: 'ราคาต่ำสุดอย่างน้อย 0 บาท' }),
     priceEnd: z.number({ message: 'กรุณากรอกราคาสูงสุด' }),
-    address: z.string({ message: 'กรุณากรอกที่อยู่หอพัก' }).max(100, { message: 'ที่อยู่ไม่เกิน 500 ตัวอักษร' }),
+    address: z.string({ message: 'กรุณากรอกที่อยู่หอพัก' }).max(100, { message: 'ที่อยู่ไม่เกิน 200 ตัวอักษร' }),
     billElectric: z.number().optional(),
     billWater: z.number().optional(),
     billInternet: z.number().optional(),
