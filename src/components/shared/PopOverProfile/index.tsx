@@ -11,7 +11,7 @@ import { LuLogOut } from 'react-icons/lu'
 import { TUser, TUserRole } from '@/lib/type'
 
 type Props = {
-  user: TUser
+  user?: TUser
 }
 
 const PopOverProfile: React.FC<Props> = ({ user }) => {
@@ -52,12 +52,12 @@ const PopOverProfile: React.FC<Props> = ({ user }) => {
           <div className="flex w-full items-center space-x-4">
             <Avatar>
               <AvatarImage
-                src={`https://placehold.jp/72/00bbf9/ffffff/150x150.png?text=${user.name?.[0]}&css=%7B%22font-weight%22%3A%22bold%22%7D`}
+                src={`https://placehold.jp/72/00bbf9/ffffff/150x150.png?text=${user?.name?.[0]}&css=%7B%22font-weight%22%3A%22bold%22%7D`}
               />
             </Avatar>
             <div className="w-full">
-              <p className="text-sm text-secondary flex items-center space-x-1">{convertRole(user.role)}</p>
-              <h6 className="text-background text-start line-clamp-1 text-wrap">{user.name}</h6>
+              <p className="text-sm text-secondary flex items-center space-x-1">{user && convertRole(user.role)}</p>
+              <h6 className="text-background text-start line-clamp-1 text-wrap">{user?.name}</h6>
             </div>
           </div>
         </Button>

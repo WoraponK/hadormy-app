@@ -1,9 +1,12 @@
+'use client'
 import { Prompt } from 'next/font/google'
 import '@/styles/globals.css'
 
 import { cn } from '@/lib/utils'
 import NextTopLoader from 'nextjs-toploader'
 import { Toaster } from '@/components/ui/toaster'
+
+import { AuthProvider } from '@/context/authContext'
 
 const font = Prompt({
   subsets: ['latin', 'thai'],
@@ -20,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn('min-h-screen bg-main', font.className)} suppressHydrationWarning={true}>
-        <NextTopLoader color="#00bbf9" showSpinner={false} />
-        <Navbar role="ADMIN" />
-        <main className="py-16 overflow-x-hidden">{children}</main>
-        <Footer />
-        <Toaster />
+        <AuthProvider>
+          <NextTopLoader color="#00bbf9" showSpinner={false} />
+          <Navbar />
+          <main className="py-16 overflow-x-hidden">{children}</main>
+          <Footer />
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   )

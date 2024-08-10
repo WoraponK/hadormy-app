@@ -2,7 +2,7 @@
 import React from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const CardDorm: React.FC = ({}) => {
+const CardDormLoading: React.FC = ({}) => {
   return (
     <Skeleton className="h-[190px] w-full bg-background rounded-lg p-4 grid grid-cols-[200px_1fr] gap-8 group max-md:flex max-md:flex-col max-md:h-fit max-md:gap-4">
       <div className="flex flex-col justify-between gap-4">
@@ -23,4 +23,4 @@ const CardDorm: React.FC = ({}) => {
   )
 }
 
-export default CardDorm
+export default CardDormLoading

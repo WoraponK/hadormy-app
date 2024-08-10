@@ -1,8 +1,8 @@
 'use client'
 
 // Lib
+import React, { useState } from 'react'
 import Link from 'next/link'
-import React from 'react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import {
@@ -31,11 +31,9 @@ import {
 } from '@/components/shared'
 import { TUser, TUserRole } from '@/lib/type'
 
-type Props = {
-  role: TUserRole | ''
-}
+const Navbar: React.FC = () => {
+  const [role, setRole] = useState<TUserRole | undefined>()
 
-const Navbar: React.FC<Props> = ({ role }) => {
   const convertRole = (role: TUserRole) => {
     switch (role) {
       case 'ADMIN':
@@ -46,7 +44,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile user={mockupUserData} />
+            <PopOverProfile />
           </>
         )
       case 'SUPERUSER':
@@ -57,7 +55,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile user={mockupUserData} />
+            <PopOverProfile />
           </>
         )
       case 'USER':
@@ -66,7 +64,7 @@ const Navbar: React.FC<Props> = ({ role }) => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile user={mockupUserData} />
+            <PopOverProfile />
           </>
         )
       default:
@@ -120,11 +118,3 @@ const Navbar: React.FC<Props> = ({ role }) => {
 }
 
 export default Navbar
-
-const mockupUserData: TUser = {
-  id: '1',
-  name: 'Hadormy',
-  email: ' worapon.klabsri@gmail.com',
-  phoneNumber: '0630913505',
-  role: 'ADMIN',
-}
