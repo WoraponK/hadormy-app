@@ -23,6 +23,7 @@ export type TUser = {
   email: string
   phoneNumber: string
   role: TUserRole
+  password?: string
 }
 
 export type TBill = {

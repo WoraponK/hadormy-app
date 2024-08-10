@@ -4,17 +4,24 @@ import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { AvatarImage, Avatar } from '@/components/ui/avatar'
+import { useRouter } from 'next/navigation'
 
 // Images
 import { FaShop, FaUser, FaShieldHalved } from 'react-icons/fa6'
 import { LuLogOut } from 'react-icons/lu'
 import { TUser, TUserRole } from '@/lib/type'
 
+// Include in project
+import { useAuth } from '@/context/authContext'
+
 type Props = {
-  user?: TUser
+  user: TUser | null
 }
 
 const PopOverProfile: React.FC<Props> = ({ user }) => {
+  const { signOutUser } = useAuth()
+  const router = useRouter()
+
   const convertRole = (role: TUserRole) => {
     switch (role) {
       case 'ADMIN':
@@ -41,8 +48,18 @@ const PopOverProfile: React.FC<Props> = ({ user }) => {
     }
   }
 
-  const handleLogout = () => {
-    console.log('Logout!')
+  const handleLogout = async () => {
+    try {
+      await signOutUser()
+        .then(() => {
+          router.refresh()
+        })
+        .catch(() => {
+          throw new Error()
+        })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

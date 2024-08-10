@@ -1,8 +1,26 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, where, query } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TUser } from '@/lib/type'
 
 const usersCollection = collection(db, 'users')
+
+export const getUserById = async (id: string): Promise<TUser | null> => {
+  const usersCollection = collection(db, 'users')
+  const q = query(usersCollection, where('id', '==', id))
+
+  try {
+    const querySnapshot = await getDocs(q)
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0]
+      return { id: userDoc.id, ...userDoc.data(), password: 'YOU DONT WANNA KNOW!' } as TUser
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.error('Error fetching user by id:', error)
+    return null
+  }
+}
 
 export const getUsers = async (): Promise<TUser[]> => {
   const snapshot = await getDocs(usersCollection)

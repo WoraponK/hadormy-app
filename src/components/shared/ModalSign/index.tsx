@@ -20,6 +20,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
+import { useRouter } from 'next/navigation'
 
 // Images
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-dark.svg'
@@ -28,8 +29,12 @@ import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-dark.svg'
 import loginSchema from '@/schemas/loginScheme'
 import registerSchema from '@/schemas/registerSchema'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useAuth } from '@/context/authContext'
 
 const LoginTab: React.FC = () => {
+  const { signIn } = useAuth()
+  const router = useRouter()
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,8 +43,18 @@ const LoginTab: React.FC = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      await signIn(values.email, values.password)
+        .then(() => {
+          router.refresh()
+        })
+        .catch(() => {
+          throw new Error()
+        })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -79,6 +94,8 @@ const LoginTab: React.FC = () => {
   )
 }
 const RegisterTab: React.FC = () => {
+  const { signUp } = useAuth()
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -91,8 +108,12 @@ const RegisterTab: React.FC = () => {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
+  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+    try {
+      await signUp(values.email, values.password, values.name, values.phone)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

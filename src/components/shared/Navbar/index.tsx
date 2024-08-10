@@ -1,20 +1,12 @@
 'use client'
 
 // Lib
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { useAuth } from '@/context/authContext'
 
 // Images
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-light.svg'
@@ -30,9 +22,28 @@ import {
   PopOverNotification,
 } from '@/components/shared'
 import { TUser, TUserRole } from '@/lib/type'
+import { getUserById } from '@/collections/usersCollection'
 
 const Navbar: React.FC = () => {
-  const [role, setRole] = useState<TUserRole | undefined>()
+  const { user } = useAuth()
+  const [userData, setUserData] = useState<TUser | null>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (user) {
+          const data = await getUserById(user.uid)
+          setUserData(data)
+        } else {
+          setUserData(null)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchUser()
+  }, [user])
 
   const convertRole = (role: TUserRole) => {
     switch (role) {
@@ -44,7 +55,7 @@ const Navbar: React.FC = () => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile />
+            <PopOverProfile user={userData} />
           </>
         )
       case 'SUPERUSER':
@@ -55,7 +66,7 @@ const Navbar: React.FC = () => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile />
+            <PopOverProfile user={userData} />
           </>
         )
       case 'USER':
@@ -64,7 +75,7 @@ const Navbar: React.FC = () => {
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>
-            <PopOverProfile />
+            <PopOverProfile user={userData} />
           </>
         )
       default:
@@ -75,6 +86,8 @@ const Navbar: React.FC = () => {
         )
     }
   }
+
+  const userRole = userData?.role || ''
 
   return (
     <nav className={`py-5 sticky bg-foreground rounded-b-3xl z-20 left-0 top-0`}>
@@ -87,7 +100,7 @@ const Navbar: React.FC = () => {
         </div>
         <div className="justify-self-end">
           <div className="flex items-center space-x-6 max-[1200px]:space-x-2 max-lg:hidden">
-            {convertRole((role as TUserRole) || '')}
+            {convertRole((userRole as TUserRole) || '')}
           </div>
           <div className="flex items-center space-x-4 lg:hidden">
             <div className="lg:hidden">
@@ -104,7 +117,7 @@ const Navbar: React.FC = () => {
                   <SheetTitle>Are you absolutely sure?</SheetTitle>
                   <SheetDescription asChild>
                     <div className="flex flex-col max-lg:items-center space-y-8">
-                      {convertRole((role as TUserRole) || '')}
+                      {convertRole((userRole as TUserRole) || '')}
                     </div>
                   </SheetDescription>
                 </SheetHeader>
