@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'
 // Include in project
 import { TUserTable } from '@/lib/type'
 import { ManageUserSection } from '@/containers/admin-manage-user'
+import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 
 const AdminManageUser = () => {
   useEffect(() => {
@@ -14,12 +15,14 @@ const AdminManageUser = () => {
   }, [])
 
   return (
-    <div className="container mx-auto min-h-screen">
-      <div className="space-y-8">
-        <h1>รายการบัญชีผู้ใช้</h1>
-        <ManageUserSection data={mockupData} />
+    <RoleBasedAccess allowedRoles={['ADMIN']}>
+      <div className="container mx-auto min-h-screen">
+        <div className="space-y-8">
+          <h1>รายการบัญชีผู้ใช้</h1>
+          <ManageUserSection data={mockupData} />
+        </div>
       </div>
-    </div>
+    </RoleBasedAccess>
   )
 }
 

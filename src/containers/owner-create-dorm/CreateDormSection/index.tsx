@@ -226,7 +226,7 @@ const CreateDormSection: React.FC = () => {
             </div>
             <FormField
               control={form.control}
-              name="phoneContact"
+              name="images"
               render={() => (
                 <FormItem>
                   <FormLabel>
@@ -260,7 +260,7 @@ const CreateDormSection: React.FC = () => {
                 บันทึก
               </Button>
             </div>
-
+            
             {/* Inside Form --- End */}
           </form>
         </Form>

@@ -1,9 +1,19 @@
 'use client'
 // Lib
-import React from 'react'
+import React, { useEffect } from 'react'
+
+// Include in project
+import { ManageRoomIdSection } from '@/containers/owner-manage-room'
 
 const OwnerManageRoomById = () => {
-  return <div>OwnerMangeRoomById</div>
+  useEffect(() => {
+    document.title = `แก้ไขห้องพัก - HaDormy`
+  }, [])
+  return (
+    <div className="container mx-auto">
+      <ManageRoomIdSection />
+    </div>
+  )
 }
 
 export default OwnerManageRoomById

@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 // Include in project
 import { ManageApprovalSection } from '@/containers/admin-approval'
 import { TDormTable } from '@/lib/type'
+import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 
 const AdminApproval = () => {
   useEffect(() => {
@@ -12,12 +13,14 @@ const AdminApproval = () => {
   }, [])
 
   return (
-    <div className="container mx-auto min-h-screen">
-      <div className="space-y-8">
-        <h1>การอนุมัติหอพัก</h1>
-        <ManageApprovalSection data={mockupData} />
+    <RoleBasedAccess allowedRoles={['ADMIN']}>
+      <div className="container mx-auto min-h-screen">
+        <div className="space-y-8">
+          <h1>การอนุมัติหอพัก</h1>
+          <ManageApprovalSection data={mockupData} />
+        </div>
       </div>
-    </div>
+    </RoleBasedAccess>
   )
 }
 
