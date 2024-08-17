@@ -4,7 +4,7 @@
 import React from 'react'
 
 // Include in project
-import { CardAnnouncement } from '@/components/shared'
+import { CardAnnouncement, CardAnnouncementSkeleton } from '@/components/shared'
 
 const CardAnnouncementSection: React.FC = () => {
   return (
@@ -29,6 +29,8 @@ const CardAnnouncementSection: React.FC = () => {
           timestamp="2024-06-23T16:04:18Z"
           role="SUPERUSER"
         />
+        <CardAnnouncementSkeleton />
+        <CardAnnouncementSkeleton />
       </div>
     </div>
   )

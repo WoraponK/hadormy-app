@@ -67,6 +67,7 @@ export type TDorm = {
   bill: TBill
   timestamp: string
   type: EDormType
+  is_activated?: boolean
 }
 
 export type TUserTable = {

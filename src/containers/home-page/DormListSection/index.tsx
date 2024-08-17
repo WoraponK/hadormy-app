@@ -116,7 +116,7 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
   const [minSort, setMinSort] = useState<boolean>(false)
   const [generalSort, setGeneralSort] = useState<string>('TIME')
 
-  const newCardList = cardList.filter((ele) => ele.type === dormType)
+  const newCardList = cardList.filter((ele) => ele.type === dormType && ele.is_activated === true)
 
   newCardList.sort((a: TDorm, b: TDorm): any => {
     switch (generalSort) {
@@ -153,19 +153,25 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
         />
       </div>
       <div className="grid grid-cols-1 gap-4 max-md:grid-cols-2 max-[548px]:grid-cols-1">
-        {newCardList.map((card) => (
-          <CardDorm
-            key={card.id}
-            id={card.id}
-            name={card.name}
-            address={card.address}
-            distance={card.distance}
-            priceStart={card.priceStart}
-            priceEnd={card.priceEnd}
-            timestamp={card.timestamp}
-            thumbnail={card.thumbnail?.[0]}
-          />
-        ))}
+        {newCardList.length > 0 ? (
+          newCardList.map((card) => (
+            <CardDorm
+              key={card.id}
+              id={card.id}
+              name={card.name}
+              address={card.address}
+              distance={card.distance}
+              priceStart={card.priceStart}
+              priceEnd={card.priceEnd}
+              timestamp={card.timestamp}
+              thumbnail={card.thumbnail?.[0]}
+            />
+          ))
+        ) : (
+          <div className="w-full flex justify-center py-8">
+            <p>ไม่พบรายชื่อหอพัก...</p>
+          </div>
+        )}
       </div>
     </div>
   )

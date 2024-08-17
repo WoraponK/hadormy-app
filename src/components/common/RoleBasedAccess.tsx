@@ -40,7 +40,7 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, childre
   if (loading) {
     return (
       <div className="min-h-screen grid place-items-center">
-        <LoadingSpinner />
+        <LoadingSpinner className="text-primary" />
       </div>
     )
   }

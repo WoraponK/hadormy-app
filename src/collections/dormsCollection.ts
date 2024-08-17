@@ -10,7 +10,7 @@ export const getDorms = async (): Promise<TDorm[]> => {
   return snapshot.docs.map((doc) => {
     const data = doc.data()
     const timestamp = `${data.timestamp instanceof Timestamp ? data.timestamp.toDate() : new Date(data.timestamp)}`
-    return { id: doc.id, ...data, timestamp: timestamp } as TDorm
+    return { id: doc.id, ...data, timestamp: timestamp, thumbnail: data.images } as TDorm
   })
 }
 

@@ -23,9 +23,10 @@ import {
 } from '@/components/shared'
 import { TUser, TUserRole } from '@/lib/type'
 import { getUserById } from '@/collections/usersCollection'
+import { LoadingSpinner } from '@/components/shared'
 
 const Navbar: React.FC = () => {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const [userData, setUserData] = useState<TUser | null>(null)
 
   useEffect(() => {
@@ -98,32 +99,40 @@ const Navbar: React.FC = () => {
           </Link>
           <SearchBar />
         </div>
-        <div className="justify-self-end">
-          <div className="flex items-center space-x-6 max-[1200px]:space-x-2 max-lg:hidden">
-            {convertRole((userRole as TUserRole) || '')}
-          </div>
-          <div className="flex items-center space-x-4 lg:hidden">
-            <div className="lg:hidden">
-              <PopOverNotification notifications={[]} />
-            </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="icon" variant="ghost" className="hover:bg-transparent">
-                  <IoMenu className="text-background text-4xl" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-[400px] max-sm:w-screen bg-foreground border-foreground">
-                <SheetHeader>
-                  <SheetTitle>Are you absolutely sure?</SheetTitle>
-                  <SheetDescription asChild>
-                    <div className="flex flex-col max-lg:items-center space-y-8">
-                      {convertRole((userRole as TUserRole) || '')}
-                    </div>
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-          </div>
+        <div className="justify-self-end flex items-center justify-center">
+          {loading ? (
+            <LoadingSpinner className="text-background" />
+          ) : (
+            <>
+              <div className="flex items-center space-x-6 max-[1200px]:space-x-2 max-lg:hidden">
+                {convertRole((userRole as TUserRole) || '')}
+              </div>
+              <div className="flex items-center space-x-4 lg:hidden">
+                {userRole !== '' && (
+                  <div className="lg:hidden">
+                    <PopOverNotification notifications={[]} />
+                  </div>
+                )}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button size="icon" variant="ghost" className="hover:bg-transparent">
+                      <IoMenu className="text-background text-4xl" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="max-w-[400px] bg-foreground border-foreground">
+                    <SheetHeader>
+                      <SheetTitle>Are you absolutely sure?</SheetTitle>
+                      <SheetDescription asChild>
+                        <div className="flex flex-col max-lg:items-center space-y-8">
+                          {convertRole((userRole as TUserRole) || '')}
+                        </div>
+                      </SheetDescription>
+                    </SheetHeader>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </nav>
