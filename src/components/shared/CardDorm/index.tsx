@@ -1,5 +1,6 @@
+'use client'
 // Lib
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -10,11 +11,13 @@ import { imagePlaceholder } from '@/lib/others'
 
 // Include in project
 import { convertNumberToString, convertDateFormat, calDistance } from '@/lib/others'
+import { getImageUrl } from '@/collections/getImageUrl'
+import FirebaseImage from '@/components/common/FirebaseImage'
 
 type Props = {
   id?: string | number
   name: string
-  thumbnail?: string
+  thumbnail: string
   address: string
   priceStart: number
   priceEnd: number
@@ -22,16 +25,7 @@ type Props = {
   distance: number
 }
 
-const CardDorm: React.FC<Props> = ({
-  id,
-  name,
-  thumbnail = imagePlaceholder,
-  address,
-  priceStart,
-  priceEnd,
-  timestamp,
-  distance,
-}) => {
+const CardDorm: React.FC<Props> = ({ id, name, thumbnail, address, priceStart, priceEnd, timestamp, distance }) => {
   return (
     <Link
       href={`/dorm/${id}`}
@@ -39,8 +33,8 @@ const CardDorm: React.FC<Props> = ({
     >
       <div className="flex flex-col justify-between gap-4">
         <div className="h-[120px] w-full rounded-lg shadow-md overflow-hidden">
-          <Image
-            src={thumbnail}
+          <FirebaseImage
+            imagePath={thumbnail}
             alt={`${name}-ตัวอย่าง`}
             className="transition-transform duration-300 group-hover:scale-110 h-full w-full object-cover object-center"
             loading="lazy"

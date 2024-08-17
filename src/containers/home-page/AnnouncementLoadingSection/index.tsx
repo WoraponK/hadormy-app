@@ -6,16 +6,9 @@ import Image from 'next/image'
 import IconMegaphoneBlackSVG from '@/images/common/icon-megaphone-black.svg'
 
 // Include in project
-import { CardAnnouncement } from '@/components/shared'
-import { TCardAnnounce, TUserRole } from '@/lib/type'
+import { CardAnnouncementSkeleton } from '@/components/shared'
 
-type Props = {
-  cardList: TCardAnnounce[]
-}
-
-const AnnouncementListSection: React.FC<Props> = ({ cardList }) => {
-  cardList.sort((a, b) => (new Date(b.timestamp) as any) - (new Date(a.timestamp) as any))
-
+const AnnouncementListSection: React.FC = () => {
   return (
     <div className="space-y-2 max-lg:space-y-0">
       <div className="h-[36px] max-lg:hidden" />
@@ -25,17 +18,9 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList }) => {
           <Image src={IconMegaphoneBlackSVG} alt="IconMegaphoneBlackSVG" />
         </div>
         <div className="flex flex-col gap-2 max-lg:flex-row max-lg:overflow-x-auto max-lg:pb-4">
-          {cardList.map((card) => (
-            <CardAnnouncement
-              key={card?.id}
-              author={card?.author}
-              title={card?.title}
-              description={card?.description}
-              role={card?.role as TUserRole}
-              timestamp={card?.timestamp}
-              thumbnail={card?.thumbnail}
-            />
-          ))}
+          <CardAnnouncementSkeleton />
+          <CardAnnouncementSkeleton />
+          <CardAnnouncementSkeleton />
         </div>
       </div>
     </div>

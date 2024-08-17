@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { FaEarthAsia } from 'react-icons/fa6'
 import { IoIosWarning } from 'react-icons/io'
 import { imagePlaceholder } from '@/lib/others'
-import HadormyLogoSVG from '@/images/logos/hadormy-logo-mini-color.svg'
+import HadormyLogoSVG from '@/images/logos/hadormy-logo-mini-yellow.svg'
 
 // Include in project
 import { TUserRole } from '@/lib/type'
@@ -20,8 +20,8 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Avatar } from '@/components/ui/avatar'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
+import FirebaseImage from '@/components/common/FirebaseImage'
 
 import TooltipMain from '@/components/ui/tooltip-main'
 
@@ -44,27 +44,40 @@ const CardAnnouncement: React.FC<Props> = ({
 }) => {
   const Preview = () => {
     return (
-      <div className="w-[305px] h-[175px] bg-[#FFFADE] p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2">
+      <div
+        className={`w-[305px] h-[175px]  p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2 ${
+          role === 'ADMIN' ? 'bg-primary' : 'bg-[#FFFADE]'
+        }`}
+      >
         <div className="grid grid-cols-[105px_1fr] gap-3">
           <div className={`rounded-lg overflow-hidden ${role === 'ADMIN' ? '' : 'shadow-md'}`}>
-            <Image
-              src={role === 'ADMIN' ? HadormyLogoSVG : thumbnail}
-              alt={`${title}-ตัวอย่าง`}
-              className={`transition-transform group-hover:scale-110 h-full w-full ${
-                role === 'ADMIN' ? 'object-contain' : 'object-cover object-center'
-              }`}
-              loading="lazy"
-              width={105}
-              height={105}
-            />
+            {role === 'ADMIN' ? (
+              <Image
+                src={HadormyLogoSVG}
+                alt={`${title}-ตัวอย่าง`}
+                className={`transition-transform group-hover:scale-110 h-full w-full object-contain object-center`}
+                loading="lazy"
+                width={105}
+                height={105}
+              />
+            ) : (
+              <FirebaseImage
+                imagePath={thumbnail}
+                alt={`${title}-ตัวอย่าง`}
+                className={`transition-transform group-hover:scale-110 h-full w-full object-cover object-center`}
+                loading="lazy"
+                width={105}
+                height={105}
+              />
+            )}
           </div>
           <div>
             <h5 className="line-clamp-1">{title}</h5>
-            <p className="line-clamp-3 text-gray-500">{description}</p>
+            <p className={`line-clamp-3 ${role === 'ADMIN' ? 'text-background' : 'text-gray-500'}`}>{description}</p>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-gray-500 text-sm">
+          <p className={`text-sm ${role === 'ADMIN' ? 'text-background' : 'text-gray-500'}`}>
             <span>ประกาศ:</span> {convertDateFormat(timestamp)}
           </p>
           {role === 'SUPERUSER' ? (
@@ -85,30 +98,42 @@ const CardAnnouncement: React.FC<Props> = ({
             <Preview />
           </div>
         </DialogTrigger>
-        <DialogContent className="bg-[#FFFADE]">
+        <DialogContent className={`${role === 'ADMIN' ? 'bg-primary' : 'bg-[#FFFADE]'}`}>
           <DialogHeader className="space-y-4">
             <DialogTitle asChild className="mt-4">
               <AspectRatio ratio={16 / 9} className="rounded-sm overflow-hidden">
-                <Image
-                  src={role === 'ADMIN' ? HadormyLogoSVG : thumbnail}
-                  alt={`${title}-ตัวอย่าง`}
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  className="w-full h-full object-cover object-center"
-                />
+                {role === 'ADMIN' ? (
+                  <Image
+                    src={HadormyLogoSVG}
+                    alt={`${title}-ตัวอย่าง`}
+                    className={`transition-transform group-hover:scale-110 h-full w-full object-contain object-center`}
+                    loading="lazy"
+                    width={105}
+                    height={105}
+                  />
+                ) : (
+                  <FirebaseImage
+                    imagePath={thumbnail}
+                    alt={`${title}-ตัวอย่าง`}
+                    className={`transition-transform group-hover:scale-110 h-full w-full object-cover object-center`}
+                    loading="lazy"
+                    width={105}
+                    height={105}
+                  />
+                )}
               </AspectRatio>
             </DialogTitle>
             <DialogDescription className="text-lg" asChild>
               <div>
                 <h3 className="text-foreground">{title}</h3>
-                <h6 className="text-gray-500">{description}</h6>
+                <h6 className={`${role === 'ADMIN' ? 'text-background' : 'text-gray-500'}`}>{description}</h6>
+                <p className={`text-end ${role === 'ADMIN' ? 'text-background' : 'text-gray-500'}`}>โดย {author}</p>
               </div>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <div className="flex justify-between items-center w-full">
-              <p className="text-gray-500">
+              <p className={`${role === 'ADMIN' ? 'text-background' : 'text-gray-500'}`}>
                 <span>ประกาศ:</span> {convertDateFormat(timestamp)}
               </p>
               {role === 'SUPERUSER' ? (
