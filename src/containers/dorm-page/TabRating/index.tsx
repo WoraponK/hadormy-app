@@ -17,6 +17,7 @@ import { FaStar, FaRegStar } from 'react-icons/fa6'
 
 // Include in project
 import ratingSchema from '@/schemas/ratingSchema'
+import { ERating } from '@/lib/type'
 
 type Props = {
   rating: number
@@ -44,7 +45,7 @@ const TabRating: React.FC<Props> = ({ rating }) => {
       <div className="flex flex-col items-center gap-4 p-8">
         <h4>คะแนนโดยรวม</h4>
         <div className="flex items-end gap-2">
-          <h2>{rating.toFixed(2)}</h2>
+          <h2>{rating && rating.toFixed(2)}</h2>
           <p className="text-gray-400">/5</p>
         </div>
         <RatingStar rating={rating} />
@@ -71,90 +72,90 @@ const TabRating: React.FC<Props> = ({ rating }) => {
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        <RadioGroupItem value="1" id="rating-1" className="peer sr-only" />
+                        <RadioGroupItem value={ERating.One} id="rating-1" className="peer sr-only" />
                         <Label htmlFor="rating-1" className="cursor-pointer text-primary peer-checked:text-primary">
                           <h3 className="transition-transform duration-100 active:scale-90">
-                            {field.value == '1' ? (
+                            {field.value == ERating.One ? (
                               <FaStar />
-                            ) : field.value == '2' ? (
+                            ) : field.value == ERating.Two ? (
                               <FaStar />
-                            ) : field.value == '3' ? (
+                            ) : field.value == ERating.Three ? (
                               <FaStar />
-                            ) : field.value == '4' ? (
+                            ) : field.value == ERating.Four ? (
                               <FaStar />
-                            ) : field.value == '5' ? (
+                            ) : field.value == ERating.Five ? (
                               <FaStar />
                             ) : (
                               <FaRegStar />
                             )}
                           </h3>
                         </Label>
-                        <RadioGroupItem value="2" id="rating-2" className="peer sr-only" />
+                        <RadioGroupItem value={ERating.Two} id="rating-2" className="peer sr-only" />
                         <Label htmlFor="rating-2" className="cursor-pointer text-primary peer-checked:text-primary">
                           <h3 className="transition-transform duration-100 active:scale-90">
-                            {field.value == '1' ? (
+                            {field.value == ERating.One ? (
                               <FaRegStar />
-                            ) : field.value == '2' ? (
+                            ) : field.value == ERating.Two ? (
                               <FaStar />
-                            ) : field.value == '3' ? (
+                            ) : field.value == ERating.Three ? (
                               <FaStar />
-                            ) : field.value == '4' ? (
+                            ) : field.value == ERating.Four ? (
                               <FaStar />
-                            ) : field.value == '5' ? (
+                            ) : field.value == ERating.Five ? (
                               <FaStar />
                             ) : (
                               <FaRegStar />
                             )}
                           </h3>
                         </Label>
-                        <RadioGroupItem value="3" id="rating-3" className="peer sr-only" />
+                        <RadioGroupItem value={ERating.Three} id="rating-3" className="peer sr-only" />
                         <Label htmlFor="rating-3" className="cursor-pointer text-primary peer-checked:text-primary">
                           <h3 className="transition-transform duration-100 active:scale-90">
-                            {field.value == '1' ? (
+                            {field.value == ERating.One ? (
                               <FaRegStar />
-                            ) : field.value == '2' ? (
+                            ) : field.value == ERating.Two ? (
                               <FaRegStar />
-                            ) : field.value == '3' ? (
+                            ) : field.value == ERating.Three ? (
                               <FaStar />
-                            ) : field.value == '4' ? (
+                            ) : field.value == ERating.Four ? (
                               <FaStar />
-                            ) : field.value == '5' ? (
+                            ) : field.value == ERating.Five ? (
                               <FaStar />
                             ) : (
                               <FaRegStar />
                             )}
                           </h3>
                         </Label>
-                        <RadioGroupItem value="4" id="rating-4" className="peer sr-only" />
+                        <RadioGroupItem value={ERating.Four} id="rating-4" className="peer sr-only" />
                         <Label htmlFor="rating-4" className="cursor-pointer text-primary peer-checked:text-primary">
                           <h3 className="transition-transform duration-100 active:scale-90">
-                            {field.value == '1' ? (
+                            {field.value == ERating.One ? (
                               <FaRegStar />
-                            ) : field.value == '2' ? (
+                            ) : field.value == ERating.Two ? (
                               <FaRegStar />
-                            ) : field.value == '3' ? (
+                            ) : field.value == ERating.Three ? (
                               <FaRegStar />
-                            ) : field.value == '4' ? (
+                            ) : field.value == ERating.Four ? (
                               <FaStar />
-                            ) : field.value == '5' ? (
+                            ) : field.value == ERating.Five ? (
                               <FaStar />
                             ) : (
                               <FaRegStar />
                             )}
                           </h3>
                         </Label>
-                        <RadioGroupItem value="5" id="rating-5" className="peer sr-only" />
+                        <RadioGroupItem value={ERating.Five} id="rating-5" className="peer sr-only" />
                         <Label htmlFor="rating-5" className="cursor-pointer text-primary peer-checked:text-primary">
                           <h3 className="transition-transform duration-100 active:scale-90">
-                            {field.value == '1' ? (
+                            {field.value == ERating.One ? (
                               <FaRegStar />
-                            ) : field.value == '2' ? (
+                            ) : field.value == ERating.Two ? (
                               <FaRegStar />
-                            ) : field.value == '3' ? (
+                            ) : field.value == ERating.Three ? (
                               <FaRegStar />
-                            ) : field.value == '4' ? (
+                            ) : field.value == ERating.Four ? (
                               <FaRegStar />
-                            ) : field.value == '5' ? (
+                            ) : field.value == ERating.Five ? (
                               <FaStar />
                             ) : (
                               <FaRegStar />

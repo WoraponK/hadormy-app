@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { ERating } from '@/lib/type'
 
 const ratingSchema = z.object({
-  rating: z.enum(['1', '2', '3', '4', '5'], {
+  rating: z.enum([ERating.One, ERating.Two, ERating.Three, ERating.Four, ERating.Five], {
     required_error: 'เลือกคะแนนที่พักก่อนยืนยัน',
   }),
 })

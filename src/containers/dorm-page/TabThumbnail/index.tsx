@@ -10,6 +10,7 @@ import { MdDirectionsRun } from 'react-icons/md'
 // Include in project
 import { TBill } from '@/lib/type'
 import { calDistance, convertNumberToString } from '@/lib/others'
+import FirebaseImage from '@/components/common/FirebaseImage'
 
 type Props = {
   priceStart: number
@@ -28,38 +29,42 @@ const TabThumbnail: React.FC<Props> = ({ priceStart, priceEnd, thumbnail, descri
     },
     {
       title: 'เงินประกัน',
-      result: `${bill.bail ? `${bill.bail} บาท` : 'ติดต่อสอบถาม'}`,
+      result: `${bill?.bail ? `${convertNumberToString(bill.bail)} บาท` : 'ติดต่อสอบถาม'}`,
     },
     {
       title: 'จ่ายล่วงหน้า',
-      result: `${bill.bail ? `${bill.bail} บาท` : 'ติดต่อสอบถาม'}`,
+      result: `${bill?.deposit ? `${convertNumberToString(bill.deposit)} บาท` : 'ติดต่อสอบถาม'}`,
     },
     {
       title: 'ค่าไฟ',
-      result: `${bill.electic ? `${bill.electic} บาท` : '-'}`,
+      result: `${bill?.electric ? `${convertNumberToString(bill.electric)} บาท/หน่วย` : '-'}`,
     },
     {
       title: 'ค่าน้ำ',
-      result: `${bill.water ? `${bill.water} บาท` : '-'}`,
+      result: `${bill?.water ? `${convertNumberToString(bill.water)} บาท/หน่วย` : '-'}`,
     },
     {
       title: 'ค่าอินเทอร์เน็ต',
-      result: `${bill.internet ? `${bill.internet} บาท` : 'ติดต่อสอบถาม'}`,
+      result: `${bill?.internet ? `${convertNumberToString(bill.internet)} บาท` : 'ติดต่อสอบถาม'}`,
     },
     {
       title: 'ค่าบริการอื่น ๆ',
-      result: `${bill.service ? `${bill.service} บาท` : 'ติดต่อสอบถาม'}`,
+      result: `${bill?.service ? `${convertNumberToString(bill.service)} บาท` : 'ติดต่อสอบถาม'}`,
     },
   ]
 
   return (
     <div className="space-y-8">
       <Carousel>
-        <CarouselContent>
+        <CarouselContent className="px-40 max-lg:px-0">
           {thumbnail?.map((ele, index) => (
             <CarouselItem key={index}>
               <AspectRatio ratio={16 / 9} className="h-full">
-                <Image alt="" src={ele} fill className="rounded-lg object-cover object-center" />
+                <FirebaseImage
+                  imagePath={ele}
+                  alt={`ตัวอย่าง-${index + 1}`}
+                  className="rounded-lg object-cover object-center h-full w-full"
+                />
               </AspectRatio>
             </CarouselItem>
           ))}

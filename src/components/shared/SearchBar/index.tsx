@@ -27,6 +27,7 @@ import { TDorm } from '@/lib/type'
 import CardDormSearch from '../CardDormSearch'
 import searchSchema from '@/schemas/searchSchema'
 import { db } from '@/lib/firebase'
+import LoadingSpinner from '../LoadingSpinner'
 
 const SearchBar: React.FC = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
@@ -59,7 +60,8 @@ const SearchBar: React.FC = () => {
       const postsRef = collection(db, 'dorms')
       let q
       if (data.searching.trim() === '') {
-        q = query(postsRef, limit(20))
+        setResults([])
+        q = query(postsRef, limit(0))
       } else {
         q = query(postsRef, where('name', '>=', data.searching), where('name', '<=', data.searching + '\uf8ff'))
       }
@@ -87,6 +89,11 @@ const SearchBar: React.FC = () => {
     debouncedSearch()
   }
 
+  const handleClick = () => {
+    form.setValue('searching', '')
+    setResults([])
+  }
+
   if (isDesktop) {
     return (
       <div className="w-full max-w-[432px] relative">
@@ -112,27 +119,29 @@ const SearchBar: React.FC = () => {
           />
         </Form>
         {form.getValues().searching.length > 0 ? (
-          <div className="p-2 bg-background rounded-lg absolute mt-2 w-full shadow z-20 ">
+          <div className="p-2 bg-background rounded-lg absolute mt-2 w-full shadow z-20 transition-all opacity-100">
             {loading ? (
-              <div className="py-4">
+              <div className="py-4 space-y-2">
+                <LoadingSpinner className="text-foreground" />
                 <p className="text-center">กำลังค้นหาหอพัก...</p>
               </div>
             ) : (
               <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
                 {results?.length > 0 ? (
                   results?.map((dorm) => (
-                    <CardDormSearch
-                      key={dorm?.id}
-                      id={dorm?.id}
-                      name={dorm?.name}
-                      priceStart={dorm?.priceStart}
-                      priceEnd={dorm?.priceEnd}
-                      distance={dorm?.distance}
-                      images={dorm.thumbnail?.[0]}
-                    />
+                    <div onClick={handleClick} key={dorm?.id}>
+                      <CardDormSearch
+                        id={dorm?.id}
+                        name={dorm?.name}
+                        priceStart={dorm?.priceStart}
+                        priceEnd={dorm?.priceEnd}
+                        distance={dorm?.distance}
+                        images={dorm.thumbnail?.[0]}
+                      />
+                    </div>
                   ))
                 ) : (
-                  <div>
+                  <div className="py-4">
                     <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
                   </div>
                 )}
@@ -140,7 +149,7 @@ const SearchBar: React.FC = () => {
             )}
           </div>
         ) : (
-          <div></div>
+          <div className="opacity-0"></div>
         )}
       </div>
     )
@@ -187,25 +196,27 @@ const SearchBar: React.FC = () => {
               <div className="w-full">
                 <div className="bg-background rounded-lg w-full z-20 ">
                   {loading ? (
-                    <div className="py-4">
+                    <div className="py-4 space-y-2">
+                      <LoadingSpinner className="text-foreground" />
                       <p className="text-center">กำลังค้นหาหอพัก...</p>
                     </div>
                   ) : (
                     <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
                       {results?.length > 0 ? (
                         results?.map((dorm) => (
-                          <CardDormSearch
-                            key={dorm?.id}
-                            id={dorm?.id}
-                            name={dorm?.name}
-                            priceStart={dorm?.priceStart}
-                            priceEnd={dorm?.priceEnd}
-                            distance={dorm?.distance}
-                            images={dorm.thumbnail?.[0]}
-                          />
+                          <div onClick={handleClick} key={dorm?.id}>
+                            <CardDormSearch
+                              id={dorm?.id}
+                              name={dorm?.name}
+                              priceStart={dorm?.priceStart}
+                              priceEnd={dorm?.priceEnd}
+                              distance={dorm?.distance}
+                              images={dorm.thumbnail?.[0]}
+                            />
+                          </div>
                         ))
                       ) : (
-                        <div>
+                        <div className="py-4">
                           <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
                         </div>
                       )}

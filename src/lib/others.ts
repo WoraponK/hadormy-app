@@ -3,9 +3,13 @@ import { ESort } from './type'
 
 export const imagePlaceholder = thumbnailPlaceholderSVG
 
-export const convertNumberToString = (inputNumber: number): string => {
-  const formatNumber = inputNumber.toLocaleString()
-  return formatNumber
+export const convertNumberToString = (inputNumber: number): string | undefined => {
+  if (inputNumber) {
+    const formatNumber = inputNumber.toLocaleString()
+    return formatNumber
+  } else {
+    return undefined
+  }
 }
 
 export const convertDateFormat = (inputDate: string): string => {
@@ -52,5 +56,9 @@ export const convertSortToName = (sort: ESort) => {
 }
 
 export const formatPhoneNumber = (phoneNumber: string) => {
-  return phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
+  if (phoneNumber) {
+    return phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
+  } else {
+    return undefined
+  }
 }

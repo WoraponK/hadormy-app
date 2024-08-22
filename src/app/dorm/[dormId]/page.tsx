@@ -2,84 +2,73 @@
 'use client'
 
 // Lib
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Include in project
 import { DormSection } from '@/containers/dorm-page'
-import { EDormType, TDorm } from '@/lib/type'
+import { TDorm } from '@/lib/type'
+import { DormLoadingSection } from '@/containers/dorm-page'
+import { useAuth } from '@/context/authContext'
+
+import { getDormById } from '@/collections/dormsCollection'
+import { getRooms } from '@/collections/roomsCollection'
+import { getRatings } from '@/collections/ratingsCollection'
 
 const Dorm = ({ params }: { params: { dormId: string } }) => {
-  const dormName = mockupDataDorm.name
+  const { loading } = useAuth()
+
+  const [dormData, setDormData] = useState<TDorm | null>()
+  const [roomsData, setRoomsData] = useState<any>()
+  const [ratingsData, setRatingsData] = useState<any>()
+  const [dormLoading, setDormLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    document.title = `${dormName} - HaDormy`
+    const fetchDormById = async () => {
+      try {
+        setDormLoading(true)
+        const data = await getDormById(params.dormId)
+        document.title = `${data?.name} - HaDormy`
+        setDormData(data)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setDormLoading(false)
+      }
+    }
+    const fetchRooms = async () => {
+      try {
+        const data = await getRooms(params.dormId)
+        setRoomsData(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const fetchRatings = async () => {
+      try {
+        const data = await getRatings(params.dormId)
+        setRatingsData(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchDormById()
+    fetchRooms()
+    fetchRatings()
   }, [])
+
+  const formattedData: TDorm = {
+    ...(dormData as TDorm),
+    rooms: roomsData,
+    rating: ratingsData,
+  }
 
   return (
     <div className="container mx-auto min-h-screen">
-      <DormSection dataDorm={mockupDataDorm} />
+      {dormLoading || loading ? <DormLoadingSection /> : <DormSection dataDorm={formattedData} />}
     </div>
   )
 }
 
 export default Dorm
-
-const mockupDataDorm: TDorm = {
-  id: '1',
-  type: EDormType.All,
-  timestamp: '2024-06-27T16:05Z',
-  name: 'อพาร์ทเม้นท์สีฟ้า',
-  address: 'ต.พะเยา อ.พะเยา จ.พะเยา',
-  description:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis modi, harum ex dignissimos nulla beatae facilis, quisquam ipsum unde fugiat mollitia, nobis molestias illum vitae nostrum culpa exercitationem commodi autem eveniet hic. Harum, eaque temporibus ratione cupiditate quos veritatis provident aliquid similique asperiores sed labore praesentium nihil dignissimos distinctio eum!',
-  distance: 800,
-  phoneNumber: '0630913505',
-  priceStart: 3000,
-  priceEnd: 4000,
-  bill: {
-    bail: 0,
-    deposit: 0,
-    electic: 0,
-    internet: 0,
-    service: 0,
-    water: 0,
-  },
-  rating: 3.5,
-  rooms: [
-    {
-      id: '101',
-      name: '101',
-      price: 3000,
-      isAvailable: true,
-    },
-    {
-      id: '102',
-      name: '102',
-      price: 3000,
-      isAvailable: true,
-    },
-    {
-      id: '103',
-      name: '103',
-      price: 3000,
-      isAvailable: true,
-    },
-    {
-      id: '104',
-      name: '104',
-      price: 3000,
-      isAvailable: true,
-    },
-    {
-      id: '105',
-      name: '105',
-      price: 3000,
-      isAvailable: true,
-    },
-  ],
-  thumbnail: [
-    'https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg',
-    'https://castfromclay.co.uk/wp-content/uploads/image-asset-1-1024x683.jpeg',
-    'https://cdn.pixabay.com/photo/2019/01/28/02/10/girl-taking-photo-3959468_1280.jpg',
-  ],
-}
