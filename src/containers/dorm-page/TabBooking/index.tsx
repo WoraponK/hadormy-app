@@ -12,10 +12,18 @@ type Props = {
 
 const TabBooking: React.FC<Props> = ({ rooms }) => {
   return (
-    <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1">
-      {rooms.map((ele) => (
-        <CardBooking key={ele.id} name={ele.name} price={ele.price} isAvailable={ele.isAvailable} />
-      ))}
+    <div>
+      {rooms.length > 0 ? (
+        <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1">
+          {rooms.map((ele) => (
+            <CardBooking key={ele.id} name={ele.name} price={ele.price} isAvailable={ele.isAvailable} />
+          ))}
+        </div>
+      ) : (
+        <div className="w-full">
+          <p className="text-center">ไม่พบข้อมูลห้องพัก...</p>
+        </div>
+      )}
     </div>
   )
 }

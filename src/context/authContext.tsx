@@ -9,7 +9,6 @@ import {
   User,
 } from 'firebase/auth'
 import { app, db } from '@/lib/firebase'
-import { getUserRole } from '@/collections/userRoleCollection'
 import { addDoc, collection } from 'firebase/firestore'
 import { Timestamp } from 'firebase/firestore'
 import { useToast } from '@/components/ui/use-toast'

@@ -1,6 +1,5 @@
 // Lib
 import React from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 // Images
@@ -8,24 +7,25 @@ import { MdDirectionsRun } from 'react-icons/md'
 
 // Include in project
 import { convertNumberToString, calDistance } from '@/lib/others'
+import FirebaseImage from '@/components/common/FirebaseImage'
 
 type Props = {
   id?: string | number
   name: string
-  thumbnail?: string
+  images: string
   priceStart: number
   priceEnd: number
   distance: number
 }
 
-const CardDormSearch: React.FC<Props> = ({ id, name, thumbnail, priceStart, priceEnd, distance }) => {
+const CardDormSearch: React.FC<Props> = ({ id, name, images, priceStart, priceEnd, distance }) => {
   return (
     <Link
       href={`/dorm/${id}`}
       className="h-16 max-md:h-fit w-full flex space-x-2 items-center shadow rounded-md group overflow-hidden"
     >
-      <Image
-        src={thumbnail as string}
+      <FirebaseImage
+        imagePath={images}
         alt={name}
         width={80}
         height={60}

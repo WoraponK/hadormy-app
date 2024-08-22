@@ -17,6 +17,14 @@ export enum ESort {
   Time = 'TIME',
 }
 
+export enum ERating {
+  One = 'ONE',
+  Two = 'TWO',
+  Three = 'THREE',
+  Four = 'FOUR',
+  Five = 'FIVE',
+}
+
 export type TUser = {
   id: string | number
   name: string
@@ -28,7 +36,7 @@ export type TUser = {
 
 export type TBill = {
   water?: number
-  electic?: number
+  electric?: number
   internet?: number
   service?: number
   deposit?: number
