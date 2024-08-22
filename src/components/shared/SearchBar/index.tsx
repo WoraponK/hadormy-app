@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 // Lib
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Dialog,
   DialogTrigger,
@@ -16,6 +16,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import debounce from 'lodash.debounce'
+import { collection, query, where, getDocs, limit } from 'firebase/firestore'
 
 // Images
 import { IoSearch } from 'react-icons/io5'
@@ -24,13 +26,12 @@ import { IoSearch } from 'react-icons/io5'
 import { TDorm } from '@/lib/type'
 import CardDormSearch from '../CardDormSearch'
 import searchSchema from '@/schemas/searchSchema'
+import { db } from '@/lib/firebase'
 
-type Props = {
-  dorms?: TDorm[]
-}
-
-const SearchBar: React.FC<Props> = ({ dorms }) => {
+const SearchBar: React.FC = () => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false)
+  const [results, setResults] = useState<TDorm[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,25 +53,39 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
     },
   })
 
-  const [filteredDorms, setFilteredDorms] = useState<TDorm[]>(dorms || [])
+  const performSearch = async (data: z.infer<typeof searchSchema>) => {
+    try {
+      setLoading(true)
+      const postsRef = collection(db, 'dorms')
+      let q
+      if (data.searching.trim() === '') {
+        q = query(postsRef, limit(20))
+      } else {
+        q = query(postsRef, where('name', '>=', data.searching), where('name', '<=', data.searching + '\uf8ff'))
+      }
+      const querySnapshot = await getDocs(q)
 
-  useEffect(() => {
-    const searchTerm = form.getValues().searching.toLowerCase()
-    const filtered =
-      dorms?.filter((dorm) => {
-        const lowerCaseDorm = {
-          name: dorm.name.toLowerCase(),
-          priceStart: dorm.priceStart.toString().toLowerCase(),
-          distance: dorm.distance.toString().toLowerCase(),
-        }
-        return (
-          lowerCaseDorm.name.includes(searchTerm) ||
-          lowerCaseDorm.priceStart.includes(searchTerm) ||
-          lowerCaseDorm.distance.includes(searchTerm)
-        )
-      }) || []
-    setFilteredDorms(filtered)
-  }, [form.getValues().searching, dorms])
+      const searchResults = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        thumbnail: doc.data().images,
+        ...doc.data(),
+      })) as TDorm[]
+
+      const filteredResult = searchResults.filter((ele) => ele.is_activated === true)
+      setResults(filteredResult)
+    } catch (error) {
+      console.error('Error during search:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const debouncedSearch = useCallback(debounce(form.handleSubmit(performSearch), 300), [])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    form.setValue('searching', e.target.value, { shouldValidate: true })
+    debouncedSearch()
+  }
 
   if (isDesktop) {
     return (
@@ -88,6 +103,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
                     icon={<IoSearch className="text-background text-2xl max-lg:text-foreground" />}
                     {...field}
                     autoComplete="off"
+                    onChange={handleChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -97,25 +113,31 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
         </Form>
         {form.getValues().searching.length > 0 ? (
           <div className="p-2 bg-background rounded-lg absolute mt-2 w-full shadow z-20 ">
-            <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
-              {filteredDorms?.length > 0 ? (
-                filteredDorms?.map((dorm) => (
-                  <CardDormSearch
-                    key={dorm?.id}
-                    id={dorm?.id}
-                    name={dorm?.name}
-                    priceStart={dorm?.priceStart}
-                    priceEnd={dorm?.priceEnd}
-                    distance={dorm?.distance}
-                    thumbnail={dorm?.thumbnail?.[0]}
-                  />
-                ))
-              ) : (
-                <div>
-                  <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
-                </div>
-              )}
-            </div>
+            {loading ? (
+              <div className="py-4">
+                <p className="text-center">กำลังค้นหาหอพัก...</p>
+              </div>
+            ) : (
+              <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
+                {results?.length > 0 ? (
+                  results?.map((dorm) => (
+                    <CardDormSearch
+                      key={dorm?.id}
+                      id={dorm?.id}
+                      name={dorm?.name}
+                      priceStart={dorm?.priceStart}
+                      priceEnd={dorm?.priceEnd}
+                      distance={dorm?.distance}
+                      images={dorm.thumbnail?.[0]}
+                    />
+                  ))
+                ) : (
+                  <div>
+                    <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div></div>
@@ -150,6 +172,7 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
                           icon={<IoSearch className="text-background text-2xl max-lg:text-foreground" />}
                           {...field}
                           autoComplete="off"
+                          onChange={handleChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -163,25 +186,31 @@ const SearchBar: React.FC<Props> = ({ dorms }) => {
             <DialogDescription className="text-foreground" asChild>
               <div className="w-full">
                 <div className="bg-background rounded-lg w-full z-20 ">
-                  <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
-                    {filteredDorms?.length > 0 ? (
-                      filteredDorms?.map((dorm) => (
-                        <CardDormSearch
-                          key={dorm?.id}
-                          id={dorm?.id}
-                          name={dorm?.name}
-                          priceStart={dorm?.priceStart}
-                          priceEnd={dorm?.priceEnd}
-                          distance={dorm?.distance}
-                          thumbnail={dorm?.thumbnail?.[0]}
-                        />
-                      ))
-                    ) : (
-                      <div>
-                        <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
-                      </div>
-                    )}
-                  </div>
+                  {loading ? (
+                    <div className="py-4">
+                      <p className="text-center">กำลังค้นหาหอพัก...</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-auto h-full max-h-80 space-y-2 p-1 rounded-lg">
+                      {results?.length > 0 ? (
+                        results?.map((dorm) => (
+                          <CardDormSearch
+                            key={dorm?.id}
+                            id={dorm?.id}
+                            name={dorm?.name}
+                            priceStart={dorm?.priceStart}
+                            priceEnd={dorm?.priceEnd}
+                            distance={dorm?.distance}
+                            images={dorm.thumbnail?.[0]}
+                          />
+                        ))
+                      ) : (
+                        <div>
+                          <p className="text-center">ไม่พบข้อมูลหอพัก...</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </DialogDescription>

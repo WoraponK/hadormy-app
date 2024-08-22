@@ -1,17 +1,15 @@
 'use client'
 // Lib
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 // Images
 import IconVerifiedSVG from '@/images/common/icon-verified.svg'
 import { MdDirectionsRun } from 'react-icons/md'
-import { imagePlaceholder } from '@/lib/others'
 
 // Include in project
 import { convertNumberToString, convertDateFormat, calDistance } from '@/lib/others'
-import { getImageUrl } from '@/collections/getImageUrl'
 import FirebaseImage from '@/components/common/FirebaseImage'
 
 type Props = {
