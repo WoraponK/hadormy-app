@@ -3,6 +3,7 @@
 
 // Lib
 import React, { useEffect, useState } from 'react'
+import NotFound from '@/app/not-found'
 
 // Include in project
 import { DormSection } from '@/containers/dorm-page'
@@ -62,6 +63,12 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
     ...(dormData as TDorm),
     rooms: roomsData,
     rating: ratingsData,
+  }
+
+  if (dormData === null) {
+    return (
+      <NotFound />
+    )
   }
 
   return (

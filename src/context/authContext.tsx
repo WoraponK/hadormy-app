@@ -9,9 +9,10 @@ import {
   User,
 } from 'firebase/auth'
 import { app, db } from '@/lib/firebase'
-import { addDoc, collection } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 import { Timestamp } from 'firebase/firestore'
 import { useToast } from '@/components/ui/use-toast'
+import bcrypt from 'bcryptjs'
 
 // Images
 import { IoCheckmarkCircle } from 'react-icons/io5'
@@ -48,10 +49,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, name: string, phone: string) => {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password)
-      await addDoc(collection(db, 'users'), {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const userDocRef = doc(db, 'users', user.uid)
+
+      await setDoc(userDocRef, {
         id: user.uid,
         name: name,
-        password: password,
+        password: hashedPassword,
         phone: phone,
         email: user.email,
         role: EUserRole.User,

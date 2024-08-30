@@ -55,7 +55,7 @@ export const columns: ColumnDef<TUserTable>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="text-lg w-full"
         >
-          เวลาส่ง
+          สร้างเมื่อ
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )

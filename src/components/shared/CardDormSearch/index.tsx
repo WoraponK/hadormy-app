@@ -22,14 +22,12 @@ const CardDormSearch: React.FC<Props> = ({ id, name, images, priceStart, priceEn
   return (
     <Link
       href={`/dorm/${id}`}
-      className="h-16 max-md:h-fit w-full flex space-x-2 items-center shadow rounded-md group overflow-hidden"
+      className="h-full max-h-16 max-md:max-h-24 max-md:h-fit w-full flex space-x-2 items-center shadow rounded-md group overflow-hidden"
     >
       <FirebaseImage
         imagePath={images}
         alt={name}
-        width={80}
-        height={60}
-        className="object-cover object-center h-full max-md:hidden"
+        className="min-h-16 max-md:min-h-24 object-cover object-center w-20"
       />
       <div className="px-2 max-md:p-2 w-full">
         <h6 className="text-primary line-clamp-1 underline-offset-2 group-hover:underline max-md:text-center">

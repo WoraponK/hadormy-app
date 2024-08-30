@@ -24,17 +24,28 @@ import {
 import { TUser, TUserRole } from '@/lib/type'
 import { getUserById } from '@/collections/usersCollection'
 import { LoadingSpinner } from '@/components/shared'
+import { checkHaveDorm } from '@/collections/checkCollection'
+import { getDormIdByUserId } from '@/collections/checkCollection'
+import { getDormById } from '@/collections/dormsCollection'
 
 const Navbar: React.FC = () => {
   const { user, loading } = useAuth()
   const [userData, setUserData] = useState<TUser | null>(null)
+  const [haveDorm, setHaveDorm] = useState<boolean | null>(null)
+  const [dormIdManage, setDormIdMange] = useState<string | null>(null)
+  const [dormPending, setDormPending] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         if (user) {
-          const data = await getUserById(user.uid)
+          const uid = user.uid
+          const data = await getUserById(uid)
+          const checkHaveDormData = await checkHaveDorm(uid)
+          const dormId = await getDormIdByUserId(uid)
           setUserData(data)
+          setHaveDorm(checkHaveDormData)
+          setDormIdMange(dormId)
         } else {
           setUserData(null)
         }
@@ -43,8 +54,19 @@ const Navbar: React.FC = () => {
       }
     }
 
+    const fetchDorm = async () => {
+      try {
+        if (dormIdManage) {
+          const dormData = await getDormById(dormIdManage)
+          setDormPending(dormData?.is_activated)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
     fetchUser()
-  }, [user])
+    fetchDorm()
+  }, [user, dormIdManage])
 
   const convertRole = (role: TUserRole) => {
     switch (role) {
@@ -62,8 +84,8 @@ const Navbar: React.FC = () => {
       case 'SUPERUSER':
         return (
           <>
-            <ModalAnnounce />
-            <PopOverManage role={role} />
+            {haveDorm && dormPending && <ModalAnnounce />}
+            <PopOverManage role={role} dormId={dormIdManage} isCreated={haveDorm} isPending={dormPending}/>
             <div className="max-lg:hidden">
               <PopOverNotification notifications={[]} />
             </div>

@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 // Include in project
 import { ManageRoomSection } from '@/containers/owner-manage-room'
 import { TRoom } from '@/lib/type'
+import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 
 const OwnerManageRoom = () => {
   useEffect(() => {
@@ -12,12 +13,14 @@ const OwnerManageRoom = () => {
   }, [])
 
   return (
-    <div className="container mx-auto min-h-screen">
-      <div className="space-y-8">
-        <h1>จัดการห้องพัก</h1>
-        <ManageRoomSection data={mockupData} />
+    <RoleBasedAccess allowedRoles={['SUPERUSER']}>
+      <div className="container mx-auto min-h-screen">
+        <div className="space-y-8">
+          <h1>จัดการห้องพัก</h1>
+          <ManageRoomSection data={mockupData} />
+        </div>
       </div>
-    </div>
+    </RoleBasedAccess>
   )
 }
 

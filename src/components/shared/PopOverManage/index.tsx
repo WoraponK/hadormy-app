@@ -9,14 +9,16 @@ import Link from 'next/link'
 import { FiGrid } from 'react-icons/fi'
 import { FaShop, FaShieldHalved } from 'react-icons/fa6'
 import { TUserRole } from '@/lib/type'
+import { IoIosInformationCircle } from 'react-icons/io'
 
 type Props = {
   role: TUserRole
-  dormId?: string
-  isCreated?: boolean
+  dormId?: string | null
+  isCreated?: boolean | null
+  isPending?: boolean | null
 }
 
-const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated }) => {
+const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated, isPending }) => {
   const convertRole = (role: TUserRole) => {
     switch (role) {
       case 'ADMIN':
@@ -49,29 +51,50 @@ const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated }) => {
               <FaShop />
               <span>เจ้าของหอพัก</span>
             </h6>
-            {!isCreated && (
+            {!isCreated ? (
               <Link href={'/owner/create-dorm'}>
-                <Button variant={'outline'} className="w-full">
+                <Button className="w-full">
                   <h6 className="flex items-center space-x-2">
                     <span>เพิ่มหอพัก</span>
                   </h6>
                 </Button>
               </Link>
+            ) : (
+              <>
+                {isPending ? (
+                  <>
+                    <Link href={'/owner/approval'}>
+                      <Button variant={'secondary'} className="w-full">
+                        <h6 className="flex items-center space-x-2">
+                          <span>การอนุมัติ</span>
+                        </h6>
+                      </Button>
+                    </Link>
+                    <Link href={`/owner/manage-dorm/${dormId}`}>
+                      <Button className="w-full">
+                        <h6 className="flex items-center space-x-2">
+                          <span>จัดการหอพัก</span>
+                        </h6>
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <div className="py-4 flex flex-col items-center">
+                      <IoIosInformationCircle className="text-4xl text-destructive" />
+                      <p className="text-center">อยู่ในระหว่างการรออนุมัติจากผู้ดูแลระบบ</p>
+                    </div>
+                    <Link href={`/owner/manage-dorm/${dormId}`}>
+                      <Button className="w-full">
+                        <h6 className="flex items-center space-x-2">
+                          <span>แก้ไขข้อมูลหอพัก</span>
+                        </h6>
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </>
             )}
-            <Link href={'/owner/approval'}>
-              <Button variant={'secondary'} className="w-full">
-                <h6 className="flex items-center space-x-2">
-                  <span>การอนุมัติ</span>
-                </h6>
-              </Button>
-            </Link>
-            <Link href={`/owner/manage-dorm/${dormId}`}>
-              <Button className="w-full">
-                <h6 className="flex items-center space-x-2">
-                  <span>จัดการหอพัก</span>
-                </h6>
-              </Button>
-            </Link>
           </>
         )
     }

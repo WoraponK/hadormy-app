@@ -62,3 +62,7 @@ export const formatPhoneNumber = (phoneNumber: string) => {
     return undefined
   }
 }
+
+export const copyTextToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text)
+}

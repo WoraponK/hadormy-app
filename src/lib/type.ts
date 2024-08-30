@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore'
+
 export type TUserRole = 'USER' | 'SUPERUSER' | 'ADMIN'
 export enum EUserRole {
   User = 'USER',
@@ -32,6 +34,7 @@ export type TUser = {
   phoneNumber: string
   role: TUserRole
   password?: string
+  owner_dorm?: any
 }
 
 export type TBill = {
@@ -44,13 +47,13 @@ export type TBill = {
 }
 
 export type TCardAnnounce = {
-  id: string | number
+  id?: string | number
   author: string
   title: string
   description: string
   role: TUserRole
   timestamp: string
-  thumbnail?: string
+  thumbnail?: any
 }
 
 export type TRoom = {
@@ -63,6 +66,7 @@ export type TRoom = {
 export type TDorm = {
   id: string | number
   name: string
+  creator_name?: string
   address: string
   phoneNumber: string
   priceStart: number
@@ -97,7 +101,7 @@ export type TRoomApproveTable = {
 export type TDormTable = {
   id: string | number
   name: string
-  createdBy: string
+  createdBy?: string
   phoneNumber: string
   updateAt: string
 }

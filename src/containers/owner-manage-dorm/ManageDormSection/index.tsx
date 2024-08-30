@@ -1,5 +1,9 @@
+'use client'
+
 // Lib
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -13,14 +17,39 @@ import { Button } from '@/components/ui/button'
 import manageDormSchema from '@/schemas/manageDormSchema'
 import { EDormType } from '@/lib/type'
 import { BackButton } from '@/components/shared'
+import { getDormIdByUserId } from '@/collections/checkCollection'
+import { useAuth } from '@/context/authContext'
 
 const ManageDormSection: React.FC = () => {
+  const { user } = useAuth()
+  const [dormId, setDormId] = useState<any>()
+
+  useEffect(() => {
+    const fetchDormId = async () => {
+      try {
+        if (user) {
+          const data = await getDormIdByUserId(user.uid)
+          setDormId(data)
+        }
+      } catch (error) {
+        console.error('Errror:', error)
+      }
+    }
+
+    fetchDormId()
+  }, [user])
+
   const form = useForm<z.infer<typeof manageDormSchema>>({
     resolver: zodResolver(manageDormSchema),
     defaultValues: {},
   })
 
-  const imageRef = form.register('images')
+  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files // Get the selected files
+    if (files) {
+      form.setValue('images', Array.from(files)) // Convert FileList to array
+    }
+  }
 
   const onSubmit = (values: z.infer<typeof manageDormSchema>) => {
     console.log('🚀 ~ onSubmit ~ values:', values)
@@ -29,6 +58,11 @@ const ManageDormSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <h1>แก้ไขหอพัก</h1>
+      <div className="flex justify-end">
+        <Link href={`${usePathname()}/room`}>
+          <Button>จัดการห้องพัก</Button>
+        </Link>
+      </div>
       <div className="bg-background p-8 rounded-lg max-lg:p-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 grid grid-cols-1">
@@ -230,10 +264,18 @@ const ManageDormSection: React.FC = () => {
               render={() => (
                 <FormItem>
                   <FormLabel>
-                    เพิ่มรูปหอพัก <span className="text-destructive">*</span>
+                    เพิ่มรูปหอพัก <span className="text-destructive">*</span>{' '}
+                    <span className="text-gray-400 font-normal">
+                      (ไฟล์นามสกุล .jpeg, .jpg, .png และขนาดไฟล์ไม่เกิน 5MB ต่อรูป)
+                    </span>
                   </FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} multiple />
+                    <Input
+                      type="file"
+                      accept="image/png, image/jpeg, image/jpg"
+                      onChange={onImageChange} // Use the custom change handler
+                      multiple
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

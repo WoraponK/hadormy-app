@@ -24,6 +24,7 @@ import { CardDorm } from '@/components/shared'
 import CardDormLoading from '@/components/shared/CardDorm/loading'
 import { ESort, TDorm } from '@/lib/type'
 import { convertDormTypeToName, convertSortToName } from '@/lib/others'
+import { IoReloadCircle } from 'react-icons/io5'
 
 type Props = {
   cardList: TDorm[]
@@ -121,12 +122,17 @@ const DormListLoadingSection: React.FC = () => {
     <div className="space-y-2 max-lg:space-y-4">
       <div className="flex justify-between max-sm:flex-col max-sm:items-end gap-2">
         <DormTypeSort dormType={dormType} setDormType={setDormType} />
-        <GeneralSort
-          minSort={minSort}
-          setMinSort={setMinSort}
-          generalSort={generalSort}
-          setGeneralSort={setGeneralSort}
-        />
+        <div className="flex gap-2">
+          <GeneralSort
+            minSort={minSort}
+            setMinSort={setMinSort}
+            generalSort={generalSort}
+            setGeneralSort={setGeneralSort}
+          />
+          <Button variant="ghost">
+            <IoReloadCircle className="text-3xl text-primary" />
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 max-md:grid-cols-2 max-[548px]:grid-cols-1">
         <CardDormLoading />

@@ -24,10 +24,6 @@ const toolsData = [
     title: 'เกี่ยวกับเรา',
     list: [
       {
-        href: '',
-        name: 'รายงานปัญหา',
-      },
-      {
         href: '/privacy-policy',
         name: 'นโยบายความเป็นส่วนตัว',
       },

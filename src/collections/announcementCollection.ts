@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TCardAnnounce } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
@@ -14,16 +14,27 @@ export const getAnnounces = async (): Promise<TCardAnnounce[]> => {
   })
 }
 
+export const subscribeToAnnounces = (callback: (dorms: TCardAnnounce[]) => void) => {
+  return onSnapshot(announcementsCollection, (snapshot) => {
+    const dorms: TCardAnnounce[] = snapshot.docs.map((doc) => {
+      const data = doc.data()
+      const timestamp = `${data.timestamp instanceof Timestamp ? data.timestamp.toDate() : new Date(data.timestamp)}`
+      return { id: doc.id, ...data, timestamp: timestamp } as TCardAnnounce
+    })
+    callback(dorms)
+  })
+}
+
 export const addAnnouce = async (post: TCardAnnounce) => {
   await addDoc(announcementsCollection, post)
 }
 
-export const updateAnnouce = async (id: string, updatedPost: Partial<TCardAnnounce>) => {
-  const postDoc = doc(db, 'announcements', id)
-  await updateDoc(postDoc, updatedPost)
+export const updateAnnouce = async (id: string, updatedAnnouce: Partial<TCardAnnounce>) => {
+  const announceDoc = doc(db, 'announcements', id)
+  await updateDoc(announceDoc, updatedAnnouce)
 }
 
 export const deleteAnnouce = async (id: string) => {
-  const postDoc = doc(db, 'announcements', id)
-  await deleteDoc(postDoc)
+  const announceDoc = doc(db, 'announcements', id)
+  await deleteDoc(announceDoc)
 }

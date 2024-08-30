@@ -15,16 +15,31 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Timestamp } from 'firebase/firestore'
+import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 // Images
 import IconMegaphoneWhiteSVG from '@/images/common/icon-megaphone-white.svg'
 import IconMegaphonePrimarySVG from '@/images/common/icon-megaphone-primary.svg'
 import announceSchema from '@/schemas/announceSchema'
+import { HiSpeakerphone } from 'react-icons/hi'
+
+// Include in project
+import { addAnnouce } from '@/collections/announcementCollection'
+import { TCardAnnounce, TUserRole } from '@/lib/type'
+import { storage } from '@/lib/firebase'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { useAuth } from '@/context/authContext'
+import { getUserById } from '@/collections/usersCollection'
 
 const ModalAnnounce: React.FC = () => {
+  const { user } = useAuth()
+  const { toast } = useToast()
+
   const form = useForm<z.infer<typeof announceSchema>>({
     resolver: zodResolver(announceSchema),
     defaultValues: {
@@ -34,10 +49,47 @@ const ModalAnnounce: React.FC = () => {
     },
   })
 
-  const imageRef = form.register('image')
+  const onSubmit = async (values: z.infer<typeof announceSchema>) => {
+    if (user) {
+      try {
+        const userById = await getUserById(user?.uid)
+        const newAnnouncement: TCardAnnounce = {
+          title: values.title,
+          description: values.description,
+          thumbnail: '',
+          author: userById?.name as string,
+          role: userById?.role as TUserRole,
+          timestamp: Timestamp.now(),
+        }
 
-  const onSubmit = (values: z.infer<typeof announceSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
+        const fileList = values.image
+        if (fileList && fileList.length > 0) {
+          const file = fileList[0] // Get the first file
+          const storageRef = ref(storage, `announcements/${file.name}`)
+
+          try {
+            await uploadBytes(storageRef, file)
+            const downloadURL = await getDownloadURL(storageRef)
+            newAnnouncement.thumbnail = downloadURL
+          } catch (error) {
+            console.error('Error uploading file:', error)
+          }
+        }
+
+        try {
+          await addAnnouce(newAnnouncement)
+
+          toast({
+            icon: <HiSpeakerphone className="text-primary" />,
+            title: 'สร้างประกาศของคุณสำเร็จ!',
+          })
+        } catch (error) {
+          console.error('Error adding announcement:', error)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 
   return (
@@ -104,7 +156,13 @@ const ModalAnnounce: React.FC = () => {
                   <FormItem>
                     <FormLabel>เพิ่มรูปภาพ (เพิ่มหรือไม่เพิ่มก็ได้)</FormLabel>
                     <FormControl>
-                      <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} />
+                      <Input
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg"
+                        onChange={(e) => {
+                          field.onChange(e.target.files) // Pass the FileList to form state
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
