@@ -23,6 +23,9 @@ const Home = () => {
   const [dormsLoading, setDormsLoading] = useState<boolean>(true)
   const [announceLoading, setAnnounceLoading] = useState<boolean>(true)
 
+  const [limitDorms, setLimitDorms] = useState<number>(10)
+  const [limitAnnounces, setLimitAnnnounce] = useState<number>(10)
+
   useEffect(() => {
     document.title = `หน้าหลัก - HaDormy`
   }, [])
@@ -40,18 +43,10 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        setAnnounceLoading(true)
-        const announcementsData = await getAnnounces()
-        setAnnouncements(announcementsData)
-      } catch (error) {
-        console.log('error:', error)
-      } finally {
-        setAnnounceLoading(false)
-      }
-    }
+    fetchDorms()
+  }, [])
 
+  useEffect(() => {
     const unsubscribeAnnouncements = subscribeToAnnounces((announces) => {
       try {
         setAnnounceLoading(true)
@@ -63,7 +58,6 @@ const Home = () => {
       }
     })
 
-    fetchDorms()
     return () => unsubscribeAnnouncements()
   }, [])
 

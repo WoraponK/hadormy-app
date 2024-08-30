@@ -52,7 +52,7 @@ export type TCardAnnounce = {
   title: string
   description: string
   role: TUserRole
-  timestamp: string
+  timestamp: any
   thumbnail?: any
 }
 
