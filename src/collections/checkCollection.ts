@@ -1,15 +1,4 @@
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  getDoc,
-  where,
-  query,
-  DocumentReference,
-} from 'firebase/firestore'
+import { collection, getDocs, getDoc, where, query, DocumentReference, doc } from 'firebase/firestore'
 
 import { db } from '@/lib/firebase'
 
@@ -56,6 +45,33 @@ export const getDormIdByUserId = async (parentId: string) => {
     }
   } catch (error) {
     console.error('Error fetching dorm by user id:', error)
+    return null
+  }
+}
+
+export const getUserIdByDormId = async (parentId: string) => {
+  try {
+    // Reference to the dorm document
+    const dormDocRef = doc(db, 'dorms', parentId)
+    const dormDoc = await getDoc(dormDocRef)
+
+    if (dormDoc.exists()) {
+      const dormData = dormDoc.data()
+
+      // Check if owner_dorm is a valid DocumentReference
+      const ownerDormRef = dormData?.owner as DocumentReference
+
+      if (ownerDormRef) {
+        const userDoc = await getDoc(ownerDormRef)
+        return userDoc.exists() ? userDoc.id : null
+      } else {
+        return null
+      }
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.error('Error fetching user ID by dorm ID:', error)
     return null
   }
 }

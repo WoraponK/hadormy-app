@@ -20,7 +20,6 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Timestamp } from 'firebase/firestore'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from 'next/navigation'
 
 // Images
 import IconMegaphoneWhiteSVG from '@/images/common/icon-megaphone-white.svg'
@@ -32,7 +31,7 @@ import { HiSpeakerphone } from 'react-icons/hi'
 import { addAnnouce } from '@/collections/announcementCollection'
 import { TCardAnnounce, TUserRole } from '@/lib/type'
 import { storage } from '@/lib/firebase'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytes, listAll, list } from 'firebase/storage'
 import { useAuth } from '@/context/authContext'
 import { getUserById } from '@/collections/usersCollection'
 
@@ -65,7 +64,7 @@ const ModalAnnounce: React.FC = () => {
         const fileList = values.image
         if (fileList && fileList.length > 0) {
           const file = fileList[0] // Get the first file
-          const storageRef = ref(storage, `announcements/${file.name}`)
+          const storageRef = ref(storage, `announcements/${user.uid}/${file.name}`)
 
           try {
             await uploadBytes(storageRef, file)
@@ -73,6 +72,22 @@ const ModalAnnounce: React.FC = () => {
             newAnnouncement.thumbnail = downloadURL
           } catch (error) {
             console.error('Error uploading file:', error)
+          }
+        } else {
+          const storagePath = `dorms/${user.uid}/`
+          const imagesRef = ref(storage, storagePath)
+
+          try {
+            const imageList = await listAll(imagesRef)
+            if (imageList.items.length > 0) {
+              const firstImageRef = imageList.items[0]
+              const firstImageURL = await getDownloadURL(firstImageRef)
+              newAnnouncement.thumbnail = firstImageURL
+            } else {
+              console.warn('No images found in storage.')
+            }
+          } catch (error) {
+            console.error(error)
           }
         }
 

@@ -19,28 +19,6 @@ const AdminApproval = () => {
     document.title = `การอนุมัติหอพัก - HaDormy`
   }, [])
 
-  // useEffect(() => {
-  //   const fetchDorm = async () => {
-  //     try {
-  //       const dorms = await getDorms()
-  //       const filteredDorms = dorms.filter((dorm) => dorm.is_activated === false)
-
-  //       const formattedDorms: TDormTable[] = filteredDorms.map((dorm) => ({
-  //         id: dorm.id,
-  //         name: dorm.name,
-  //         createdBy: dorm.creator_name,
-  //         phoneNumber: dorm.phoneNumber,
-  //         updateAt: dorm.timestamp,
-  //       }))
-  //       setDormData(formattedDorms)
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-
-  //   fetchDorm()
-  // }, [])
-
   useEffect(() => {
     const unsubscribe = subscribeToDorms((dorms) => {
       const filteredDorms = dorms.filter((dorm) => dorm.is_activated === false)
@@ -50,7 +28,7 @@ const AdminApproval = () => {
         name: dorm.name,
         createdBy: dorm.creator_name,
         phoneNumber: dorm.phoneNumber,
-        updateAt: dorm.timestamp,
+        updateAt: dorm.updated_at,
       }))
       setDormData(formattedDorms)
     })

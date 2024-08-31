@@ -1,17 +1,42 @@
 'use client'
 // Lib
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Images
 
 // Include in project
-import { TUserTable } from '@/lib/type'
+import { EUserRole, TUserRole, TUserTable } from '@/lib/type'
 import { ManageUserSection } from '@/containers/admin-manage-user'
 import RoleBasedAccess from '@/components/common/RoleBasedAccess'
+import { getUsers, listenToUsers } from '@/collections/usersCollection'
 
 const AdminManageUser = () => {
+  const [userData, setUserData] = useState<TUserTable[]>([])
+
   useEffect(() => {
     document.title = `รายการบัญชีผู้ใช้ - HaDormy`
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = listenToUsers((data) => {
+      try {
+        const formattedUsers: TUserTable[] = data.map((user) => ({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phone,
+          created_at: user.created_at as string,
+          role: user.role as EUserRole,
+        }))
+
+        const filteredUsers = formattedUsers.filter((user) => user.role !== EUserRole.Admin)
+        setUserData(filteredUsers)
+      } catch (error) {
+        console.error(error)
+      }
+    })
+
+    return () => unsubscribe()
   }, [])
 
   return (
@@ -19,7 +44,7 @@ const AdminManageUser = () => {
       <div className="container mx-auto min-h-screen">
         <div className="space-y-8">
           <h1>รายการบัญชีผู้ใช้</h1>
-          <ManageUserSection data={mockupData} />
+          <ManageUserSection data={userData} />
         </div>
       </div>
     </RoleBasedAccess>
@@ -27,27 +52,3 @@ const AdminManageUser = () => {
 }
 
 export default AdminManageUser
-
-const mockupData: TUserTable[] = [
-  {
-    id: '1',
-    name: 'Worapon Klabsri',
-    email: 'worapon.klabsri@gmail.com',
-    phoneNumber: '0630913505',
-    updateAt: '2024-07-15T12:26:19Z',
-  },
-  {
-    id: '2',
-    name: 'John Doe',
-    email: 'john@example.com',
-    phoneNumber: '0123456789',
-    updateAt: '2024-07-15T12:26:19Z',
-  },
-  {
-    id: '3',
-    name: 'Jane Doe',
-    email: 'janeteka@example.com',
-    phoneNumber: '0123456789',
-    updateAt: '2024-07-13T12:26:19Z',
-  },
-]

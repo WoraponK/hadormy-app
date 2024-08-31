@@ -1,5 +1,5 @@
 // Lib
-import React from 'react'
+import React, { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -16,12 +16,14 @@ import { useRouter } from 'next/navigation'
 // Include in project
 import manageDormSchema from '@/schemas/manageDormSchema'
 import { EDormType, TDorm, TUser } from '@/lib/type'
-import { BackButton } from '@/components/shared'
+import { BackButton, LoadingSpinner } from '@/components/shared'
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { updateUser } from '@/collections/usersCollection'
 import { addRoomsByAmount } from '@/collections/roomsCollection'
 
 const CreateDormSection: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+
   const router = useRouter()
   const form = useForm<z.infer<typeof manageDormSchema>>({
     resolver: zodResolver(manageDormSchema),
@@ -113,7 +115,8 @@ const CreateDormSection: React.FC = () => {
       }
       await addRoomsByAmount(dormRef.id, values.roomAmount, values.priceStart)
       await updateUser(user.uid, dataUser as TUser)
-      router.push(`/owner/manage-dorm/${dormRef.id}/room`)
+      setLoading(true)
+      router.replace(`/owner/manage-dorm/${dormRef.id}/room`)
     } catch (error) {
       console.error('Error submitted create dorm:', error)
     }
@@ -403,8 +406,9 @@ const CreateDormSection: React.FC = () => {
             />
             <div className="flex justify-between items-center">
               <BackButton />
-              <Button variant="success" type="submit">
-                บันทึก
+              <Button variant="success" type="submit" className="space-x-2">
+                {loading && <LoadingSpinner className="text-base" />}
+                <span>บันทึก</span>
               </Button>
             </div>
 

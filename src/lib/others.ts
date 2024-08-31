@@ -1,5 +1,5 @@
 import thumbnailPlaceholderSVG from '@/images/common/thumbnail-placeholder.svg'
-import { ESort } from './type'
+import { ESort, EUserRole } from './type'
 
 export const imagePlaceholder = thumbnailPlaceholderSVG
 
@@ -52,6 +52,17 @@ export const convertSortToName = (sort: ESort) => {
       return 'ระยะทาง'
     case ESort.Time:
       return 'เวลาประกาศ'
+  }
+}
+
+export const convertRoleToName = (role: EUserRole) => {
+  switch (role) {
+    case EUserRole.Admin:
+      return 'ผู้ดูแลระบบ'
+    case EUserRole.Superuser:
+      return 'เจ้าของหอพัก'
+    case EUserRole.User:
+      return 'ผู้ใช้งานทั่วไป'
   }
 }
 

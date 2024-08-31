@@ -1,16 +1,66 @@
 'use client'
 // Lib
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 // Include in project
 import { TRoom } from '@/lib/type'
 import { CardBooking } from '@/components/shared'
+import { useAuth } from '@/context/authContext'
+import { getDormIdByUserId } from '@/collections/checkCollection'
+import { getUserById } from '@/collections/usersCollection'
 
 type Props = {
+  dormId: string
   rooms: TRoom[]
 }
 
-const TabBooking: React.FC<Props> = ({ rooms }) => {
+const TabBooking: React.FC<Props> = ({ dormId, rooms }) => {
+  const { user } = useAuth()
+  const [isCreator, setIsCreator] = useState<boolean>(false)
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
+
+  useEffect(() => {
+    const fetchCheckDorm = async () => {
+      try {
+        if (!user) return
+        const checkDormId = await getDormIdByUserId(user.uid)
+        setIsCreator(checkDormId === dormId)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const fetchCheckAdmin = async () => {
+      try {
+        if (!user) return
+        const userData = await getUserById(user.uid)
+        if (!userData) return
+        setIsAdmin(userData.role === 'ADMIN')
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchCheckDorm()
+    fetchCheckAdmin()
+  }, [])
+
+  if (isCreator) {
+    return (
+      <div className="w-full grid place-items-center">
+        <p>เนื่องจากคุณเป็นเจ้าของหอพักนี้ จึงไม่สามารถทำการจองห้องพักได้</p>
+      </div>
+    )
+  }
+
+  if (isAdmin) {
+    return (
+      <div className="w-full grid place-items-center">
+        <p>เนื่องจากคุณเป็นผู้ดูแลระบบ จึงไม่สามารถทำการจองห้องพักได้</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       {rooms.length > 0 ? (

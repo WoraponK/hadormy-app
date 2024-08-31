@@ -26,7 +26,7 @@ export default function RootLayout({
         <AuthProvider>
           <NextTopLoader color="#00bbf9" showSpinner={false} />
           <Navbar />
-          <main className="py-16 overflow-x-hidden">{children}</main>
+          <main className="py-16 overflow-x-hidden min-h-screen">{children}</main>
           <Footer />
           <Toaster />
         </AuthProvider>

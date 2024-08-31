@@ -18,10 +18,11 @@ import { TabThumbnail, TabBooking, TabRating } from '@/containers/dorm-page/'
 import { copyTextToClipboard } from '@/lib/others'
 
 type Props = {
+  dormId: string
   dataDorm: TDorm
 }
 
-const DormSection: React.FC<Props> = ({ dataDorm }) => {
+const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
   const { toast } = useToast()
 
   const copyToClipboard = (text: string) => {
@@ -87,10 +88,10 @@ const DormSection: React.FC<Props> = ({ dataDorm }) => {
           />
         </TabsContent>
         <TabsContent value="booking">
-          <TabBooking rooms={dataDorm?.rooms} />
+          <TabBooking dormId={dormId} rooms={dataDorm?.rooms} />
         </TabsContent>
         <TabsContent value="rating">
-          <TabRating rating={dataDorm?.rating} />
+          <TabRating dormId={dormId} rating={dataDorm?.rating} />
         </TabsContent>
       </Tabs>
     </div>

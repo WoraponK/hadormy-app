@@ -1,4 +1,16 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, where, query } from 'firebase/firestore'
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  where,
+  query,
+  onSnapshot,
+  Timestamp,
+} from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TUser } from '@/lib/type'
 
@@ -12,7 +24,9 @@ export const getUserById = async (id: string): Promise<TUser | null> => {
     const querySnapshot = await getDocs(q)
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0]
-      return { id: userDoc.id, ...userDoc.data(), password: 'YOU DONT WANNA KNOW!' } as TUser
+      const data = userDoc.data()
+      const timestamp = `${data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)}`
+      return { id: userDoc.id, ...userDoc.data(), password: 'YOU DONT WANNA KNOW!', created_at: timestamp } as TUser
     } else {
       return null
     }
@@ -24,7 +38,11 @@ export const getUserById = async (id: string): Promise<TUser | null> => {
 
 export const getUsers = async (): Promise<TUser[]> => {
   const snapshot = await getDocs(usersCollection)
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TUser))
+  return snapshot.docs.map((doc) => {
+    const data = doc.data()
+    const timestamp = `${data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)}`
+    return { id: doc.id, ...doc.data(), created_at: timestamp, phone: data.phone } as TUser
+  })
 }
 
 export const addUser = async (user: TUser) => {
@@ -39,4 +57,61 @@ export const updateUser = async (id: string, updatedUser: TUser) => {
 export const deleteUser = async (id: string) => {
   const userDoc = doc(db, 'users', id)
   await deleteDoc(userDoc)
+}
+
+export const listenToUserById = (id: string, callback: (user: TUser | null) => void) => {
+  const userDocRef = doc(db, 'users', id)
+
+  const unsubscribe = onSnapshot(
+    userDocRef,
+    (doc) => {
+      if (doc.exists()) {
+        const data = doc.data()
+        const timestamp = `${
+          data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)
+        }`
+        const user = { id: doc.id, ...doc.data(), created_at: timestamp, phone: data.phone } as TUser
+        callback(user)
+      } else {
+        callback(null) // Document does not exist
+      }
+    },
+    (error) => {
+      console.error('Error listening to user:', error)
+      callback(null) // Handle error case
+    },
+  )
+
+  // Return the unsubscribe function
+  return unsubscribe
+}
+
+export const listenToUsers = (callback: (users: TUser[]) => void) => {
+  const unsubscribe = onSnapshot(
+    usersCollection,
+    (snapshot) => {
+      const users = snapshot.docs.map((doc) => {
+        const data = doc.data()
+        const timestamp = `${
+          data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)
+        }`
+        return { id: doc.id, ...doc.data(), created_at: timestamp, phone: data.phone } as TUser
+      })
+      callback(users)
+    },
+    (error) => {
+      console.error('Error listening to users:', error)
+      callback([]) // Handle error case by returning an empty array
+    },
+  )
+
+  // Return the unsubscribe function
+  return unsubscribe
+}
+
+// Call this function to stop listening when needed
+export const stopListeningToUser = (unsubscribe: () => void) => {
+  if (unsubscribe) {
+    unsubscribe()
+  }
 }

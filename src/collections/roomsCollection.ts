@@ -29,9 +29,12 @@ export const addRoomsByAmount = async (parentId: string, amount: number, price: 
   const parentDocRef = doc(db, 'dorms', parentId)
   const roomDocs = collection(parentDocRef, 'rooms')
 
+  const startingRoomNumber = 100
+
   for (let i = 0; i < amount; i++) {
+    const roomNumber = startingRoomNumber + i + 1
     const roomData = {
-      name: `${i + 1}`,
+      name: `${roomNumber}`,
       price: price,
       isAvailable: true,
       created_at: Timestamp.now(),

@@ -66,10 +66,14 @@ export const subscribeToDorms = (callback: (dorms: TDorm[]) => void) => {
     const dorms: TDorm[] = snapshot.docs.map((doc) => {
       const data = doc.data()
       const timestamp = `${data.timestamp instanceof Timestamp ? data.timestamp.toDate() : new Date(data.timestamp)}`
+      const updated_at = `${
+        data.updated_at instanceof Timestamp ? data.updated_at.toDate() : new Date(data.updated_at)
+      }`
       return {
         id: doc.id,
         ...data,
         timestamp: timestamp,
+        updated_at: updated_at,
         thumbnail: data.images,
         phoneNumber: data.phone_number,
       } as TDorm

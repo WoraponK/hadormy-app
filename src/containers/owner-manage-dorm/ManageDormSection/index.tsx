@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,57 +10,110 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
+
+// Images
+import { CgWebsite } from 'react-icons/cg'
+import { FiGrid } from 'react-icons/fi'
+import { IoCheckmarkCircle } from 'react-icons/io5'
 
 // Include in project
-import manageDormSchema from '@/schemas/manageDormSchema'
-import { EDormType } from '@/lib/type'
+import editDormSchema from '@/schemas/editDormSchema'
+import { TDorm } from '@/lib/type'
 import { BackButton } from '@/components/shared'
-import { getDormIdByUserId } from '@/collections/checkCollection'
-import { useAuth } from '@/context/authContext'
+import FirebaseImage from '@/components/common/FirebaseImage'
+import { updateDorm } from '@/collections/dormsCollection'
 
-const ManageDormSection: React.FC = () => {
-  const { user } = useAuth()
-  const [dormId, setDormId] = useState<any>()
+type Props = {
+  dormId: string
+  dormData: TDorm | null
+}
 
-  useEffect(() => {
-    const fetchDormId = async () => {
-      try {
-        if (user) {
-          const data = await getDormIdByUserId(user.uid)
-          setDormId(data)
-        }
-      } catch (error) {
-        console.error('Errror:', error)
-      }
-    }
-
-    fetchDormId()
-  }, [user])
-
-  const form = useForm<z.infer<typeof manageDormSchema>>({
-    resolver: zodResolver(manageDormSchema),
-    defaultValues: {},
+const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
+  const router = useRouter()
+  const { toast } = useToast()
+  const form = useForm<z.infer<typeof editDormSchema>>({
+    resolver: zodResolver(editDormSchema),
+    defaultValues: {
+      name: '',
+      address: '',
+      priceStart: 0,
+      priceEnd: 0,
+      billElectric: 0,
+      billWater: 0,
+      billInternet: 0,
+      billService: 0,
+      distance: 0,
+      phoneContact: '',
+      description: '',
+    },
   })
 
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files // Get the selected files
-    if (files) {
-      form.setValue('images', Array.from(files)) // Convert FileList to array
+  useEffect(() => {
+    if (dormData) {
+      form.reset({
+        name: dormData.name || '',
+        priceStart: dormData.priceStart,
+        priceEnd: dormData.priceEnd,
+        address: dormData.address || '',
+        billElectric: dormData.bill.electric,
+        billWater: dormData.bill.water,
+        billInternet: dormData.bill.internet,
+        billService: dormData.bill.service,
+        distance: dormData.distance,
+        phoneContact: dormData.phoneNumber || '',
+        description: dormData.description || '',
+      })
     }
-  }
+  }, [dormData, form])
 
-  const onSubmit = (values: z.infer<typeof manageDormSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
+  const onSubmit = async (values: z.infer<typeof editDormSchema>) => {
+    try {
+      await updateDorm(dormId, {
+        name: values.name,
+        address: values.address,
+        priceStart: values.priceStart,
+        priceEnd: values.priceEnd,
+        bill: {
+          electric: values.billElectric,
+          water: values.billWater,
+          internet: values.billInternet,
+          service: values.billService,
+        },
+        distance: values.distance,
+        phoneNumber: values.phoneContact,
+        description: values.description,
+      })
+
+      toast({
+        variant: 'success',
+        icon: <IoCheckmarkCircle className="text-forground" />,
+        title: 'แก้ไขข้อมูลหอพักสำเร็จ',
+      })
+
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
     <div className="space-y-4">
       <h1>แก้ไขหอพัก</h1>
-      <div className="flex justify-end">
+      <div className="flex justify-end space-x-2">
+        <Link href={`/dorm/${dormId}`}>
+          <Button variant="secondary" className="space-x-2">
+            <CgWebsite />
+            <span>ไปหน้าหอพัก</span>
+          </Button>
+        </Link>
         <Link href={`${usePathname()}/room`}>
-          <Button>จัดการห้องพัก</Button>
+          <Button className="space-x-2">
+            <FiGrid />
+            <span>จัดการห้องพัก</span>
+          </Button>
         </Link>
       </div>
       <div className="bg-background p-8 rounded-lg max-lg:p-4">
@@ -205,45 +258,6 @@ const ManageDormSection: React.FC = () => {
               />
               <FormField
                 control={form.control}
-                name="dormType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      ประเภทหอพัก <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="ประเภทหอพัก" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={EDormType.All}>หอพักรวม</SelectItem>
-                        <SelectItem value={EDormType.Male}>หอพักชายล้วน</SelectItem>
-                        <SelectItem value={EDormType.Female}>หอพักหญิงล้วน</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="roomAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      จำนวนห้อง <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="จำนวนห้อง" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="phoneContact"
                 render={({ field }) => (
                   <FormItem>
@@ -258,29 +272,18 @@ const ManageDormSection: React.FC = () => {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="images"
-              render={() => (
-                <FormItem>
-                  <FormLabel>
-                    เพิ่มรูปหอพัก <span className="text-destructive">*</span>{' '}
-                    <span className="text-gray-400 font-normal">
-                      (ไฟล์นามสกุล .jpeg, .jpg, .png และขนาดไฟล์ไม่เกิน 5MB ต่อรูป)
-                    </span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/png, image/jpeg, image/jpg"
-                      onChange={onImageChange} // Use the custom change handler
-                      multiple
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="py-2 space-y-2 w-full">
+              <h4>รายการรูปภาพของคุณ</h4>
+              <div className="overflow-auto ">
+                <div className="flex w-fit space-x-2 pb-2">
+                  {dormData?.thumbnail.map((image, index) => (
+                    <div key={index} className="h-[100px] aspect-video rounded-lg overflow-hidden">
+                      <FirebaseImage imagePath={image} className="w-full h-full object-cover object-center" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
             <FormField
               control={form.control}
               name="description"
