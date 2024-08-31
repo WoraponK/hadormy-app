@@ -1,5 +1,5 @@
 // Lib
-import React from 'react'
+import React, { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -8,22 +8,118 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { db, storage } from '@/lib/firebase'
+import { addDoc, collection, doc, getDoc, Timestamp } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
 
 // Include in project
 import manageDormSchema from '@/schemas/manageDormSchema'
-import { EDormType } from '@/lib/type'
-import { BackButton } from '@/components/shared'
+import { EDormType, TDorm, TUser } from '@/lib/type'
+import { BackButton, LoadingSpinner } from '@/components/shared'
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
+import { updateUser } from '@/collections/usersCollection'
+import { addRoomsByAmount } from '@/collections/roomsCollection'
 
 const CreateDormSection: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const router = useRouter()
   const form = useForm<z.infer<typeof manageDormSchema>>({
     resolver: zodResolver(manageDormSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: '',
+      address: '',
+      priceStart: 0,
+      priceEnd: 0,
+      billElectric: 0,
+      billWater: 0,
+      billInternet: 0,
+      billService: 0,
+      distance: 0,
+      dormType: EDormType.All,
+      roomAmount: 1,
+      phoneContact: '',
+      images: [],
+      description: '',
+    },
   })
 
-  const imageRef = form.register('images')
+  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files) {
+      form.setValue('images', Array.from(files))
+    }
+  }
 
-  const onSubmit = (values: z.infer<typeof manageDormSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
+  const onSubmit = async (values: z.infer<typeof manageDormSchema>) => {
+    try {
+      const auth = getAuth()
+      const user = auth.currentUser
+
+      if (!user) {
+        throw new Error('User not authenticated')
+      }
+
+      const userDocRef = doc(db, 'users', user.uid)
+      const userDocSnapshot = await getDoc(userDocRef)
+
+      if (!userDocSnapshot.exists()) {
+        throw new Error('Use data not found')
+      }
+
+      const userData = userDocSnapshot.data()
+
+      const newDorm = {
+        name: values.name,
+        creator_name: userData.name,
+        address: values.address,
+        priceStart: values.priceStart,
+        priceEnd: values.priceEnd,
+        bill: {
+          electric: values.billElectric,
+          water: values.billWater,
+          internet: values.billInternet,
+          service: values.billService,
+        },
+        distance: values.distance,
+        type: values.dormType,
+        phone_number: values.phoneContact,
+        description: values.description,
+        owner: userDocRef,
+        images: [] as string[],
+        timestamp: Timestamp.now(),
+        updated_at: Timestamp.now(),
+        is_activated: false,
+      }
+
+      const fileList = values.images
+
+      if (fileList && fileList.length > 0) {
+        for (const file of fileList) {
+          const storageRef = ref(storage, `dorms/${user.uid}/${file.name}`)
+
+          try {
+            await uploadBytes(storageRef, file)
+            const downloadURL = await getDownloadURL(storageRef)
+            newDorm.images.push(downloadURL) // Store each download URL in the images array
+          } catch (error) {
+            console.error('Error uploading file:', error)
+          }
+        }
+      }
+
+      const dormRef = await addDoc(collection(db, 'dorms'), newDorm)
+      const dataUser = {
+        owner_dorm: doc(db, 'dorms', dormRef.id),
+      }
+      await addRoomsByAmount(dormRef.id, values.roomAmount, values.priceStart)
+      await updateUser(user.uid, dataUser as TUser)
+      setLoading(true)
+      router.replace(`/owner/manage-dorm/${dormRef.id}/room`)
+    } catch (error) {
+      console.error('Error submitted create dorm:', error)
+    }
   }
 
   return (
@@ -62,7 +158,12 @@ const CreateDormSection: React.FC = () => {
                           ราคาต่ำสุด <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="ราคาต่ำสุด" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="ราคาต่ำสุด"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -77,7 +178,12 @@ const CreateDormSection: React.FC = () => {
                           ราคาสูงสุด <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="ราคาสูงสุด" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="ราคาสูงสุด"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -107,9 +213,17 @@ const CreateDormSection: React.FC = () => {
                 name="billElectric"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ค่าไฟ</FormLabel>
+                    <FormLabel>
+                      ค่าไฟ
+                      <span className="text-gray-400 font-normal">(บาท/หน่วย)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="ค่าไฟ" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="ค่าไฟ"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,9 +234,17 @@ const CreateDormSection: React.FC = () => {
                 name="billWater"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ค่าน้ำ</FormLabel>
+                    <FormLabel>
+                      ค่าน้ำ
+                      <span className="text-gray-400 font-normal">(บาท/หน่วย)</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="ค่าน้ำ" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="ค่าน้ำ"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,12 +252,17 @@ const CreateDormSection: React.FC = () => {
               />
               <FormField
                 control={form.control}
-                name="billWater"
+                name="billInternet"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>ค่าอินเทอร์เน็ต</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="ค่าอินเทอร์เน็ต" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="ค่าอินเทอร์เน็ต"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,7 +275,12 @@ const CreateDormSection: React.FC = () => {
                   <FormItem>
                     <FormLabel>ค่าบริการอื่น ๆ</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="ค่าบริการอื่น ๆ" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="ค่าบริการอื่น ๆ"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -163,7 +295,12 @@ const CreateDormSection: React.FC = () => {
                       ระยะทางถึงหน้ามหาวิทยาลัย <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="ระยะทาง" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="ระยะทาง"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,7 +339,12 @@ const CreateDormSection: React.FC = () => {
                       จำนวนห้อง <span className="text-destructive">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="จำนวนห้อง" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="จำนวนห้อง"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -230,10 +372,18 @@ const CreateDormSection: React.FC = () => {
               render={() => (
                 <FormItem>
                   <FormLabel>
-                    เพิ่มรูปหอพัก <span className="text-destructive">*</span>
+                    เพิ่มรูปหอพัก <span className="text-destructive">*</span>{' '}
+                    <span className="text-gray-400 font-normal">
+                      (ไฟล์นามสกุล .jpeg, .jpg, .png และขนาดไฟล์ไม่เกิน 5MB ต่อรูป)
+                    </span>
                   </FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/png, image/jpeg, image/jpg" {...imageRef} multiple />
+                    <Input
+                      type="file"
+                      accept="image/png, image/jpeg, image/jpg"
+                      onChange={onImageChange} // Use the custom change handler
+                      multiple
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -256,11 +406,12 @@ const CreateDormSection: React.FC = () => {
             />
             <div className="flex justify-between items-center">
               <BackButton />
-              <Button variant="success" type="submit">
-                บันทึก
+              <Button variant="success" type="submit" className="space-x-2">
+                {loading && <LoadingSpinner className="text-base" />}
+                <span>บันทึก</span>
               </Button>
             </div>
-            
+
             {/* Inside Form --- End */}
           </form>
         </Form>

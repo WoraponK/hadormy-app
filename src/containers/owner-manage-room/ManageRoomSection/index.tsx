@@ -21,6 +21,7 @@ import { columns } from './columns'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { BackButton } from '@/components/shared'
 
 type Props = {
   data: TRoom[]
@@ -38,7 +39,8 @@ const ManageRoomSection: React.FC<Props> = ({ data }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <BackButton />
         <Link href={`${usePathname()}/create`}>
           <Button>เพิ่มห้องพัก</Button>
         </Link>

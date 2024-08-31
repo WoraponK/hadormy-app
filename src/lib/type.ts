@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore'
+
 export type TUserRole = 'USER' | 'SUPERUSER' | 'ADMIN'
 export enum EUserRole {
   User = 'USER',
@@ -29,9 +31,11 @@ export type TUser = {
   id: string | number
   name: string
   email: string
-  phoneNumber: string
+  phone: string
   role: TUserRole
   password?: string
+  owner_dorm?: any
+  created_at?: string
 }
 
 export type TBill = {
@@ -44,13 +48,13 @@ export type TBill = {
 }
 
 export type TCardAnnounce = {
-  id: string | number
+  id?: string | number
   author: string
   title: string
   description: string
   role: TUserRole
-  timestamp: string
-  thumbnail?: string
+  timestamp: any
+  thumbnail?: any
 }
 
 export type TRoom = {
@@ -61,8 +65,10 @@ export type TRoom = {
 }
 
 export type TDorm = {
+  [x: string]: any
   id: string | number
   name: string
+  creator_name?: string
   address: string
   phoneNumber: string
   priceStart: number
@@ -74,6 +80,7 @@ export type TDorm = {
   description: string
   bill: TBill
   timestamp: string
+  updated_at?: string
   type: EDormType
   is_activated?: boolean
 }
@@ -83,7 +90,8 @@ export type TUserTable = {
   name: string
   phoneNumber: string
   email: string
-  updateAt: string
+  created_at: string
+  role: EUserRole
 }
 
 export type TRoomApproveTable = {
@@ -97,9 +105,9 @@ export type TRoomApproveTable = {
 export type TDormTable = {
   id: string | number
   name: string
-  createdBy: string
+  createdBy?: string
   phoneNumber: string
-  updateAt: string
+  updateAt?: string
 }
 
 export type TNotification = {
@@ -107,4 +115,7 @@ export type TNotification = {
   title: string
   updateAt: string
   image: string
+  is_seen: boolean
+  role: EUserRole
+  description?: string
 }

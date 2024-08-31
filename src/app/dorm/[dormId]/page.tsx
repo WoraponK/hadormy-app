@@ -3,10 +3,11 @@
 
 // Lib
 import React, { useEffect, useState } from 'react'
+import NotFound from '@/app/not-found'
 
 // Include in project
 import { DormSection } from '@/containers/dorm-page'
-import { TDorm } from '@/lib/type'
+import { TDorm, TRoom } from '@/lib/type'
 import { DormLoadingSection } from '@/containers/dorm-page'
 import { useAuth } from '@/context/authContext'
 
@@ -38,6 +39,9 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
     const fetchRooms = async () => {
       try {
         const data = await getRooms(params.dormId)
+        data.sort((a: any, b: any) => a.name.localeCompare(b.name))
+        data.sort((a: any, b: any) => a.price - b.price)
+        data.sort((a: any, b: any) => b.isAvailable - a.isAvailable)
         setRoomsData(data)
       } catch (error) {
         console.error(error)
@@ -64,9 +68,17 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
     rating: ratingsData,
   }
 
+  if (dormData === null) {
+    return <NotFound />
+  }
+
   return (
     <div className="container mx-auto min-h-screen">
-      {dormLoading || loading ? <DormLoadingSection /> : <DormSection dataDorm={formattedData} />}
+      {dormLoading || loading ? (
+        <DormLoadingSection />
+      ) : (
+        <DormSection dormId={params.dormId} dataDorm={formattedData} />
+      )}
     </div>
   )
 }

@@ -18,6 +18,7 @@ import TooltipMain from '@/components/ui/tooltip-main'
 // Images
 import { FaListUl } from 'react-icons/fa6'
 import { FaSortAmountDown, FaSortAmountDownAlt } from 'react-icons/fa'
+import { IoReloadCircle } from 'react-icons/io5'
 
 // Include in project
 import { CardDorm } from '@/components/shared'
@@ -26,6 +27,7 @@ import { convertDormTypeToName, convertSortToName } from '@/lib/others'
 
 type Props = {
   cardList: TDorm[]
+  onRefresh: () => void
 }
 
 type DormTypeSortProps = {
@@ -111,7 +113,7 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
   )
 }
 
-const DormListSection: React.FC<Props> = ({ cardList }) => {
+const DormListSection: React.FC<Props> = ({ cardList, onRefresh }) => {
   const [dormType, setDormType] = useState<string>('ALL')
   const [minSort, setMinSort] = useState<boolean>(false)
   const [generalSort, setGeneralSort] = useState<string>('TIME')
@@ -145,12 +147,17 @@ const DormListSection: React.FC<Props> = ({ cardList }) => {
     <div className="space-y-2 max-lg:space-y-4">
       <div className="flex justify-between max-sm:flex-col max-sm:items-end gap-2">
         <DormTypeSort dormType={dormType} setDormType={setDormType} />
-        <GeneralSort
-          minSort={minSort}
-          setMinSort={setMinSort}
-          generalSort={generalSort}
-          setGeneralSort={setGeneralSort}
-        />
+        <div className="flex gap-2">
+          <GeneralSort
+            minSort={minSort}
+            setMinSort={setMinSort}
+            generalSort={generalSort}
+            setGeneralSort={setGeneralSort}
+          />
+          <Button variant="ghost" onClick={onRefresh}>
+            <IoReloadCircle className="text-3xl text-primary" />
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 max-md:grid-cols-2 max-[548px]:grid-cols-1">
         {newCardList.length > 0 ? (

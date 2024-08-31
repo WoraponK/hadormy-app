@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 // Include in project
 import { ManageApprovalSection } from '@/containers/owner-approval'
 import { TRoomApproveTable } from '@/lib/type'
+import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 
 const OwnerApproval = () => {
   useEffect(() => {
@@ -12,12 +13,14 @@ const OwnerApproval = () => {
   }, [])
 
   return (
-    <div className="container mx-auto min-h-screen">
-      <div className="space-y-8">
-        <h1>การอนุมัติผู้เช่าหอพัก</h1>
-        <ManageApprovalSection data={mockupData} />
+    <RoleBasedAccess allowedRoles={['SUPERUSER']}>
+      <div className="container mx-auto min-h-screen">
+        <div className="space-y-8">
+          <h1>การอนุมัติผู้เช่าหอพัก</h1>
+          <ManageApprovalSection data={mockupData} />
+        </div>
       </div>
-    </div>
+    </RoleBasedAccess>
   )
 }
 

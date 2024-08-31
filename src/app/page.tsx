@@ -15,6 +15,7 @@ import {
 import { TCardAnnounce, TDorm } from '@/lib/type'
 import { getDorms } from '@/collections/dormsCollection'
 import { getAnnounces } from '@/collections/announcementCollection'
+import { subscribeToAnnounces } from '@/collections/announcementCollection'
 
 const Home = () => {
   const [dorms, setDorms] = useState<TDorm[]>([])
@@ -22,37 +23,42 @@ const Home = () => {
   const [dormsLoading, setDormsLoading] = useState<boolean>(true)
   const [announceLoading, setAnnounceLoading] = useState<boolean>(true)
 
+  const [limitDorms, setLimitDorms] = useState<number>(10)
+  const [limitAnnounces, setLimitAnnnounce] = useState<number>(10)
+
   useEffect(() => {
     document.title = `หน้าหลัก - HaDormy`
   }, [])
 
-  useEffect(() => {
-    const fetchDorms = async () => {
-      try {
-        setDormsLoading(true)
-        const dormsData = await getDorms()
-        setDorms(dormsData)
-      } catch (error) {
-        console.log('error:', error)
-      } finally {
-        setDormsLoading(false)
-      }
+  const fetchDorms = async () => {
+    try {
+      setDormsLoading(true)
+      const dormsData = await getDorms()
+      setDorms(dormsData)
+    } catch (error) {
+      console.log('error:', error)
+    } finally {
+      setDormsLoading(false)
     }
+  }
 
-    const fetchAnnouncements = async () => {
+  useEffect(() => {
+    fetchDorms()
+  }, [])
+
+  useEffect(() => {
+    const unsubscribeAnnouncements = subscribeToAnnounces((announces) => {
       try {
         setAnnounceLoading(true)
-        const announcementsData = await getAnnounces()
-        setAnnouncements(announcementsData)
+        setAnnouncements(announces)
       } catch (error) {
         console.log('error:', error)
       } finally {
         setAnnounceLoading(false)
       }
-    }
+    })
 
-    fetchDorms()
-    fetchAnnouncements()
+    return () => unsubscribeAnnouncements()
   }, [])
 
   return (
@@ -62,7 +68,7 @@ const Home = () => {
         <h2>ใกล้มหาวิทยาลัยพะเยา</h2>
       </div>
       <div className="grid grid-cols-[1fr_335px] gap-4 max-lg:flex max-lg:flex-col-reverse max-lg:gap-8">
-        {dormsLoading ? <DormListLoadingSection /> : <DormListSection cardList={dorms} />}
+        {dormsLoading ? <DormListLoadingSection /> : <DormListSection cardList={dorms} onRefresh={fetchDorms} />}
         {announceLoading ? <AnnouncementLoadingSection /> : <AnnouncementListSection cardList={announcements} />}
       </div>
     </div>

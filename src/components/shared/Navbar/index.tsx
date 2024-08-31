@@ -21,30 +21,74 @@ import {
   PopOverProfile,
   PopOverNotification,
 } from '@/components/shared'
-import { TUser, TUserRole } from '@/lib/type'
-import { getUserById } from '@/collections/usersCollection'
+import { EUserRole, TNotification, TUser, TUserRole } from '@/lib/type'
+import { listenToUserById, stopListeningToUser } from '@/collections/usersCollection'
 import { LoadingSpinner } from '@/components/shared'
+import { checkHaveDorm } from '@/collections/checkCollection'
+import { getDormIdByUserId } from '@/collections/checkCollection'
+import { getDormById } from '@/collections/dormsCollection'
+import { subscribeToNotifications } from '@/collections/notificationCollection'
+import { Noticia_Text } from 'next/font/google'
 
 const Navbar: React.FC = () => {
   const { user, loading } = useAuth()
   const [userData, setUserData] = useState<TUser | null>(null)
+  const [haveDorm, setHaveDorm] = useState<boolean | null>(null)
+  const [dormIdManage, setDormIdMange] = useState<string | null>(null)
+  const [dormPending, setDormPending] = useState<boolean | undefined>(undefined)
+  const [notifications, setNotifications] = useState<TNotification[]>([])
+
+  useEffect(() => {
+    if (!user) {
+      // Reset states on logout
+      setUserData(null)
+      setHaveDorm(null)
+      setDormIdMange(null)
+      setDormPending(undefined)
+      setNotifications([])
+      return
+    }
+
+    const unsubscribeUser = listenToUserById(user.uid, setUserData)
+    const unsubscribeNoti = subscribeToNotifications(user.uid as string, (notifications) => {
+      try {
+        setNotifications(notifications)
+      } catch (error) {
+        console.error(error)
+      }
+    })
+
+    return () => {
+      stopListeningToUser(unsubscribeUser)
+      unsubscribeNoti()
+    }
+  }, [user])
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        if (user) {
-          const data = await getUserById(user.uid)
-          setUserData(data)
-        } else {
-          setUserData(null)
-        }
+        if (!userData) return
+        const checkHaveDormData = await checkHaveDorm(userData.id as string)
+        const dormId = await getDormIdByUserId(userData.id as string)
+        setHaveDorm(checkHaveDormData)
+        setDormIdMange(dormId)
       } catch (error) {
         console.error(error)
       }
     }
 
+    const fetchDorm = async () => {
+      try {
+        if (!dormIdManage) return
+        const dormData = await getDormById(dormIdManage)
+        setDormPending(dormData?.is_activated)
+      } catch (error) {
+        console.error(error)
+      }
+    }
     fetchUser()
-  }, [user])
+    fetchDorm()
+  }, [userData, dormIdManage, notifications])
 
   const convertRole = (role: TUserRole) => {
     switch (role) {
@@ -54,7 +98,7 @@ const Navbar: React.FC = () => {
             <ModalAnnounce />
             <PopOverManage role={role} />
             <div className="max-lg:hidden">
-              <PopOverNotification notifications={[]} />
+              <PopOverNotification userId={userData && userData.id} notifications={notifications} />
             </div>
             <PopOverProfile user={userData} />
           </>
@@ -62,10 +106,10 @@ const Navbar: React.FC = () => {
       case 'SUPERUSER':
         return (
           <>
-            <ModalAnnounce />
-            <PopOverManage role={role} />
+            {haveDorm && dormPending && <ModalAnnounce />}
+            <PopOverManage role={role} dormId={dormIdManage} isCreated={haveDorm} isPending={dormPending} />
             <div className="max-lg:hidden">
-              <PopOverNotification notifications={[]} />
+              <PopOverNotification userId={userData && userData.id} notifications={notifications} />
             </div>
             <PopOverProfile user={userData} />
           </>
@@ -74,7 +118,7 @@ const Navbar: React.FC = () => {
         return (
           <>
             <div className="max-lg:hidden">
-              <PopOverNotification notifications={[]} />
+              <PopOverNotification userId={userData && userData.id} notifications={notifications} />
             </div>
             <PopOverProfile user={userData} />
           </>
@@ -110,7 +154,7 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-4 lg:hidden">
                 {userRole !== '' && (
                   <div className="lg:hidden">
-                    <PopOverNotification notifications={[]} />
+                    <PopOverNotification userId={userData && userData.id} notifications={[]} />
                   </div>
                 )}
                 <Sheet>

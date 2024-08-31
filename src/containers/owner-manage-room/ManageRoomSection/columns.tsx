@@ -82,7 +82,7 @@ export const columns: ColumnDef<TRoom>[] = [
   },
   {
     id: 'edit',
-    header: () => <div className="text-center text-primary">แก้ไขรายละเอียดห้องพัก</div>,
+    header: () => <div className="text-center text-primary">แก้ไขรายละเอียด</div>,
     cell: ({ row }) => {
       const room = row.original
       return (

@@ -1,5 +1,5 @@
 import thumbnailPlaceholderSVG from '@/images/common/thumbnail-placeholder.svg'
-import { ESort } from './type'
+import { ESort, EUserRole } from './type'
 
 export const imagePlaceholder = thumbnailPlaceholderSVG
 
@@ -55,10 +55,25 @@ export const convertSortToName = (sort: ESort) => {
   }
 }
 
+export const convertRoleToName = (role: EUserRole) => {
+  switch (role) {
+    case EUserRole.Admin:
+      return 'ผู้ดูแลระบบ'
+    case EUserRole.Superuser:
+      return 'เจ้าของหอพัก'
+    case EUserRole.User:
+      return 'ผู้ใช้งานทั่วไป'
+  }
+}
+
 export const formatPhoneNumber = (phoneNumber: string) => {
   if (phoneNumber) {
     return phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
   } else {
     return undefined
   }
+}
+
+export const copyTextToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text)
 }

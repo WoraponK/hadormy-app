@@ -25,17 +25,23 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList }) => {
           <Image src={IconMegaphoneBlackSVG} alt="IconMegaphoneBlackSVG" />
         </div>
         <div className="flex flex-col gap-2 max-lg:flex-row max-lg:overflow-x-auto max-lg:pb-4">
-          {cardList.map((card) => (
-            <CardAnnouncement
-              key={card?.id}
-              author={card?.author}
-              title={card?.title}
-              description={card?.description}
-              role={card?.role as TUserRole}
-              timestamp={card?.timestamp}
-              thumbnail={card?.thumbnail}
-            />
-          ))}
+          {cardList.length > 0 ? (
+            cardList.map((card) => (
+              <CardAnnouncement
+                key={card?.id}
+                author={card?.author}
+                title={card?.title}
+                description={card?.description}
+                role={card?.role as TUserRole}
+                timestamp={card.timestamp}
+                thumbnail={card?.thumbnail}
+              />
+            ))
+          ) : (
+            <div className="w-full flex justify-center py-4">
+              <p>ไม่พบข้อมูลประกาศ...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -62,7 +62,7 @@ const ManageUserByIdSection: React.FC = () => {
                 <FormItem>
                   <FormLabel>เบอร์โทร</FormLabel>
                   <FormControl>
-                    <Input placeholder="เบอร์โทร" {...field} />
+                    <Input placeholder="เบอร์โทร" {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,7 +75,7 @@ const ManageUserByIdSection: React.FC = () => {
                 <FormItem>
                   <FormLabel>รหัสผ่าน</FormLabel>
                   <FormControl>
-                    <Input placeholder="รหัสผ่าน" {...field} />
+                    <Input placeholder="รหัสผ่าน" {...field} disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

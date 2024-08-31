@@ -14,12 +14,38 @@ import {
 } from '@/components/ui/alert-dialog'
 import Link from 'next/link'
 
-import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
+import { formatPhoneNumber, convertDateFormat, convertRoleToName } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { FaRegTrashCan } from 'react-icons/fa6'
 import { CgWebsite } from 'react-icons/cg'
 
+import { deleteUser } from '@/collections/usersCollection'
+
+const handleDelete = async (userId: string) => {
+  try {
+    await deleteUser(userId)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const columns: ColumnDef<TUserTable>[] = [
+  {
+    accessorKey: 'role',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg w-full"
+        >
+          บทบาท
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="text-center">{convertRoleToName(row.getValue('role'))}</div>,
+  },
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -47,7 +73,7 @@ export const columns: ColumnDef<TUserTable>[] = [
     cell: ({ row }) => <div>{row.getValue('email')}</div>,
   },
   {
-    accessorKey: 'updateAt',
+    accessorKey: 'created_at',
     header: ({ column }) => {
       return (
         <Button
@@ -55,12 +81,12 @@ export const columns: ColumnDef<TUserTable>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="text-lg w-full"
         >
-          เวลาส่ง
+          สร้างเมื่อ
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="text-center">{convertDateFormat(row.getValue('updateAt'))}</div>,
+    cell: ({ row }) => <div className="text-center">{convertDateFormat(row.getValue('created_at'))}</div>,
   },
   {
     id: 'edit',
@@ -81,7 +107,9 @@ export const columns: ColumnDef<TUserTable>[] = [
   {
     id: 'delete',
     header: () => <div className="text-center text-destructive">ลบบัญชี</div>,
-    cell: () => {
+    cell: ({ row }) => {
+      const user = row.original
+
       return (
         <div className="flex justify-center">
           <AlertDialog>
@@ -106,7 +134,7 @@ export const columns: ColumnDef<TUserTable>[] = [
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+                <AlertDialogAction onClick={() => handleDelete(user.id as string)}>ยืนยัน</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

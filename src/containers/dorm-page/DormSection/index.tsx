@@ -4,21 +4,35 @@ import React from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { useToast } from '@/components/ui/use-toast'
 
 // Images
 import IconVerifiedSVG from '@/images/common/icon-verified.svg'
 import { BsFillTelephoneFill } from 'react-icons/bs'
+import { FaClipboardCheck } from 'react-icons/fa'
 
 // Include in project
 import { TDorm } from '@/lib/type'
 import { convertNumberToString, formatPhoneNumber } from '@/lib/others'
 import { TabThumbnail, TabBooking, TabRating } from '@/containers/dorm-page/'
+import { copyTextToClipboard } from '@/lib/others'
 
 type Props = {
+  dormId: string
   dataDorm: TDorm
 }
 
-const DormSection: React.FC<Props> = ({ dataDorm }) => {
+const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
+  const { toast } = useToast()
+
+  const copyToClipboard = (text: string) => {
+    copyTextToClipboard(text)
+    toast({
+      icon: <FaClipboardCheck className="text-primary" />,
+      title: 'คัดลอกลงคลิปบอร์ดสำเร็จ',
+    })
+  }
+
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -26,7 +40,10 @@ const DormSection: React.FC<Props> = ({ dataDorm }) => {
         <div className="grid grid-cols-2 max-md:flex max-md:flex-col gap-8">
           <div className="space-y-4 flex flex-col max-sm:items-center">
             <h6 className="text-gray-500">{dataDorm?.address}</h6>
-            <Button className="rounded-full bg-secondary text-secondary-foreground flex justify-center items-center gap-2 text-lg p-5 cursor-default w-fit">
+            <Button
+              onClick={() => copyToClipboard(dataDorm?.phoneNumber)}
+              className="rounded-full bg-secondary text-secondary-foreground flex justify-center items-center gap-2 text-lg p-5 w-fit"
+            >
               <BsFillTelephoneFill />
               {formatPhoneNumber(dataDorm?.phoneNumber)}
             </Button>
@@ -71,10 +88,10 @@ const DormSection: React.FC<Props> = ({ dataDorm }) => {
           />
         </TabsContent>
         <TabsContent value="booking">
-          <TabBooking rooms={dataDorm?.rooms} />
+          <TabBooking dormId={dormId} rooms={dataDorm?.rooms} />
         </TabsContent>
         <TabsContent value="rating">
-          <TabRating rating={dataDorm?.rating} />
+          <TabRating dormId={dormId} rating={dataDorm?.rating} />
         </TabsContent>
       </Tabs>
     </div>

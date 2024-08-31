@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { TDormTable } from '@/lib/type'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,11 +13,61 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import Link from 'next/link'
+import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { Timestamp } from 'firebase/firestore'
 
 import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { FaCheck, FaXmark } from 'react-icons/fa6'
+import { CgWebsite } from 'react-icons/cg'
+
+import { updateDorm, deleteDorm } from '@/collections/dormsCollection'
+import { addNotification } from '@/collections/notificationCollection'
+import { getUserIdByDormId } from '@/collections/checkCollection'
+
+const handleSubmit = async (id: string) => {
+  try {
+    const userId = await getUserIdByDormId(id)
+    await updateDorm(id, { is_activated: true })
+    await addNotification(userId as string, {
+      title: 'หอพักได้รับการอนุมัติ!',
+      is_seen: false,
+      updateAt: Timestamp.now(),
+      role: 'ADMIN',
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleCancel = async (id: string) => {
+  try {
+    const userId = await getUserIdByDormId(id)
+    const userQuery = query(collection(db, 'users'), where('owner_dorm', '==', doc(db, 'dorms', id)))
+    const userSnapshot = await getDocs(userQuery)
+
+    if (!userSnapshot.empty) {
+      const userDoc = userSnapshot.docs[0]
+      const userRef = doc(db, 'users', userDoc.id)
+
+      await updateDoc(userRef, {
+        owner_dorm: null,
+      })
+
+      await addNotification(userId as string, {
+        title: 'หอพักได้ถูกปฏิเสธการอนุมัติ!',
+        is_seen: false,
+        updateAt: Timestamp.now(),
+        role: 'ADMIN',
+      })
+
+      await deleteDorm(id)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 export const columns: ColumnDef<TDormTable>[] = [
   {
@@ -54,7 +105,7 @@ export const columns: ColumnDef<TDormTable>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           className="text-lg w-full"
         >
-          เวลาส่ง
+          แก้ไขล่าสุด
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -62,9 +113,26 @@ export const columns: ColumnDef<TDormTable>[] = [
     cell: ({ row }) => <div className="text-center">{convertDateFormat(row.getValue('updateAt'))}</div>,
   },
   {
+    id: 'preview',
+    header: () => <div className="text-center text-primary">รายละเอียด</div>,
+    cell: ({ row }) => {
+      const user = row.original
+      return (
+        <div className="flex justify-center">
+          <Link href={`/dorm/${user.id}`} target="_blank">
+            <Button size="icon" className="text-lg text-center">
+              <CgWebsite className="text-background" />
+            </Button>
+          </Link>
+        </div>
+      )
+    },
+  },
+  {
     id: 'submit',
     header: () => <div className="text-center text-success">ยอมรับ</div>,
-    cell: () => {
+    cell: ({ row }) => {
+      const user = row.original
       return (
         <div className="flex justify-center">
           <AlertDialog>
@@ -89,7 +157,7 @@ export const columns: ColumnDef<TDormTable>[] = [
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+                <AlertDialogAction onClick={() => handleSubmit(`${user.id}`)}>ยืนยัน</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -100,7 +168,8 @@ export const columns: ColumnDef<TDormTable>[] = [
   {
     id: 'decline',
     header: () => <div className="text-center text-destructive">ปฏิเสธ</div>,
-    cell: () => {
+    cell: ({ row }) => {
+      const user = row.original
       return (
         <div className="flex justify-center">
           <AlertDialog>
@@ -125,7 +194,7 @@ export const columns: ColumnDef<TDormTable>[] = [
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+                <AlertDialogAction onClick={() => handleCancel(`${user.id}`)}>ยืนยัน</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
