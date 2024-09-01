@@ -17,9 +17,116 @@ import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { FaCheck, FaXmark } from 'react-icons/fa6'
 
+// Collection
+import { db, storage } from '@/lib/firebase'
+import { ref, listAll, getDownloadURL } from 'firebase/storage'
+import { deleteRoomBooking, getRoomBookings } from '@/collections/roomBookingCollection'
+import { addNotification } from '@/collections/notificationCollection'
+import { getDormById } from '@/collections/dormsCollection'
+import { getUserIdByDormId } from '@/collections/checkCollection'
+import { doc, Timestamp } from 'firebase/firestore'
+import { updateRoom } from '@/collections/roomsCollection'
+
+const handleDecline = async (dormId: string, roomBookingId: string, userId: string, roomName: string) => {
+  try {
+    const dormName = await getDormById(dormId).then((dorm) => dorm?.name)
+    if (!dormName) return
+
+    const ownerId = await getUserIdByDormId(dormId)
+    if (!ownerId) return
+
+    const storagePath = `dorms/${ownerId}/`
+    const imagesRef = ref(storage, storagePath)
+
+    const newNotification = {
+      title: 'ถูกปฏิเสธการจองห้องพัก!',
+      description: `${dormName} ห้อง ${roomName}`,
+      is_seen: false,
+      updateAt: Timestamp.now(),
+      image: '',
+    }
+
+    try {
+      const imageList = await listAll(imagesRef)
+      if (imageList.items.length > 0) {
+        const firstImageRef = imageList.items[0]
+        const firstImageURL = await getDownloadURL(firstImageRef)
+        newNotification.image = firstImageURL
+      } else {
+        console.warn('No images found in storage.')
+      }
+    } catch (error) {
+      console.error('Error retrieving images:', error)
+    }
+
+    await addNotification(userId, newNotification)
+    await deleteRoomBooking(dormId, roomBookingId)
+  } catch (error) {
+    console.error('Error declining room booking:', error)
+  }
+}
+
+const handleSubmit = async (
+  dormId: string,
+  approvedRoomBookingId: string,
+  userId: string,
+  roomId: string,
+  roomName: string,
+) => {
+  try {
+    const dormName = await getDormById(dormId).then((dorm) => dorm?.name)
+    if (!dormName) return
+
+    const ownerId = await getUserIdByDormId(dormId)
+    if (!ownerId) return
+
+    const storagePath = `dorms/${ownerId}/`
+    const imagesRef = ref(storage, storagePath)
+
+    const newNotification = {
+      title: 'การจองห้องพักได้รับการอนุมัติ!',
+      description: `${dormName} ห้อง ${roomName}`,
+      is_seen: false,
+      updateAt: Timestamp.now(),
+      image: '',
+    }
+
+    try {
+      const imageList = await listAll(imagesRef)
+      if (imageList.items.length > 0) {
+        const firstImageRef = imageList.items[0]
+        const firstImageURL = await getDownloadURL(firstImageRef)
+        newNotification.image = firstImageURL
+      } else {
+        console.warn('No images found in storage.')
+      }
+    } catch (error) {
+      console.error('Error retrieving images:', error)
+    }
+
+    await addNotification(userId, newNotification)
+    await updateRoom(dormId, roomId, {
+      isAvailable: false,
+      user: doc(db, 'users', userId),
+    })
+    await deleteRoomBooking(dormId, approvedRoomBookingId)
+
+    const roomBookings = await getRoomBookings(dormId)
+    if (!roomBookings) return
+
+    for (const booking of roomBookings) {
+      if (booking.room_id === roomId && booking.id !== approvedRoomBookingId) {
+        await handleDecline(dormId, booking.id, booking.user_id, roomName)
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const columns: ColumnDef<TRoomApproveTable>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'username',
     header: ({ column }) => {
       return (
         <Button
@@ -32,7 +139,7 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('name')}</div>,
+    cell: ({ row }) => <div>{row.getValue('username')}</div>,
   },
   {
     accessorKey: 'phoneNumber',
@@ -41,8 +148,19 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
   },
   {
     accessorKey: 'room',
-    header: () => <div>ห้อง</div>,
-    cell: ({ row }) => <div>{row.getValue('room')}</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="text-lg w-full"
+        >
+          ห้อง
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="text-center">{row.getValue('room')}</div>,
   },
   {
     accessorKey: 'updateAt',
@@ -63,7 +181,13 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
   {
     id: 'submit',
     header: () => <div className="text-center text-success">ยอมรับ</div>,
-    cell: () => {
+    cell: ({ row }) => {
+      const dormId = row.original.dormId
+      const roomBookingId = row.original.id
+      const userId = row.original.userId
+      const roomId = row.original.roomId
+      const roomName = row.original.room
+
       return (
         <div className="flex justify-center">
           <AlertDialog>
@@ -83,9 +207,24 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
                   </div>
                 </AlertDialogTitle>
               </AlertDialogHeader>
+              <AlertDialogDescription className="text-center">
+                ระบบจะทำการปฏิเสธการจอง ที่มีห้องพักเดียวกันโดยอัตโนมัติ
+              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() =>
+                    handleSubmit(
+                      dormId as string,
+                      roomBookingId as string,
+                      userId as string,
+                      roomId as string,
+                      roomName,
+                    )
+                  }
+                >
+                  ยืนยัน
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -96,7 +235,12 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
   {
     id: 'decline',
     header: () => <div className="text-center text-destructive">ปฏิเสธ</div>,
-    cell: () => {
+    cell: ({ row }) => {
+      const dormId = row.original.dormId
+      const roomBookingId = row.original.id
+      const userId = row.original.userId
+      const roomName = row.original.room
+
       return (
         <div className="flex justify-center">
           <AlertDialog>
@@ -119,9 +263,14 @@ export const columns: ColumnDef<TRoomApproveTable>[] = [
                   หากปฏิเสธไปแล้ว จะไม่สามารถกลับมาได้
                 </AlertDialogDescription>
               </AlertDialogHeader>
+              <AlertDialogDescription className="text-center"></AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                <AlertDialogAction onClick={() => console.log('ยืนยันลบบัญชีผู้ใช้!')}>ยืนยัน</AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() => handleDecline(dormId as string, roomBookingId as string, userId as string, roomName)}
+                >
+                  ยืนยัน
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

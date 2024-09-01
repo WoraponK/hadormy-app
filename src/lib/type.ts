@@ -96,9 +96,12 @@ export type TUserTable = {
 
 export type TRoomApproveTable = {
   id: string | number
-  name: string
+  dormId: string | number
+  username: string
+  userId: string | number
   phoneNumber: string
   room: string
+  roomId: string | number
   updateAt: string
 }
 

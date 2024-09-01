@@ -21,14 +21,13 @@ import {
   PopOverProfile,
   PopOverNotification,
 } from '@/components/shared'
-import { EUserRole, TNotification, TUser, TUserRole } from '@/lib/type'
+import { TNotification, TUser, TUserRole } from '@/lib/type'
 import { listenToUserById, stopListeningToUser } from '@/collections/usersCollection'
 import { LoadingSpinner } from '@/components/shared'
 import { checkHaveDorm } from '@/collections/checkCollection'
 import { getDormIdByUserId } from '@/collections/checkCollection'
 import { getDormById } from '@/collections/dormsCollection'
 import { subscribeToNotifications } from '@/collections/notificationCollection'
-import { Noticia_Text } from 'next/font/google'
 
 const Navbar: React.FC = () => {
   const { user, loading } = useAuth()
@@ -139,7 +138,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto grid grid-cols-2 gap-4 h-full">
         <div className="flex items-center space-x-8 max-lg:space-x-4">
           <Link href={'/'}>
-            <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} />
+            <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} priority />
           </Link>
           <SearchBar />
         </div>
@@ -154,7 +153,7 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-4 lg:hidden">
                 {userRole !== '' && (
                   <div className="lg:hidden">
-                    <PopOverNotification userId={userData && userData.id} notifications={[]} />
+                    <PopOverNotification userId={userData && userData.id} notifications={notifications} />
                   </div>
                 )}
                 <Sheet>

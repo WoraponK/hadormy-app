@@ -122,7 +122,11 @@ const ModalAnnounce: React.FC = () => {
           <DialogTitle asChild>
             <div className="flex gap-2">
               <h2 className="text-primary">ประกาศ</h2>
-              <Image src={IconMegaphonePrimarySVG} alt="IconMegaphoneBlackSVG" />
+              <Image
+                src={IconMegaphonePrimarySVG}
+                alt="IconMegaphoneBlackSVG"
+                className="w-auto h-auto aspect-square"
+              />
             </div>
           </DialogTitle>
           <DialogDescription asChild>

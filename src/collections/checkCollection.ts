@@ -75,3 +75,25 @@ export const getUserIdByDormId = async (parentId: string) => {
     return null
   }
 }
+
+export const getDormIdByRoomBookingId = async (roomBookingId: string): Promise<string | null> => {
+  try {
+    const roomDocRef = doc(db, 'dorms', 'dormId', 'room_booking', roomBookingId)
+    const roomDoc = await getDoc(roomDocRef)
+
+    if (roomDoc.exists()) {
+      const dormDocRef = roomDocRef.parent.parent as DocumentReference
+
+      if (dormDocRef) {
+        return dormDocRef.id
+      } else {
+        return null
+      }
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.error('Error fetching dorm ID by room ID:', error)
+    return null
+  }
+}

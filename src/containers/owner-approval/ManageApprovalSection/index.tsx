@@ -39,9 +39,9 @@ const ManageApprovalSection: React.FC<Props> = ({ data }) => {
         <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start">
           <Input
             icon={<IoSearch />}
-            placeholder="ค้นหาชื่อ..."
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+            placeholder="ค้นหาชื่อผู้เช่า..."
+            value={(table.getColumn('username')?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn('username')?.setFilterValue(event.target.value)}
             className="max-w-sm border border-border"
           />
           <p>รายการทั้งหมด: {table.getRowModel().rows?.length}</p>

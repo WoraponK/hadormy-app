@@ -67,6 +67,7 @@ const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable
       if (!user) return
 
       await addRoomBooking(dormId, {
+        dorm_id: dormId,
         room_id: roomId,
         room_name: name,
         user_id: user?.uid,

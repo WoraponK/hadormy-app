@@ -6,6 +6,23 @@ const getDormRoomBookingCollection = (dormId: string) => {
   return collection(db, 'dorms', dormId, 'room_booking')
 }
 
+export const getRoomBookings = async (dormId: string) => {
+  const roomBookingCollection = getDormRoomBookingCollection(dormId)
+  const snapshot = await getDocs(roomBookingCollection)
+
+  const roomBookings: any[] = snapshot.docs.map((doc) => {
+    const data = doc.data()
+    const timestamp = `${data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)}`
+    return {
+      id: doc.id,
+      ...data,
+      created_at: timestamp,
+    }
+  })
+
+  return roomBookings
+}
+
 export const addRoomBooking = async (dormId: string, post: any) => {
   const roomBookingCollection = getDormRoomBookingCollection(dormId)
   await addDoc(roomBookingCollection, post)

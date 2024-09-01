@@ -52,17 +52,17 @@ const PopOverNotification: React.FC<Props> = ({ userId, notifications }) => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="overflow-hidden mt-3 space-y-2">
-        <div className="flex items-center space-x-2 text-primary">
+      <PopoverContent className="overflow-hidden mt-3 space-y-2 p-2">
+        <div className="flex items-center space-x-2 text-primary p-2">
           <FaBell className="text-lg" />
           <h4>การแจ้งเตือน</h4>
         </div>
-        <div className="overflow-auto h-full max-h-80 space-y-2">
+        <div className="overflow-auto h-full max-h-80 space-y-1 p-1">
           {notifications.length > 0 ? (
             notifications.map((noti, index) => (
               <div
                 key={index}
-                className={`p-2 flex space-x-2 items-center rounded shadow-md relative transition-all ${
+                className={`p-2 flex space-x-2 items-center rounded shadow-sm relative transition-all ${
                   noti.is_seen ? 'bg-gray-200' : 'cursor-pointer hover:bg-gray-100'
                 }`}
                 onClick={() => (noti.is_seen ? undefined : handleClick(userId as string, noti.id as string))}

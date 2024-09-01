@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, addDoc, onSnapshot } from 'firebase/firestore'
+import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { Timestamp } from 'firebase/firestore'
 
@@ -61,4 +61,15 @@ export const addRoomsByAmount = async (parentId: string, amount: number, price: 
 
     await addDoc(roomDocs, roomData)
   }
+}
+
+export const updateRoom = async (dormId: string, roomId: string, updatedData: any) => {
+  const roomDocRef = doc(db, 'dorms', dormId, 'rooms', roomId)
+
+  const dataToUpdate = {
+    ...updatedData,
+    updated_at: Timestamp.now(),
+  }
+
+  await updateDoc(roomDocRef, dataToUpdate)
 }

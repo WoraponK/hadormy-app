@@ -61,7 +61,7 @@ const SearchBar: React.FC = () => {
       let q
       if (data.searching.trim() === '') {
         setResults([])
-        q = query(postsRef, limit(0))
+        q = query(postsRef)
       } else {
         q = query(postsRef, where('name', '>=', data.searching), where('name', '<=', data.searching + '\uf8ff'))
       }
