@@ -73,7 +73,6 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
       title: 'ให้คะแนนสำเร็จ',
       description: 'ขอบคุณสำหรับการให้คะแนน',
     })
-    router.refresh()
   }
 
   return (
@@ -96,7 +95,7 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
               <FormField
                 control={form.control}
-                name="rating"
+                name="rate"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel asChild>
