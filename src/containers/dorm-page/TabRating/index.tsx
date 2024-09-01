@@ -32,6 +32,7 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
   const { toast } = useToast()
   const { user } = useAuth()
   const [isCreator, setIsCreator] = useState<boolean>(false)
+  const [isSuperuser, setIsSuperuser] = useState<boolean>(false)
   const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
 
   useEffect(() => {
@@ -45,20 +46,21 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
       }
     }
 
-    const fetchCheckAdmin = async () => {
+    const fetchCheckRole = async () => {
       try {
         if (!user) return
         const userData = await getUserById(user.uid)
         if (!userData) return
         setIsAdmin(userData.role === 'ADMIN')
+        setIsSuperuser(userData.role === 'SUPERUSER')
       } catch (error) {
         console.error(error)
       }
     }
 
     fetchCheckDorm()
-    fetchCheckAdmin()
-  }, [])
+    fetchCheckRole()
+  }, [user, dormId])
 
   const form = useForm<z.infer<typeof ratingSchema>>({
     resolver: zodResolver(ratingSchema),
@@ -87,8 +89,8 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
       <div className="p-8 flex justify-center items-center">
         {isAdmin ? (
           <p>เนื่องจากคุณเป็นผู้ดูแลระบบ จึงไม่สามารถให้คะแนนได้</p>
-        ) : isCreator ? (
-          <p>เนื่องจากคุณเป็นเจ้าของหอพักนี้ จึงไม่สามารถให้คะแนนได้</p>
+        ) : isCreator || isSuperuser ? (
+          <p>เนื่องจากคุณมีบทบาทเป็นเจ้าของหอพัก จึงไม่สามารถให้คะแนนได้</p>
         ) : (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
