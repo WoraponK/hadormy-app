@@ -48,18 +48,20 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
       }
     })
 
-    const fetchRatings = async () => {
+    const unsubscribeRatings = getRatings(params.dormId, (ratings) => {
       try {
-        const data = await getRatings(params.dormId)
-        setRatingsData(data)
+        setRatingsData(ratings)
       } catch (error) {
         console.error(error)
       }
-    }
+    })
 
     fetchDormById()
-    fetchRatings()
-    return () => unsubscribeRooms()
+
+    return () => {
+      unsubscribeRooms()
+      unsubscribeRatings()
+    }
   }, [params.dormId])
 
   const formattedData: TDorm = {

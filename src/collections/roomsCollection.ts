@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { Timestamp } from 'firebase/firestore'
 
@@ -72,4 +72,27 @@ export const updateRoom = async (dormId: string, roomId: string, updatedData: an
   }
 
   await updateDoc(roomDocRef, dataToUpdate)
+}
+
+export const getRoomMembershipByUserId = async (dormId: string, userId: string) => {
+  try {
+    const roomsCollection = getDormRoomCollection(dormId)
+    const roomsSnapshot = await getDocs(roomsCollection)
+
+    for (const roomDoc of roomsSnapshot.docs) {
+      const userRef = roomDoc.data().user
+      if (userRef) {
+        const userDocSnapshot = await getDoc(userRef)
+
+        if (userDocSnapshot.exists() && userDocSnapshot.id === userId) {
+          return true
+        }
+      }
+    }
+
+    return false
+  } catch (error) {
+    console.error('Error checking room membership:', error)
+    throw new Error('Failed to check room membership')
+  }
 }

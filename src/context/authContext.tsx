@@ -93,7 +93,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
       })
     } catch (error) {
-      console.error('Error signing in:', error)
+      toast({
+        variant: 'destructive',
+        icon: <MdError className="text-background" />,
+        title: 'เข้าสู่ระบบไม่สำเร็จ',
+        description: `${error}`,
+      })
     }
   }
 

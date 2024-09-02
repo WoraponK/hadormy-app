@@ -10,8 +10,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context/authContext'
 
 // Images
 import { FaStar, FaRegStar } from 'react-icons/fa6'
@@ -19,60 +17,38 @@ import { FaStar, FaRegStar } from 'react-icons/fa6'
 // Include in project
 import ratingSchema from '@/schemas/ratingSchema'
 import { ERating } from '@/lib/type'
-import { getDormIdByUserId } from '@/collections/checkCollection'
-import { getUserById } from '@/collections/usersCollection'
+import { addRating } from '@/collections/ratingsCollection'
 
 type Props = {
   dormId: string
   rating: number
+  userId: string | null
+  isCreator: boolean
+  isSuperuser: boolean
+  isAdmin: boolean | null
+  isMember: boolean
+  isRated: boolean
 }
 
-const TabRating: React.FC<Props> = ({ dormId, rating }) => {
-  const router = useRouter()
+const TabRating: React.FC<Props> = ({ dormId, userId, rating, isCreator, isSuperuser, isAdmin, isMember, isRated }) => {
   const { toast } = useToast()
-  const { user } = useAuth()
-  const [isCreator, setIsCreator] = useState<boolean>(false)
-  const [isSuperuser, setIsSuperuser] = useState<boolean>(false)
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
-
-  useEffect(() => {
-    const fetchCheckDorm = async () => {
-      try {
-        if (!user) return
-        const checkDormId = await getDormIdByUserId(user.uid)
-        setIsCreator(checkDormId === dormId)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    const fetchCheckRole = async () => {
-      try {
-        if (!user) return
-        const userData = await getUserById(user.uid)
-        if (!userData) return
-        setIsAdmin(userData.role === 'ADMIN')
-        setIsSuperuser(userData.role === 'SUPERUSER')
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    fetchCheckDorm()
-    fetchCheckRole()
-  }, [user, dormId])
 
   const form = useForm<z.infer<typeof ratingSchema>>({
     resolver: zodResolver(ratingSchema),
   })
 
-  const onSubmit = (values: z.infer<typeof ratingSchema>) => {
-    console.log('🚀 ~ onSubmit ~ values:', values)
-    toast({
-      icon: <FaStar className="text-primary" />,
-      title: 'ให้คะแนนสำเร็จ',
-      description: 'ขอบคุณสำหรับการให้คะแนน',
-    })
+  const onSubmit = async (values: z.infer<typeof ratingSchema>) => {
+    try {
+      if (!userId) return
+      await addRating(dormId, userId, values.rate)
+      toast({
+        icon: <FaStar className="text-primary" />,
+        title: 'ให้คะแนนสำเร็จ',
+        description: 'ขอบคุณสำหรับการให้คะแนน',
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -90,7 +66,12 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
           <p>เนื่องจากคุณเป็นผู้ดูแลระบบ จึงไม่สามารถให้คะแนนได้</p>
         ) : isCreator || isSuperuser ? (
           <p>เนื่องจากคุณมีบทบาทเป็นเจ้าของหอพัก จึงไม่สามารถให้คะแนนได้</p>
-        ) : (
+        ) : isRated ? (
+          <div className="flex flex-col items-center space-y-2">
+            <FaStar className="text-primary text-3xl" />
+            <h4 className="text-primary">ขอบคุณสำหรับคะแนนของคุณ :)</h4>
+          </div>
+        ) : isMember ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
               <FormField
@@ -216,6 +197,8 @@ const TabRating: React.FC<Props> = ({ dormId, rating }) => {
               />
             </form>
           </Form>
+        ) : (
+          <p>เนื่องจากคุณไม่ได้เป็นสมาชิกของหอพัก จึงไม่สามารถให้คะแนนได้</p>
         )}
       </div>
     </div>

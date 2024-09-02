@@ -1,6 +1,6 @@
 'use client'
 // Lib
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -16,6 +16,11 @@ import { TDorm } from '@/lib/type'
 import { convertNumberToString, formatPhoneNumber } from '@/lib/others'
 import { TabThumbnail, TabBooking, TabRating } from '@/containers/dorm-page/'
 import { copyTextToClipboard } from '@/lib/others'
+import { useAuth } from '@/context/authContext'
+import { getDormIdByUserId } from '@/collections/checkCollection'
+import { getUserById } from '@/collections/usersCollection'
+import { getRoomMembershipByUserId } from '@/collections/roomsCollection'
+import { getIsRatedByUserId } from '@/collections/ratingsCollection'
 
 type Props = {
   dormId: string
@@ -24,6 +29,44 @@ type Props = {
 
 const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
   const { toast } = useToast()
+  const { user } = useAuth()
+  const [isCreator, setIsCreator] = useState<boolean>(false)
+  const [isSuperuser, setIsSuperuser] = useState<boolean>(false)
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
+  const [isMember, setIsMember] = useState<boolean>(false)
+  const [isRated, setIsRated] = useState<boolean>(false)
+  console.log('🚀 ~ isRated:', isRated)
+
+  useEffect(() => {
+    if (!user) return
+
+    const fetchData = async () => {
+      try {
+        const [checkDormId, userData, membership] = await Promise.all([
+          getDormIdByUserId(user.uid),
+          getUserById(user.uid),
+          getRoomMembershipByUserId(dormId, user.uid),
+        ])
+
+        setIsCreator(checkDormId === dormId)
+        setIsAdmin(userData?.role === 'ADMIN')
+        setIsSuperuser(userData?.role === 'SUPERUSER')
+        setIsMember(membership)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    const unsubscribeRated = getIsRatedByUserId(dormId, user.uid, (isRated) => {
+      setIsRated(isRated)
+    })
+
+    fetchData()
+
+    return () => {
+      unsubscribeRated()
+    }
+  }, [user, dormId])
 
   const copyToClipboard = (text: string) => {
     copyTextToClipboard(text)
@@ -58,7 +101,7 @@ const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
                 <p className="text-gray-500">บาท/เดือน</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 max-md:justify-start">
+            <div className="flex items-center gap-2 max-md:justify-start bg-foreground w-fit py-2 px-4 rounded-full">
               <Image src={IconVerifiedSVG} alt="IconVerifiedSVG" />
               <h5 className="text-success">ลงทะเบียนที่พักแล้ว</h5>
             </div>
@@ -88,10 +131,25 @@ const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
           />
         </TabsContent>
         <TabsContent value="booking">
-          <TabBooking dormId={dormId} rooms={dataDorm?.rooms} />
+          <TabBooking
+            isAdmin={isAdmin}
+            isCreator={isCreator}
+            isSuperuser={isSuperuser}
+            dormId={dormId}
+            rooms={dataDorm?.rooms}
+          />
         </TabsContent>
         <TabsContent value="rating">
-          <TabRating dormId={dormId} rating={dataDorm?.rating} />
+          <TabRating
+            userId={user && user.uid}
+            isAdmin={isAdmin}
+            isCreator={isCreator}
+            isSuperuser={isSuperuser}
+            isMember={isMember}
+            isRated={isRated}
+            dormId={dormId}
+            rating={dataDorm?.rating}
+          />
         </TabsContent>
       </Tabs>
     </div>

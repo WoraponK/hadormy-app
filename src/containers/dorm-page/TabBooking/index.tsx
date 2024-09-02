@@ -13,45 +13,21 @@ import { subscribeToRoomIdByUserId } from '@/collections/roomBookingCollection'
 type Props = {
   dormId: string
   rooms: TRoom[]
+  isCreator: boolean
+  isSuperuser: boolean
+  isAdmin: boolean | null
 }
 
-const TabBooking: React.FC<Props> = ({ dormId, rooms }) => {
+const TabBooking: React.FC<Props> = ({ dormId, rooms, isCreator, isSuperuser, isAdmin }) => {
   const { user } = useAuth()
-  const [isCreator, setIsCreator] = useState<boolean>(false)
-  const [isSuperuser, setIsSuperuser] = useState<boolean>(false)
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
+
   const [roomId, setRoomId] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchCheckDorm = async () => {
-      try {
-        if (!user) return
-        const checkDormId = await getDormIdByUserId(user.uid)
-        setIsCreator(checkDormId === dormId)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    const fetchCheckRole = async () => {
-      try {
-        if (!user) return
-        const userData = await getUserById(user.uid)
-        if (!userData) return
-        setIsAdmin(userData.role === 'ADMIN')
-        setIsSuperuser(userData.role === 'SUPERUSER')
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
     if (!user) return
     const unsubscribeCheckRoomBooking = subscribeToRoomIdByUserId(dormId, user.uid, (roomId) => {
       setRoomId(roomId)
     })
-
-    fetchCheckDorm()
-    fetchCheckRole()
 
     return () => unsubscribeCheckRoomBooking()
   }, [user, dormId])

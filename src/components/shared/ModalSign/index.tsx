@@ -20,7 +20,6 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
-import { useRouter } from 'next/navigation'
 
 // Images
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-dark.svg'
@@ -33,7 +32,6 @@ import { useAuth } from '@/context/authContext'
 
 const LoginTab: React.FC = () => {
   const { signIn } = useAuth()
-  const router = useRouter()
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -46,12 +44,6 @@ const LoginTab: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
       await signIn(values.email, values.password)
-        .then(() => {
-          router.refresh()
-        })
-        .catch(() => {
-          throw new Error()
-        })
     } catch (error) {
       console.error(error)
     }
