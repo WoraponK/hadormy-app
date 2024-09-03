@@ -11,6 +11,7 @@ import { useAuth } from '@/context/authContext'
 // Images
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-light.svg'
 import { IoMenu } from 'react-icons/io5'
+import { LuArrowBigUpDash } from 'react-icons/lu'
 
 // Include in project
 import {
@@ -21,14 +22,13 @@ import {
   PopOverProfile,
   PopOverNotification,
 } from '@/components/shared'
-import { EUserRole, TNotification, TUser, TUserRole } from '@/lib/type'
+import { TNotification, TUser, TUserRole } from '@/lib/type'
 import { listenToUserById, stopListeningToUser } from '@/collections/usersCollection'
 import { LoadingSpinner } from '@/components/shared'
 import { checkHaveDorm } from '@/collections/checkCollection'
 import { getDormIdByUserId } from '@/collections/checkCollection'
 import { getDormById } from '@/collections/dormsCollection'
 import { subscribeToNotifications } from '@/collections/notificationCollection'
-import { Noticia_Text } from 'next/font/google'
 
 const Navbar: React.FC = () => {
   const { user, loading } = useAuth()
@@ -37,6 +37,26 @@ const Navbar: React.FC = () => {
   const [dormIdManage, setDormIdMange] = useState<string | null>(null)
   const [dormPending, setDormPending] = useState<boolean | undefined>(undefined)
   const [notifications, setNotifications] = useState<TNotification[]>([])
+
+  const [showScroll, setShowScroll] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowScroll(true)
+      } else {
+        setShowScroll(false)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     if (!user) {
@@ -135,51 +155,63 @@ const Navbar: React.FC = () => {
   const userRole = userData?.role || ''
 
   return (
-    <nav className={`py-5 sticky bg-foreground rounded-b-3xl z-20 left-0 top-0`}>
-      <div className="container mx-auto grid grid-cols-2 gap-4 h-full">
-        <div className="flex items-center space-x-8 max-lg:space-x-4">
-          <Link href={'/'}>
-            <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} />
-          </Link>
-          <SearchBar />
+    <>
+      <nav className={`py-5 sticky bg-foreground rounded-b-3xl z-20 left-0 top-0`}>
+        <div className="container mx-auto grid grid-cols-2 gap-4 h-full">
+          <div className="flex items-center space-x-8 max-lg:space-x-4">
+            <Link href={'/'}>
+              <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" height={40} priority />
+            </Link>
+            <SearchBar />
+          </div>
+          <div className="justify-self-end flex items-center justify-center">
+            {loading ? (
+              <LoadingSpinner className="text-background" />
+            ) : (
+              <>
+                <div className="flex items-center space-x-6 max-[1200px]:space-x-2 max-lg:hidden">
+                  {convertRole((userRole as TUserRole) || '')}
+                </div>
+                <div className="flex items-center space-x-4 lg:hidden">
+                  {userRole !== '' && (
+                    <div className="lg:hidden">
+                      <PopOverNotification userId={userData && userData.id} notifications={notifications} />
+                    </div>
+                  )}
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button size="icon" variant="ghost" className="hover:bg-transparent">
+                        <IoMenu className="text-background text-4xl" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent className="max-w-[400px] bg-foreground border-foreground">
+                      <SheetHeader>
+                        <SheetTitle>Are you absolutely sure?</SheetTitle>
+                        <SheetDescription asChild>
+                          <div className="flex flex-col max-lg:items-center space-y-8">
+                            {convertRole((userRole as TUserRole) || '')}
+                          </div>
+                        </SheetDescription>
+                      </SheetHeader>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-        <div className="justify-self-end flex items-center justify-center">
-          {loading ? (
-            <LoadingSpinner className="text-background" />
-          ) : (
-            <>
-              <div className="flex items-center space-x-6 max-[1200px]:space-x-2 max-lg:hidden">
-                {convertRole((userRole as TUserRole) || '')}
-              </div>
-              <div className="flex items-center space-x-4 lg:hidden">
-                {userRole !== '' && (
-                  <div className="lg:hidden">
-                    <PopOverNotification userId={userData && userData.id} notifications={[]} />
-                  </div>
-                )}
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button size="icon" variant="ghost" className="hover:bg-transparent">
-                      <IoMenu className="text-background text-4xl" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent className="max-w-[400px] bg-foreground border-foreground">
-                    <SheetHeader>
-                      <SheetTitle>Are you absolutely sure?</SheetTitle>
-                      <SheetDescription asChild>
-                        <div className="flex flex-col max-lg:items-center space-y-8">
-                          {convertRole((userRole as TUserRole) || '')}
-                        </div>
-                      </SheetDescription>
-                    </SheetHeader>
-                  </SheetContent>
-                </Sheet>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </nav>
+      </nav>
+      {showScroll && (
+        <Button
+          className={`w-[50px] h-[50px] rounded-full fixed bottom-4 right-4 bg-primary text-background transition-opacity duration-300 ease-in-out ${
+            showScroll ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={scrollToTop}
+        >
+          <LuArrowBigUpDash className="text-background text-3xl absolute" />
+        </Button>
+      )}
+    </>
   )
 }
 

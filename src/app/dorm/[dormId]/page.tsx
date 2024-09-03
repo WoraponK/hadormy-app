@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 // Lib
@@ -7,12 +6,12 @@ import NotFound from '@/app/not-found'
 
 // Include in project
 import { DormSection } from '@/containers/dorm-page'
-import { TDorm, TRoom } from '@/lib/type'
+import { TDorm } from '@/lib/type'
 import { DormLoadingSection } from '@/containers/dorm-page'
 import { useAuth } from '@/context/authContext'
 
 import { getDormById } from '@/collections/dormsCollection'
-import { getRooms } from '@/collections/roomsCollection'
+import { subscribeToRooms } from '@/collections/roomsCollection'
 import { getRatings } from '@/collections/ratingsCollection'
 
 const Dorm = ({ params }: { params: { dormId: string } }) => {
@@ -36,9 +35,10 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
         setDormLoading(false)
       }
     }
-    const fetchRooms = async () => {
+
+    const unsubscribeRooms = subscribeToRooms(params.dormId, (rooms) => {
       try {
-        const data = await getRooms(params.dormId)
+        const data = rooms
         data.sort((a: any, b: any) => a.name.localeCompare(b.name))
         data.sort((a: any, b: any) => a.price - b.price)
         data.sort((a: any, b: any) => b.isAvailable - a.isAvailable)
@@ -46,21 +46,23 @@ const Dorm = ({ params }: { params: { dormId: string } }) => {
       } catch (error) {
         console.error(error)
       }
-    }
+    })
 
-    const fetchRatings = async () => {
+    const unsubscribeRatings = getRatings(params.dormId, (ratings) => {
       try {
-        const data = await getRatings(params.dormId)
-        setRatingsData(data)
+        setRatingsData(ratings)
       } catch (error) {
         console.error(error)
       }
-    }
+    })
 
     fetchDormById()
-    fetchRooms()
-    fetchRatings()
-  }, [])
+
+    return () => {
+      unsubscribeRooms()
+      unsubscribeRatings()
+    }
+  }, [params.dormId])
 
   const formattedData: TDorm = {
     ...(dormData as TDorm),

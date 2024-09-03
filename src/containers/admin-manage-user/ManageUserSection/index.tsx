@@ -10,6 +10,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 
 // Images
 import { IoSearch } from 'react-icons/io5'
@@ -44,7 +47,35 @@ const ManageUserSection: React.FC<Props> = ({ data }) => {
             onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
             className="max-w-sm border border-border"
           />
-          <p>รายการทั้งหมด: {table.getRowModel().rows?.length}</p>
+          <p>รายการทั้งหมด: {data.length}</p>
+        </div>
+        <div className="flex items-center gap-2 justify-end max-md:flex-col">
+          <span>
+            หน้า {table.getState().pagination.pageIndex + 1} จาก {table.getPageCount()}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+              ย้อนกลับ
+            </Button>
+            <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+              ถัดไป
+            </Button>
+          </div>
+          <Select
+            value={table.getState().pagination.pageSize.toString()}
+            onValueChange={(value) => table.setPageSize(Number(value))}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select page size" />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50, data.length].map((pageSize) => (
+                <SelectItem key={pageSize} value={pageSize.toString()} className="hover:cursor-pointer">
+                  {pageSize !== data.length ? `แสดง ${pageSize} รายการ` : 'แสดงทั้งหมด'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Table className="space-y-4">
           <TableHeader>

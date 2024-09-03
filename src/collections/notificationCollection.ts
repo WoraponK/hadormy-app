@@ -1,16 +1,4 @@
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  getDoc,
-  onSnapshot,
-  DocumentData,
-} from 'firebase/firestore'
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TNotification } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'

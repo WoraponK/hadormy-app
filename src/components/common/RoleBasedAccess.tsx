@@ -17,6 +17,7 @@ interface RoleBasedAccessProps {
 const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, children }) => {
   const { user, loading } = useAuth()
   const [userData, setUserData] = useState<TUser | null>(null)
+  const [isUserDataLoading, setIsUserDataLoading] = useState(true)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +30,8 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, childre
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        setIsUserDataLoading(false)
       }
     }
 
@@ -37,7 +40,7 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, childre
 
   const userRole = userData?.role || ''
 
-  if (loading) {
+  if (loading || isUserDataLoading) {
     return (
       <div className="min-h-screen grid place-items-center">
         <LoadingSpinner className="text-primary" />
@@ -45,7 +48,7 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({ allowedRoles, childre
     )
   }
 
-  if (!allowedRoles.includes(userRole || '')) {
+  if (!allowedRoles.includes(userRole)) {
     return <NotFound />
   }
 

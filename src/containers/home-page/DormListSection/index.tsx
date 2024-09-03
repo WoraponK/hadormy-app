@@ -28,6 +28,8 @@ import { convertDormTypeToName, convertSortToName } from '@/lib/others'
 type Props = {
   cardList: TDorm[]
   onRefresh: () => void
+  onLoadMore: () => void
+  currentLimit: number
 }
 
 type DormTypeSortProps = {
@@ -113,7 +115,7 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
   )
 }
 
-const DormListSection: React.FC<Props> = ({ cardList, onRefresh }) => {
+const DormListSection: React.FC<Props> = ({ cardList, onRefresh, onLoadMore, currentLimit }) => {
   const [dormType, setDormType] = useState<string>('ALL')
   const [minSort, setMinSort] = useState<boolean>(false)
   const [generalSort, setGeneralSort] = useState<string>('TIME')
@@ -161,19 +163,22 @@ const DormListSection: React.FC<Props> = ({ cardList, onRefresh }) => {
       </div>
       <div className="grid grid-cols-1 gap-4 max-md:grid-cols-2 max-[548px]:grid-cols-1">
         {newCardList.length > 0 ? (
-          newCardList.map((card) => (
-            <CardDorm
-              key={card.id}
-              id={card.id}
-              name={card.name}
-              address={card.address}
-              distance={card.distance}
-              priceStart={card.priceStart}
-              priceEnd={card.priceEnd}
-              timestamp={card.timestamp}
-              thumbnail={card.thumbnail?.[0]}
-            />
-          ))
+          <>
+            {newCardList.map((card) => (
+              <CardDorm
+                key={card.id}
+                id={card.id}
+                name={card.name}
+                address={card.address}
+                distance={card.distance}
+                priceStart={card.priceStart}
+                priceEnd={card.priceEnd}
+                timestamp={card.timestamp}
+                thumbnail={card.thumbnail?.[0]}
+              />
+            ))}
+            {newCardList.length >= currentLimit && <Button onClick={onLoadMore}>โหลดเพิ่ม</Button>}
+          </>
         ) : (
           <div className="w-full flex justify-center py-8">
             <p>ไม่พบรายชื่อหอพัก...</p>

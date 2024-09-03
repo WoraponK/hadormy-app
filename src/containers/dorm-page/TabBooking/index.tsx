@@ -8,47 +8,34 @@ import { CardBooking } from '@/components/shared'
 import { useAuth } from '@/context/authContext'
 import { getDormIdByUserId } from '@/collections/checkCollection'
 import { getUserById } from '@/collections/usersCollection'
+import { subscribeToRoomIdByUserId } from '@/collections/roomBookingCollection'
 
 type Props = {
   dormId: string
   rooms: TRoom[]
+  isCreator: boolean
+  isSuperuser: boolean
+  isAdmin: boolean | null
 }
 
-const TabBooking: React.FC<Props> = ({ dormId, rooms }) => {
+const TabBooking: React.FC<Props> = ({ dormId, rooms, isCreator, isSuperuser, isAdmin }) => {
   const { user } = useAuth()
-  const [isCreator, setIsCreator] = useState<boolean>(false)
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
+
+  const [roomId, setRoomId] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchCheckDorm = async () => {
-      try {
-        if (!user) return
-        const checkDormId = await getDormIdByUserId(user.uid)
-        setIsCreator(checkDormId === dormId)
-      } catch (error) {
-        console.error(error)
-      }
-    }
+    if (!user) return
+    const unsubscribeCheckRoomBooking = subscribeToRoomIdByUserId(dormId, user.uid, (roomId) => {
+      setRoomId(roomId)
+    })
 
-    const fetchCheckAdmin = async () => {
-      try {
-        if (!user) return
-        const userData = await getUserById(user.uid)
-        if (!userData) return
-        setIsAdmin(userData.role === 'ADMIN')
-      } catch (error) {
-        console.error(error)
-      }
-    }
+    return () => unsubscribeCheckRoomBooking()
+  }, [user, dormId])
 
-    fetchCheckDorm()
-    fetchCheckAdmin()
-  }, [])
-
-  if (isCreator) {
+  if (isCreator || isSuperuser) {
     return (
       <div className="w-full grid place-items-center">
-        <p>เนื่องจากคุณเป็นเจ้าของหอพักนี้ จึงไม่สามารถทำการจองห้องพักได้</p>
+        <p>เนื่องจากคุณมีบทบาทเป็นเจ้าของหอพัก จึงไม่สามารถทำการจองห้องพักได้</p>
       </div>
     )
   }
@@ -63,10 +50,20 @@ const TabBooking: React.FC<Props> = ({ dormId, rooms }) => {
 
   return (
     <div>
+      {!user && <div className="flex w-full justify-center mb-8">กรุณาเข้าสู่ระบบเพื่อทำการจองห้องพัก</div>}
       {rooms.length > 0 ? (
         <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1">
           {rooms.map((ele) => (
-            <CardBooking key={ele.id} name={ele.name} price={ele.price} isAvailable={ele.isAvailable} />
+            <CardBooking
+              key={ele.id}
+              dormId={dormId}
+              roomId={ele.id as string}
+              name={ele.name}
+              price={ele.price}
+              isAvailable={ele.isAvailable}
+              isBooking={ele.id === roomId}
+              disabled={roomId !== null && ele.id !== roomId}
+            />
           ))}
         </div>
       ) : (

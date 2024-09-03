@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
     <footer className="py-8 bg-foreground rounded-t-3xl">
       <div className="container mx-auto text-background py-6 flex gap-8 justify-between max-md:flex-col max-md:items-center">
         <div className="flex flex-col gap-4 max-md:items-center">
-          <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" />
+          <Image src={HadormyLogoSVG} alt="HadormyLogoSVG" priority />
           <h5 className="text-center">© 2024 HaDormy. All Rights Reserved</h5>
         </div>
         <div className="flex gap-16 max-sm:flex-col max-sm:gap-8">

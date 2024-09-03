@@ -23,8 +23,8 @@ const Home = () => {
   const [dormsLoading, setDormsLoading] = useState<boolean>(true)
   const [announceLoading, setAnnounceLoading] = useState<boolean>(true)
 
-  const [limitDorms, setLimitDorms] = useState<number>(10)
-  const [limitAnnounces, setLimitAnnnounce] = useState<number>(10)
+  const [limitDorms, setLimitDorms] = useState<number>(5)
+  const [limitAnnounces, setLimitAnnounces] = useState<number>(5)
 
   useEffect(() => {
     document.title = `หน้าหลัก - HaDormy`
@@ -33,7 +33,7 @@ const Home = () => {
   const fetchDorms = async () => {
     try {
       setDormsLoading(true)
-      const dormsData = await getDorms()
+      const dormsData = await getDorms(limitDorms)
       setDorms(dormsData)
     } catch (error) {
       console.log('error:', error)
@@ -44,13 +44,13 @@ const Home = () => {
 
   useEffect(() => {
     fetchDorms()
-  }, [])
+  }, [limitDorms])
 
   useEffect(() => {
     const unsubscribeAnnouncements = subscribeToAnnounces((announces) => {
       try {
         setAnnounceLoading(true)
-        setAnnouncements(announces)
+        setAnnouncements(announces.slice(0, limitAnnounces))
       } catch (error) {
         console.log('error:', error)
       } finally {
@@ -59,7 +59,15 @@ const Home = () => {
     })
 
     return () => unsubscribeAnnouncements()
-  }, [])
+  }, [limitAnnounces])
+
+  const loadMoreDorms = () => {
+    setLimitDorms((prev) => prev + 5)
+  }
+
+  const loadMoreAnnounces = () => {
+    setLimitAnnounces((prev) => prev + 5)
+  }
 
   return (
     <div className="container mx-auto flex flex-col gap-8">
@@ -68,38 +76,28 @@ const Home = () => {
         <h2>ใกล้มหาวิทยาลัยพะเยา</h2>
       </div>
       <div className="grid grid-cols-[1fr_335px] gap-4 max-lg:flex max-lg:flex-col-reverse max-lg:gap-8">
-        {dormsLoading ? <DormListLoadingSection /> : <DormListSection cardList={dorms} onRefresh={fetchDorms} />}
-        {announceLoading ? <AnnouncementLoadingSection /> : <AnnouncementListSection cardList={announcements} />}
+        {dormsLoading ? (
+          <DormListLoadingSection />
+        ) : (
+          <DormListSection
+            cardList={dorms}
+            onRefresh={fetchDorms}
+            onLoadMore={loadMoreDorms}
+            currentLimit={limitDorms}
+          />
+        )}
+        {announceLoading ? (
+          <AnnouncementLoadingSection />
+        ) : (
+          <AnnouncementListSection
+            cardList={announcements}
+            onLoadMore={loadMoreAnnounces}
+            currentLimit={limitAnnounces}
+          />
+        )}
       </div>
     </div>
   )
 }
 
 export default Home
-
-const mockupAnnounce: TCardAnnounce[] = [
-  {
-    id: 1,
-    author: 'worapon',
-    title: 'ไฟดับ',
-    description: 'สวัสดีครับ',
-    role: 'ADMIN',
-    timestamp: '2024-06-27T16:20Z',
-  },
-  {
-    id: 2,
-    author: 'worapon',
-    title: 'ไฟดับ',
-    description: 'สวัสดีครับ',
-    role: 'SUPERUSER',
-    timestamp: '2024-06-27T16:02Z',
-  },
-  {
-    id: 3,
-    author: 'worapon',
-    title: 'ไฟดับ',
-    description: 'สวัสดีครับ',
-    role: 'SUPERUSER',
-    timestamp: '2024-06-27T16:05Z',
-  },
-]

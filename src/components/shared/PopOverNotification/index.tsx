@@ -15,7 +15,6 @@ import hadormyLogoSVG from '@/images/logos/hadormy-logo-mini-color.svg'
 import { convertDateFormat } from '@/lib/others'
 import FirebaseImage from '@/components/common/FirebaseImage'
 import { updateNotification, deleteNotification } from '@/collections/notificationCollection'
-import { getUserIdByDormId } from '@/collections/checkCollection'
 
 type Props = {
   userId: string | number | null
@@ -53,38 +52,36 @@ const PopOverNotification: React.FC<Props> = ({ userId, notifications }) => {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="overflow-hidden mt-3 space-y-2">
-        <div className="flex items-center space-x-2 text-primary">
+      <PopoverContent className="overflow-hidden mt-3 space-y-2 p-2">
+        <div className="flex items-center space-x-2 text-primary p-2">
           <FaBell className="text-lg" />
           <h4>การแจ้งเตือน</h4>
         </div>
-        <div className="overflow-auto h-full max-h-80 space-y-2">
+        <div className="overflow-auto h-full max-h-80 space-y-1 p-1">
           {notifications.length > 0 ? (
             notifications.map((noti, index) => (
               <div
                 key={index}
-                className={`p-2 flex space-x-2 items-center rounded shadow-md relative transition-all ${
+                className={`p-2 flex space-x-2 items-center rounded shadow-sm relative transition-all ${
                   noti.is_seen ? 'bg-gray-200' : 'cursor-pointer hover:bg-gray-100'
                 }`}
                 onClick={() => (noti.is_seen ? undefined : handleClick(userId as string, noti.id as string))}
               >
                 <Avatar>
-                  {noti.role === EUserRole.Superuser ? (
+                  {noti.role === EUserRole.Admin ? (
+                    <Image
+                      src={hadormyLogoSVG}
+                      width={500}
+                      height={300}
+                      alt={`${noti.title}-notification`}
+                      className="object-contain object-center"
+                    />
+                  ) : (
                     <FirebaseImage
                       imagePath={noti.image}
                       alt={`${noti.title}-notification`}
                       className="object-cover object-center"
                     />
-                  ) : (
-                    noti.role === EUserRole.Admin && (
-                      <Image
-                        src={hadormyLogoSVG}
-                        width={500}
-                        height={300}
-                        alt={`${noti.title}-notification`}
-                        className="object-contain object-center"
-                      />
-                    )
                   )}
                 </Avatar>
                 <div className="space-y-1">
@@ -93,10 +90,12 @@ const PopOverNotification: React.FC<Props> = ({ userId, notifications }) => {
                   <p className="text-gray-400 text-xs">{convertDateFormat(noti.updateAt)}</p>
                 </div>
                 {noti.is_seen && (
-                  <IoClose
+                  <div
                     onClick={() => handleClose(userId as string, noti.id as string)}
-                    className="cursor-pointer absolute top-2 right-2"
-                  />
+                    className="cursor-pointer absolute top-0 right-0 p-1 rounded-l-full rounded-br-full bg-gray-500/50 transition-colors hover:bg-gray-500/80"
+                  >
+                    <IoClose className="text-background" />
+                  </div>
                 )}
               </div>
             ))

@@ -1,6 +1,24 @@
-import { collection, getDocs, doc, addDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc, getDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { Timestamp } from 'firebase/firestore'
+
+const getDormRoomCollection = (dormId: string) => {
+  return collection(db, 'dorms', dormId, 'rooms')
+}
+
+export const subscribeToRooms = (dormId: string, callback: (notifications: any[]) => void) => {
+  const roomsCollection = getDormRoomCollection(dormId)
+  return onSnapshot(roomsCollection, (snapshot) => {
+    const rooms: any[] = snapshot.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        ...data,
+      }
+    })
+    callback(rooms)
+  })
+}
 
 export const getRooms = async (parentId: string) => {
   const parentDocRef = doc(db, 'dorms', parentId)
@@ -37,10 +55,52 @@ export const addRoomsByAmount = async (parentId: string, amount: number, price: 
       name: `${roomNumber}`,
       price: price,
       isAvailable: true,
-      created_at: Timestamp.now(),
-      updated_at: Timestamp.now(),
     }
 
     await addDoc(roomDocs, roomData)
+  }
+}
+
+export const updateRoom = async (dormId: string, roomId: string, updatedData: any) => {
+  const roomDocRef = doc(db, 'dorms', dormId, 'rooms', roomId)
+
+  const dataToUpdate = {
+    ...updatedData,
+    updated_at: Timestamp.now(),
+  }
+
+  await updateDoc(roomDocRef, dataToUpdate)
+}
+
+export const getRoomMembershipByUserId = async (dormId: string, userId: string) => {
+  try {
+    const roomsCollection = getDormRoomCollection(dormId)
+    const roomsSnapshot = await getDocs(roomsCollection)
+
+    for (const roomDoc of roomsSnapshot.docs) {
+      const userRef = roomDoc.data().user
+      if (userRef) {
+        const userDocSnapshot = await getDoc(userRef)
+
+        if (userDocSnapshot.exists() && userDocSnapshot.id === userId) {
+          return true
+        }
+      }
+    }
+
+    return false
+  } catch (error) {
+    console.error('Error checking room membership:', error)
+    throw new Error('Failed to check room membership')
+  }
+}
+
+export const deleteRoom = async (dormId: string, roomId: string) => {
+  const roomDocRef = doc(db, 'dorms', dormId, 'rooms', roomId)
+
+  try {
+    await deleteDoc(roomDocRef)
+  } catch (error) {
+    console.error('Error deleting room:', error)
   }
 }
