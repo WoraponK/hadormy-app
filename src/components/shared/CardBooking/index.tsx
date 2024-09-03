@@ -133,7 +133,7 @@ const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable
       <div className="py-2 px-2 flex flex-col items-end justify-between">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size={'sm'} className="w-fit" disabled={!isAvailable || isBooking}>
+            <Button size={'sm'} className="w-fit" disabled={!isAvailable || isBooking || !user}>
               {isBooking ? 'จองแล้ว' : 'จองห้องนี้'}
             </Button>
           </AlertDialogTrigger>
@@ -155,7 +155,7 @@ const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable
                 </div>
               </AlertDialogTitle>
               <AlertDialogDescription className="text-center">
-                {disabled ? <>เนื่องจากคุณได้ทำการจองอีกห้องไว้แล้ว</> : <>ระบบจะทำการส่งคำขอไปยังเจ้าของหอพัก</>}
+                {disabled ? 'เนื่องจากคุณได้ทำการจองอีกห้องไว้แล้ว' : 'ระบบจะทำการส่งคำขอไปยังเจ้าของหอพัก'}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

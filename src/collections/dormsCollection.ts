@@ -1,4 +1,15 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot } from 'firebase/firestore'
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  limit,
+  query,
+} from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TDorm } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
@@ -20,8 +31,9 @@ export const getDormById = async (id: string): Promise<TDorm | null> => {
   }
 }
 
-export const getDorms = async () => {
-  const snapshot = await getDocs(dormsCollection)
+export const getDorms = async (limitCount: number) => {
+  const dormsQuery = query(dormsCollection, limit(limitCount))
+  const snapshot = await getDocs(dormsQuery)
   return snapshot.docs.map((doc) => {
     const data = doc.data()
     const timestamp = `${data.timestamp instanceof Timestamp ? data.timestamp.toDate() : new Date(data.timestamp)}`

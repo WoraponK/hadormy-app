@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, addDoc, onSnapshot, updateDoc, getDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { Timestamp } from 'firebase/firestore'
 
@@ -55,8 +55,6 @@ export const addRoomsByAmount = async (parentId: string, amount: number, price: 
       name: `${roomNumber}`,
       price: price,
       isAvailable: true,
-      created_at: Timestamp.now(),
-      updated_at: Timestamp.now(),
     }
 
     await addDoc(roomDocs, roomData)
@@ -94,5 +92,15 @@ export const getRoomMembershipByUserId = async (dormId: string, userId: string) 
   } catch (error) {
     console.error('Error checking room membership:', error)
     throw new Error('Failed to check room membership')
+  }
+}
+
+export const deleteRoom = async (dormId: string, roomId: string) => {
+  const roomDocRef = doc(db, 'dorms', dormId, 'rooms', roomId)
+
+  try {
+    await deleteDoc(roomDocRef)
+  } catch (error) {
+    console.error('Error deleting room:', error)
   }
 }

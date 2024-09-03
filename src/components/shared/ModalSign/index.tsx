@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -30,7 +30,11 @@ import registerSchema from '@/schemas/registerSchema'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useAuth } from '@/context/authContext'
 
-const LoginTab: React.FC = () => {
+type TabProps = {
+  setIsOpen: (isOpen: boolean) => void
+}
+
+const LoginTab: React.FC<TabProps> = ({ setIsOpen }) => {
   const { signIn } = useAuth()
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -44,6 +48,7 @@ const LoginTab: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
       await signIn(values.email, values.password)
+      setIsOpen(false)
     } catch (error) {
       console.error(error)
     }
@@ -85,7 +90,7 @@ const LoginTab: React.FC = () => {
     </Form>
   )
 }
-const RegisterTab: React.FC = () => {
+const RegisterTab: React.FC<TabProps> = ({ setIsOpen }) => {
   const { signUp } = useAuth()
 
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -103,6 +108,7 @@ const RegisterTab: React.FC = () => {
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
       await signUp(values.email, values.password, values.name, values.phone)
+      setIsOpen(false)
     } catch (error) {
       console.error(error)
     }
@@ -221,8 +227,10 @@ const RegisterTab: React.FC = () => {
 }
 
 const ModalSign: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <div>
           <Button size={'lg'}>
@@ -252,10 +260,10 @@ const ModalSign: React.FC = () => {
           </TabsList>
           <div className="pt-4 text-foreground">
             <TabsContent value="login" className="max-md:max-h-[250px] overflow-auto px-2">
-              <LoginTab />
+              <LoginTab setIsOpen={setIsOpen} />
             </TabsContent>
             <TabsContent value="register" className="max-md:max-h-[250px] overflow-auto px-2">
-              <RegisterTab />
+              <RegisterTab setIsOpen={setIsOpen} />
             </TabsContent>
           </div>
         </Tabs>

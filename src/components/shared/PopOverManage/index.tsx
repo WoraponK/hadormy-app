@@ -70,10 +70,17 @@ const PopOverManage: React.FC<Props> = ({ role, dormId, isCreated, isPending }) 
                         </h6>
                       </Button>
                     </Link>
-                    <Link href={`/owner/manage-dorm/${dormId}`}>
+                    <Link href={`/owner/manage-dorm/${dormId}/room`}>
                       <Button className="w-full">
                         <h6 className="flex items-center space-x-2">
-                          <span>จัดการหอพัก</span>
+                          <span>จัดการห้องพัก</span>
+                        </h6>
+                      </Button>
+                    </Link>
+                    <Link href={`/owner/manage-dorm/${dormId}`}>
+                      <Button className="w-full" variant="outline">
+                        <h6 className="flex items-center space-x-2">
+                          <span>แก้ไขรายละเอียด</span>
                         </h6>
                       </Button>
                     </Link>

@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         variant: 'destructive',
         icon: <MdError className="text-background" />,
         title: 'เข้าสู่ระบบไม่สำเร็จ',
-        description: `${error}`,
+        description: 'โปรดตรวจสอบอีเมลและรหัสผ่านของคุณถูกต้องหรือไม่',
       })
     }
   }

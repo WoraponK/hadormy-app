@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -38,9 +38,11 @@ import { getUserById } from '@/collections/usersCollection'
 const ModalAnnounce: React.FC = () => {
   const { user } = useAuth()
   const { toast } = useToast()
+  const [isOpen, setIsOpen] = useState(false)
 
   const form = useForm<z.infer<typeof announceSchema>>({
     resolver: zodResolver(announceSchema),
+    mode: 'onChange',
     defaultValues: {
       title: '',
       description: '',
@@ -93,14 +95,17 @@ const ModalAnnounce: React.FC = () => {
 
         try {
           await addAnnouce(newAnnouncement)
-
+        
           toast({
             icon: <HiSpeakerphone className="text-primary" />,
             title: 'สร้างประกาศของคุณสำเร็จ!',
           })
+
+          setIsOpen(false)
         } catch (error) {
           console.error('Error adding announcement:', error)
         }
+
       } catch (error) {
         console.error(error)
       }
@@ -108,10 +113,10 @@ const ModalAnnounce: React.FC = () => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <div>
-          <Button size="lg" className="space-x-2">
+          <Button size="lg" className="space-x-2" onClick={() => setIsOpen(true)}>
             <h5>ประกาศ</h5>
             <Image src={IconMegaphoneWhiteSVG} alt="IconMegaphoneWhiteSVG" />
           </Button>
@@ -187,7 +192,7 @@ const ModalAnnounce: React.FC = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={!form.formState.isValid}>
                 ประกาศ
               </Button>
             </form>

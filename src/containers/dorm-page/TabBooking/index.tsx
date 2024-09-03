@@ -50,6 +50,7 @@ const TabBooking: React.FC<Props> = ({ dormId, rooms, isCreator, isSuperuser, is
 
   return (
     <div>
+      {!user && <div className="flex w-full justify-center mb-8">กรุณาเข้าสู่ระบบเพื่อทำการจองห้องพัก</div>}
       {rooms.length > 0 ? (
         <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-[480px]:grid-cols-1">
           {rooms.map((ele) => (

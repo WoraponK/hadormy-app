@@ -26,6 +26,7 @@ import { getDormById } from '@/collections/dormsCollection'
 import { getUserIdByDormId } from '@/collections/checkCollection'
 import { doc, Timestamp } from 'firebase/firestore'
 import { updateRoom } from '@/collections/roomsCollection'
+import { getUserById } from '@/collections/usersCollection'
 
 const handleDecline = async (dormId: string, roomBookingId: string, userId: string, roomName: string) => {
   try {
@@ -80,6 +81,9 @@ const handleSubmit = async (
     const ownerId = await getUserIdByDormId(dormId)
     if (!ownerId) return
 
+    const userData = await getUserById(userId)
+    if (!userData) return
+
     const storagePath = `dorms/${ownerId}/`
     const imagesRef = ref(storage, storagePath)
 
@@ -107,7 +111,9 @@ const handleSubmit = async (
     await addNotification(userId, newNotification)
     await updateRoom(dormId, roomId, {
       isAvailable: false,
-      user: doc(db, 'users', userId),
+      user_ref: doc(db, 'users', userId),
+      user_id: userId as string,
+      username: userData.name as string,
     })
     await deleteRoomBooking(dormId, approvedRoomBookingId)
 

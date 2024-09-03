@@ -1,5 +1,3 @@
-import { Timestamp } from 'firebase/firestore'
-
 export type TUserRole = 'USER' | 'SUPERUSER' | 'ADMIN'
 export enum EUserRole {
   User = 'USER',
@@ -62,6 +60,8 @@ export type TRoom = {
   name: string
   price: number
   isAvailable: boolean
+  userID?: string
+  userName?: string
 }
 
 export type TDorm = {
