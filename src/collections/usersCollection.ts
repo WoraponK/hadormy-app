@@ -26,7 +26,7 @@ export const getUserById = async (id: string): Promise<TUser | null> => {
       const userDoc = querySnapshot.docs[0]
       const data = userDoc.data()
       const timestamp = `${data.created_at instanceof Timestamp ? data.created_at.toDate() : new Date(data.created_at)}`
-      return { id: userDoc.id, ...userDoc.data(), password: 'YOU DONT WANNA KNOW!', created_at: timestamp } as TUser
+      return { id: userDoc.id, ...userDoc.data(), created_at: timestamp } as TUser
     } else {
       return null
     }
@@ -49,7 +49,7 @@ export const addUser = async (user: TUser) => {
   await addDoc(usersCollection, user)
 }
 
-export const updateUser = async (id: string, updatedUser: TUser) => {
+export const updateUser = async (id: string, updatedUser: any) => {
   const userDoc = doc(db, 'users', id)
   await updateDoc(userDoc, updatedUser)
 }

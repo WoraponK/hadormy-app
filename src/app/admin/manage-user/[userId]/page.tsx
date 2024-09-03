@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import { ManageUserByIdSection } from '@/containers/admin-manage-user'
 import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 
-const AdminManageUserById = () => {
+const AdminManageUserById = ({ params }: { params: { userId: string } }) => {
   useEffect(() => {
     document.title = `จัดการบัญชีผู้ใช้ - HaDormy`
   }, [])
@@ -14,7 +14,7 @@ const AdminManageUserById = () => {
   return (
     <RoleBasedAccess allowedRoles={['ADMIN']}>
       <div className="container mx-auto">
-        <ManageUserByIdSection />
+        <ManageUserByIdSection userId={params.userId} />
       </div>
     </RoleBasedAccess>
   )

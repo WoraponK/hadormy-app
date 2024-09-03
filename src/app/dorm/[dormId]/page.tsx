@@ -11,7 +11,7 @@ import { DormLoadingSection } from '@/containers/dorm-page'
 import { useAuth } from '@/context/authContext'
 
 import { getDormById } from '@/collections/dormsCollection'
-import { getRooms, subscribeToRooms } from '@/collections/roomsCollection'
+import { subscribeToRooms } from '@/collections/roomsCollection'
 import { getRatings } from '@/collections/ratingsCollection'
 
 const Dorm = ({ params }: { params: { dormId: string } }) => {
