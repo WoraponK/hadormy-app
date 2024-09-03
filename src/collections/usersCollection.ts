@@ -56,7 +56,30 @@ export const updateUser = async (id: string, updatedUser: any) => {
 
 export const deleteUser = async (id: string) => {
   const userDoc = doc(db, 'users', id)
-  await deleteDoc(userDoc)
+
+  try {
+    // Step 1: Fetch the user document
+    const userSnapshot = await getDoc(userDoc)
+    if (!userSnapshot.exists()) {
+      console.error('User does not exist.')
+      return
+    }
+
+    const userData = userSnapshot.data()
+
+    // Step 2: Get the dorm reference from user data
+    const dormRef = userData.owner_dorm // Adjust this to match the field name of the dorm reference
+
+    // Step 3: Delete the dorm if it exists
+    if (dormRef) {
+      await deleteDoc(dormRef)
+    }
+
+    // Step 4: Delete the user
+    await deleteDoc(userDoc)
+  } catch (error) {
+    console.error('Error deleting user:', error)
+  }
 }
 
 export const listenToUserById = (id: string, callback: (user: TUser | null) => void) => {
