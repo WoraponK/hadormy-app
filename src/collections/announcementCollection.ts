@@ -1,5 +1,6 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { TCardAnnounce } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
 
@@ -25,8 +26,27 @@ export const subscribeToAnnounces = (callback: (dorms: TCardAnnounce[]) => void)
   })
 }
 
-export const addAnnouce = async (post: TCardAnnounce) => {
-  await addDoc(announcementsCollection, post)
+export const addAnnouce = async (post: TCardAnnounce, deleteDelay: number) => {
+  try {
+    const docRef = await addDoc(announcementsCollection, post)
+    console.log(`Announcement added with ID: ${docRef.id}`)
+
+    await deleteDataWithDelay(docRef.id, deleteDelay)
+  } catch (error) {
+    console.error('Error adding announcement:', error)
+  }
+}
+
+const deleteDataWithDelay = async (docId: string, delay: number) => {
+  const functions = getFunctions()
+  const deleteDocument = httpsCallable(functions, 'deleteDocumentAfterDelay')
+
+  try {
+    const result = await deleteDocument({ docId, delay })
+    console.log(result.data) // Handle the response
+  } catch (error) {
+    console.error('Error deleting document:', error)
+  }
 }
 
 export const updateAnnouce = async (id: string, updatedAnnouce: Partial<TCardAnnounce>) => {

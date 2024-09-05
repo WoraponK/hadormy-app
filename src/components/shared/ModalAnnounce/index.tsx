@@ -35,6 +35,8 @@ import { getDownloadURL, ref, uploadBytes, listAll, list } from 'firebase/storag
 import { useAuth } from '@/context/authContext'
 import { getUserById } from '@/collections/usersCollection'
 
+const minutesInMilliseconds = 30 * 60 * 1000 // 30 Minutes
+
 const ModalAnnounce: React.FC = () => {
   const { user } = useAuth()
   const { toast } = useToast()
@@ -94,8 +96,8 @@ const ModalAnnounce: React.FC = () => {
         }
 
         try {
-          await addAnnouce(newAnnouncement)
-        
+          await addAnnouce(newAnnouncement, minutesInMilliseconds)
+
           toast({
             icon: <HiSpeakerphone className="text-primary" />,
             title: 'สร้างประกาศของคุณสำเร็จ!',
@@ -105,7 +107,6 @@ const ModalAnnounce: React.FC = () => {
         } catch (error) {
           console.error('Error adding announcement:', error)
         }
-
       } catch (error) {
         console.error(error)
       }
