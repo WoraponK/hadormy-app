@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TUser } from '@/lib/type'
+import { initAdmin, deleteUserById } from '@/lib/firebaseAdmin'
 
 const usersCollection = collection(db, 'users')
 
@@ -58,7 +59,6 @@ export const deleteUser = async (id: string) => {
   const userDoc = doc(db, 'users', id)
 
   try {
-    // Step 1: Fetch the user document
     const userSnapshot = await getDoc(userDoc)
     if (!userSnapshot.exists()) {
       console.error('User does not exist.')
@@ -67,15 +67,12 @@ export const deleteUser = async (id: string) => {
 
     const userData = userSnapshot.data()
 
-    // Step 2: Get the dorm reference from user data
-    const dormRef = userData.owner_dorm // Adjust this to match the field name of the dorm reference
+    const dormRef = userData.owner_dorm
 
-    // Step 3: Delete the dorm if it exists
     if (dormRef) {
       await deleteDoc(dormRef)
     }
 
-    // Step 4: Delete the user
     await deleteDoc(userDoc)
   } catch (error) {
     console.error('Error deleting user:', error)
@@ -96,16 +93,15 @@ export const listenToUserById = (id: string, callback: (user: TUser | null) => v
         const user = { id: doc.id, ...doc.data(), created_at: timestamp, phone: data.phone } as TUser
         callback(user)
       } else {
-        callback(null) // Document does not exist
+        callback(null)
       }
     },
     (error) => {
       console.error('Error listening to user:', error)
-      callback(null) // Handle error case
+      callback(null)
     },
   )
 
-  // Return the unsubscribe function
   return unsubscribe
 }
 
@@ -124,11 +120,10 @@ export const listenToUsers = (callback: (users: TUser[]) => void) => {
     },
     (error) => {
       console.error('Error listening to users:', error)
-      callback([]) // Handle error case by returning an empty array
+      callback([])
     },
   )
 
-  // Return the unsubscribe function
   return unsubscribe
 }
 
