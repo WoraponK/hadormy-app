@@ -11,7 +11,7 @@ import { useAuth } from '@/context/authContext'
 // Images
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-full-light.svg'
 import { IoMenu } from 'react-icons/io5'
-import { LuArrowBigUpDash } from 'react-icons/lu'
+import { IoArrowUp } from 'react-icons/io5'
 
 // Include in project
 import {
@@ -203,12 +203,10 @@ const Navbar: React.FC = () => {
       </nav>
       {showScroll && (
         <Button
-          className={`w-[50px] h-[50px] rounded-full fixed bottom-4 right-4 bg-primary text-background transition-opacity duration-300 ease-in-out ${
-            showScroll ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`w-[50px] h-[50px] rounded-full fixed bottom-4 right-4 bg-primary text-background transition-all `}
           onClick={scrollToTop}
         >
-          <LuArrowBigUpDash className="text-background text-3xl absolute" />
+          <IoArrowUp className="text-background text-3xl absolute" />
         </Button>
       )}
     </>
