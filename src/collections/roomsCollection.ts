@@ -78,7 +78,7 @@ export const getRoomMembershipByUserId = async (dormId: string, userId: string) 
     const roomsSnapshot = await getDocs(roomsCollection)
 
     for (const roomDoc of roomsSnapshot.docs) {
-      const userRef = roomDoc.data().user
+      const userRef = roomDoc.data().user_ref
       if (userRef) {
         const userDocSnapshot = await getDoc(userRef)
 
