@@ -85,6 +85,13 @@ export const deleteUser = async (id: string) => {
       await deleteDoc(dormRef)
     }
 
+    const notificationsCollection = collection(db, 'users', id, 'notifications')
+    const notificationsSnapshot = await getDocs(query(notificationsCollection))
+    const deleteNotificationsPromises = notificationsSnapshot.docs.map((notiDoc) => {
+      return deleteDoc(doc(db, 'users', id, 'notifications', notiDoc.id))
+    })
+    await Promise.all(deleteNotificationsPromises)
+
     await deleteAllUserAnnouncements(id)
 
     const dormFolderRef = ref(storage, `dorms/${id}/`)
