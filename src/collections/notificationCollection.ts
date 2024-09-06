@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, getDocs } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { TNotification } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
@@ -10,6 +10,20 @@ const getUserNotificationsCollection = (userId: string) => {
 export const addNotification = async (userId: string, post: any) => {
   const notificationsCollection = getUserNotificationsCollection(userId)
   await addDoc(notificationsCollection, post)
+}
+
+const getAdminUsers = async () => {
+  const usersCollection = collection(db, 'users')
+  const q = query(usersCollection, where('role', '==', 'ADMIN'))
+  const querySnapshot = await getDocs(q)
+
+  return querySnapshot.docs.map((doc) => doc.id)
+}
+
+export const addNotificationForAdminUsers = async (post: any) => {
+  const adminUserIds = await getAdminUsers()
+
+  await Promise.all(adminUserIds.map((userId) => addNotification(userId, post)))
 }
 
 export const updateNotification = async (

@@ -40,8 +40,7 @@ export async function initAdmin() {
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
     privateKey: process.env.FIREBASE_PRIVATE_KEY as string,
   }
-  
-  console.log('Initializing Firebase Admin with params:', params)
+
   return createFirebaseAdminApp(params)
 }
 

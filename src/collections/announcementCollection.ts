@@ -1,6 +1,5 @@
 import { db } from '@/lib/firebase'
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, where, query } from 'firebase/firestore'
 import { TCardAnnounce } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
 
@@ -26,26 +25,12 @@ export const subscribeToAnnounces = (callback: (dorms: TCardAnnounce[]) => void)
   })
 }
 
-export const addAnnouce = async (post: TCardAnnounce, deleteDelay: number) => {
+export const addAnnouce = async (post: TCardAnnounce) => {
   try {
     const docRef = await addDoc(announcementsCollection, post)
-    console.log(`Announcement added with ID: ${docRef.id}`)
-
-    await deleteDataWithDelay(docRef.id, deleteDelay)
+    return docRef.id
   } catch (error) {
     console.error('Error adding announcement:', error)
-  }
-}
-
-const deleteDataWithDelay = async (docId: string, delay: number) => {
-  const functions = getFunctions()
-  const deleteDocument = httpsCallable(functions, 'deleteDocumentAfterDelay')
-
-  try {
-    const result = await deleteDocument({ docId, delay })
-    console.log(result.data) // Handle the response
-  } catch (error) {
-    console.error('Error deleting document:', error)
   }
 }
 
@@ -57,4 +42,18 @@ export const updateAnnouce = async (id: string, updatedAnnouce: Partial<TCardAnn
 export const deleteAnnouce = async (id: string) => {
   const announceDoc = doc(db, 'announcements', id)
   await deleteDoc(announceDoc)
+}
+
+export const deleteAllUserAnnouncements = async (userId: string) => {
+  const announcementsRef = collection(db, 'announcements')
+  const q = query(announcementsRef, where('user_id', '==', userId)) // Adjust 'userId' to the actual field name used in your announcements collection
+
+  try {
+    const querySnapshot = await getDocs(q)
+    const deletePromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref))
+
+    await Promise.all(deletePromises)
+  } catch (error) {
+    console.error('Error deleting announcements:', error)
+  }
 }

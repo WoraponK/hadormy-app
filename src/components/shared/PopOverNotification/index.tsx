@@ -1,9 +1,12 @@
+'use client'
+
 // Lib
 import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 // Images
 import { FaRegBell, FaBell } from 'react-icons/fa6'
@@ -22,7 +25,12 @@ type Props = {
 }
 
 const PopOverNotification: React.FC<Props> = ({ userId, notifications }) => {
+  const router = useRouter()
   notifications.sort((a, b) => (new Date(b.updateAt) as any) - (new Date(a.updateAt) as any))
+
+  const handleRedirect = (link: string) => {
+    router.push(link)
+  }
 
   const handleClick = async (userId: string, notiId: string) => {
     try {
@@ -62,10 +70,13 @@ const PopOverNotification: React.FC<Props> = ({ userId, notifications }) => {
             notifications.map((noti, index) => (
               <div
                 key={index}
-                className={`p-2 flex space-x-2 items-center rounded shadow-sm relative transition-all ${
-                  noti.is_seen ? 'bg-gray-200' : 'cursor-pointer hover:bg-gray-100'
+                className={`p-2 flex space-x-2 items-center rounded shadow-sm relative transition-all cursor-pointer ${
+                  noti.is_seen ? 'bg-gray-100 hover:bg-gray-200' : ' hover:bg-gray-100'
                 }`}
-                onClick={() => (noti.is_seen ? undefined : handleClick(userId as string, noti.id as string))}
+                onClick={() => {
+                  noti.link && handleRedirect(noti.link)
+                  noti.is_seen ? undefined : handleClick(userId as string, noti.id as string)
+                }}
               >
                 <Avatar>
                   {noti.role === EUserRole.Admin ? (

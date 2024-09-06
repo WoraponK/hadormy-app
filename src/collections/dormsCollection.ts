@@ -57,8 +57,22 @@ export const updateDorm = async (id: string, updatedPost: Partial<TDorm>) => {
 }
 
 export const deleteDorm = async (id: string) => {
-  const postDoc = doc(db, 'dorms', id)
-  await deleteDoc(postDoc)
+  try {
+    const postDoc = doc(db, 'dorms', id)
+    const roomsCollection = collection(db, 'dorms', id, 'rooms')
+
+    const roomsSnapshot = await getDocs(query(roomsCollection))
+
+    const deleteRoomPromises = roomsSnapshot.docs.map((roomDoc) => {
+      return deleteDoc(doc(db, 'dorms', id, 'rooms', roomDoc.id))
+    })
+
+    await Promise.all(deleteRoomPromises)
+
+    await deleteDoc(postDoc)
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const subscribeToDorms = (callback: (dorms: TDorm[]) => void) => {

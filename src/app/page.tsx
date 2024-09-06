@@ -36,7 +36,7 @@ const Home = () => {
       const dormsData = await getDorms(limitDorms)
       setDorms(dormsData)
     } catch (error) {
-      console.log('error:', error)
+      console.error('error:', error)
     } finally {
       setDormsLoading(false)
     }
@@ -44,6 +44,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchDorms()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limitDorms])
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Home = () => {
         setAnnounceLoading(true)
         setAnnouncements(announces.slice(0, limitAnnounces))
       } catch (error) {
-        console.log('error:', error)
+        console.error('error:', error)
       } finally {
         setAnnounceLoading(false)
       }

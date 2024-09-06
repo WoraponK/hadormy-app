@@ -11,11 +11,23 @@ import {
   onSnapshot,
   Timestamp,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { db, storage } from '@/lib/firebase'
 import { TUser } from '@/lib/type'
-import { initAdmin, deleteUserById } from '@/lib/firebaseAdmin'
+import { ref, deleteObject, listAll } from 'firebase/storage'
+import { deleteAllUserAnnouncements } from './announcementCollection'
 
 const usersCollection = collection(db, 'users')
+
+const deleteAllFilesInFolder = async (folderRef: any) => {
+  try {
+    const result = await listAll(folderRef) // Get all files in the folder
+
+    const deletePromises = result.items.map((fileRef: any) => deleteObject(fileRef)) // Delete each file
+    await Promise.all(deletePromises)
+  } catch (error) {
+    console.error('Error deleting files in folder:', error)
+  }
+}
 
 export const getUserById = async (id: string): Promise<TUser | null> => {
   const usersCollection = collection(db, 'users')
@@ -72,6 +84,13 @@ export const deleteUser = async (id: string) => {
     if (dormRef) {
       await deleteDoc(dormRef)
     }
+
+    await deleteAllUserAnnouncements(id)
+
+    const dormFolderRef = ref(storage, `dorms/${id}/`)
+    const annoucneFolderRef = ref(storage, `announcements/${id}/`)
+    await deleteAllFilesInFolder(dormFolderRef)
+    await deleteAllFilesInFolder(annoucneFolderRef)
 
     await deleteDoc(userDoc)
   } catch (error) {
