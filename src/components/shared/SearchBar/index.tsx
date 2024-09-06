@@ -59,21 +59,27 @@ const SearchBar: React.FC = () => {
       setLoading(true)
       const postsRef = collection(db, 'dorms')
       let q
-      if (data.searching.trim() === '') {
+
+      const searchTerm = data.searching.trim() 
+
+      if (searchTerm === '') {
         setResults([])
         q = query(postsRef)
       } else {
-        q = query(postsRef, where('name', '>=', data.searching), where('name', '<=', data.searching + '\uf8ff'))
+        q = query(postsRef)
       }
-      const querySnapshot = await getDocs(q)
 
+      const querySnapshot = await getDocs(q)
       const searchResults = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         thumbnail: doc.data().images,
         ...doc.data(),
       })) as TDorm[]
 
-      const filteredResult = searchResults.filter((ele) => ele.is_activated === true)
+      const filteredResult = searchResults.filter(
+        (ele) => ele.is_activated === true && ele.name.includes(searchTerm), 
+      )
+
       setResults(filteredResult)
     } catch (error) {
       console.error('Error during search:', error)
