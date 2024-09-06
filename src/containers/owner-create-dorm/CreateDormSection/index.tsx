@@ -20,6 +20,7 @@ import { BackButton, LoadingSpinner } from '@/components/shared'
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { updateUser } from '@/collections/usersCollection'
 import { addRoomsByAmount } from '@/collections/roomsCollection'
+import { addNotificationForAdminUsers } from '@/collections/notificationCollection'
 
 const CreateDormSection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
@@ -27,6 +28,7 @@ const CreateDormSection: React.FC = () => {
   const router = useRouter()
   const form = useForm<z.infer<typeof manageDormSchema>>({
     resolver: zodResolver(manageDormSchema),
+    mode: 'onChange',
     defaultValues: {
       name: '',
       address: '',
@@ -38,7 +40,7 @@ const CreateDormSection: React.FC = () => {
       billService: 0,
       distance: 0,
       dormType: EDormType.All,
-      roomAmount: 1,
+      roomAmount: 0,
       phoneContact: '',
       images: [],
       description: '',
@@ -54,6 +56,7 @@ const CreateDormSection: React.FC = () => {
 
   const onSubmit = async (values: z.infer<typeof manageDormSchema>) => {
     try {
+      setLoading(true)
       const auth = getAuth()
       const user = auth.currentUser
 
@@ -93,6 +96,8 @@ const CreateDormSection: React.FC = () => {
         is_activated: false,
       }
 
+      const newNotification = {}
+
       const fileList = values.images
 
       if (fileList && fileList.length > 0) {
@@ -115,7 +120,15 @@ const CreateDormSection: React.FC = () => {
       }
       await addRoomsByAmount(dormRef.id, values.roomAmount, values.priceStart)
       await updateUser(user.uid, dataUser as TUser)
-      setLoading(true)
+      await addNotificationForAdminUsers({
+        title: `มีคำขออนุมัติหอพัก!`,
+        description: `จาก ${values.name} โดย ${userData.name}`,
+        is_seen: false,
+        updateAt: Timestamp.now(),
+        image: '',
+        link: '/admin/approval',
+        role: 'ADMIN',
+      })
       router.replace(`/owner/manage-dorm/${dormRef.id}/room`)
     } catch (error) {
       console.error('Error submitted create dorm:', error)
@@ -159,7 +172,6 @@ const CreateDormSection: React.FC = () => {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
                             placeholder="ราคาต่ำสุด"
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
@@ -179,7 +191,6 @@ const CreateDormSection: React.FC = () => {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
                             placeholder="ราคาสูงสุด"
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
@@ -218,12 +229,7 @@ const CreateDormSection: React.FC = () => {
                       <span className="text-gray-400 font-normal">(บาท/หน่วย)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="ค่าไฟ"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <Input placeholder="ค่าไฟ" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -239,12 +245,7 @@ const CreateDormSection: React.FC = () => {
                       <span className="text-gray-400 font-normal">(บาท/หน่วย)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="ค่าน้ำ"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <Input placeholder="ค่าน้ำ" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -258,7 +259,6 @@ const CreateDormSection: React.FC = () => {
                     <FormLabel>ค่าอินเทอร์เน็ต</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ค่าอินเทอร์เน็ต"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -276,7 +276,6 @@ const CreateDormSection: React.FC = () => {
                     <FormLabel>ค่าบริการอื่น ๆ</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ค่าบริการอื่น ๆ"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -296,7 +295,6 @@ const CreateDormSection: React.FC = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ระยะทาง"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -340,7 +338,6 @@ const CreateDormSection: React.FC = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="จำนวนห้อง"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -406,9 +403,18 @@ const CreateDormSection: React.FC = () => {
             />
             <div className="flex justify-between items-center">
               <BackButton />
-              <Button variant="success" type="submit" className="space-x-2">
-                {loading && <LoadingSpinner className="text-base" />}
-                <span>บันทึก</span>
+              <Button
+                variant="success"
+                type="submit"
+                className="space-x-2 flex"
+                disabled={loading || !form.formState.isValid}
+              >
+                {loading && (
+                  <span className="text-xs">
+                    <LoadingSpinner size="sm" />
+                  </span>
+                )}
+                <span> บันทึก</span>
               </Button>
             </div>
 

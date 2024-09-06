@@ -47,6 +47,7 @@ export type TBill = {
 
 export type TCardAnnounce = {
   id?: string | number
+  user_id: string
   author: string
   title: string
   description: string
@@ -121,4 +122,5 @@ export type TNotification = {
   is_seen: boolean
   role: EUserRole
   description?: string
+  link?: string
 }

@@ -150,7 +150,6 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
                             placeholder="ราคาต่ำสุด"
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
@@ -170,7 +169,6 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
                             placeholder="ราคาสูงสุด"
                             {...field}
                             onChange={(e) => field.onChange(Number(e.target.value))}
@@ -206,12 +204,7 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                   <FormItem>
                     <FormLabel>ค่าไฟ</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="ค่าไฟ"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <Input placeholder="ค่าไฟ" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -224,12 +217,7 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                   <FormItem>
                     <FormLabel>ค่าน้ำ</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="ค่าน้ำ"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <Input placeholder="ค่าน้ำ" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -243,7 +231,6 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                     <FormLabel>ค่าอินเทอร์เน็ต</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ค่าอินเทอร์เน็ต"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -261,7 +248,6 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                     <FormLabel>ค่าบริการอื่น ๆ</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ค่าบริการอื่น ๆ"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}
@@ -281,7 +267,6 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ระยะทาง"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}

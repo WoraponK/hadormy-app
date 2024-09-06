@@ -35,7 +35,6 @@ const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(false)
   const [isMember, setIsMember] = useState<boolean>(false)
   const [isRated, setIsRated] = useState<boolean>(false)
-  console.log('🚀 ~ isRated:', isRated)
 
   useEffect(() => {
     if (!user) return

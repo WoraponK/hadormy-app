@@ -60,6 +60,7 @@ const ModalAnnounce: React.FC = () => {
           thumbnail: '',
           author: userById?.name as string,
           role: userById?.role as TUserRole,
+          user_id: userById?.id as string,
           timestamp: Timestamp.now(),
         }
 
@@ -94,8 +95,12 @@ const ModalAnnounce: React.FC = () => {
         }
 
         try {
-          await addAnnouce(newAnnouncement)
-        
+          const announcementDocId = await addAnnouce(newAnnouncement)
+
+          await fetch(`/api/announcements/${announcementDocId}`, {
+            method: 'DELETE',
+          })
+
           toast({
             icon: <HiSpeakerphone className="text-primary" />,
             title: 'สร้างประกาศของคุณสำเร็จ!',
@@ -105,7 +110,6 @@ const ModalAnnounce: React.FC = () => {
         } catch (error) {
           console.error('Error adding announcement:', error)
         }
-
       } catch (error) {
         console.error(error)
       }

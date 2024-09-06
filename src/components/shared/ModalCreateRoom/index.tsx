@@ -61,7 +61,7 @@ const ModalCreateRoom: React.FC<Props> = ({ dormId, priceStart, priceEnd }) => {
         price: priceStart,
       })
     }
-  }, [form, priceStart])
+  }, [form, priceEnd, priceStart])
 
   const onSubmit = async (values: z.infer<typeof manageRoomSchema>) => {
     try {
@@ -125,7 +125,6 @@ const ModalCreateRoom: React.FC<Props> = ({ dormId, priceStart, priceEnd }) => {
                     <FormLabel>ราคา</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
                         placeholder="ราคา"
                         {...field}
                         onChange={(e) => field.onChange(Number(e.target.value))}

@@ -11,10 +11,23 @@ import {
   onSnapshot,
   Timestamp,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
+import { db, storage } from '@/lib/firebase'
 import { TUser } from '@/lib/type'
+import { ref, deleteObject, listAll } from 'firebase/storage'
+import { deleteAllUserAnnouncements } from './announcementCollection'
 
 const usersCollection = collection(db, 'users')
+
+const deleteAllFilesInFolder = async (folderRef: any) => {
+  try {
+    const result = await listAll(folderRef) // Get all files in the folder
+
+    const deletePromises = result.items.map((fileRef: any) => deleteObject(fileRef)) // Delete each file
+    await Promise.all(deletePromises)
+  } catch (error) {
+    console.error('Error deleting files in folder:', error)
+  }
+}
 
 export const getUserById = async (id: string): Promise<TUser | null> => {
   const usersCollection = collection(db, 'users')
@@ -58,7 +71,6 @@ export const deleteUser = async (id: string) => {
   const userDoc = doc(db, 'users', id)
 
   try {
-    // Step 1: Fetch the user document
     const userSnapshot = await getDoc(userDoc)
     if (!userSnapshot.exists()) {
       console.error('User does not exist.')
@@ -67,15 +79,26 @@ export const deleteUser = async (id: string) => {
 
     const userData = userSnapshot.data()
 
-    // Step 2: Get the dorm reference from user data
-    const dormRef = userData.owner_dorm // Adjust this to match the field name of the dorm reference
+    const dormRef = userData.owner_dorm
 
-    // Step 3: Delete the dorm if it exists
     if (dormRef) {
       await deleteDoc(dormRef)
     }
 
-    // Step 4: Delete the user
+    const notificationsCollection = collection(db, 'users', id, 'notifications')
+    const notificationsSnapshot = await getDocs(query(notificationsCollection))
+    const deleteNotificationsPromises = notificationsSnapshot.docs.map((notiDoc) => {
+      return deleteDoc(doc(db, 'users', id, 'notifications', notiDoc.id))
+    })
+    await Promise.all(deleteNotificationsPromises)
+
+    await deleteAllUserAnnouncements(id)
+
+    const dormFolderRef = ref(storage, `dorms/${id}/`)
+    const annoucneFolderRef = ref(storage, `announcements/${id}/`)
+    await deleteAllFilesInFolder(dormFolderRef)
+    await deleteAllFilesInFolder(annoucneFolderRef)
+
     await deleteDoc(userDoc)
   } catch (error) {
     console.error('Error deleting user:', error)
@@ -96,16 +119,15 @@ export const listenToUserById = (id: string, callback: (user: TUser | null) => v
         const user = { id: doc.id, ...doc.data(), created_at: timestamp, phone: data.phone } as TUser
         callback(user)
       } else {
-        callback(null) // Document does not exist
+        callback(null)
       }
     },
     (error) => {
       console.error('Error listening to user:', error)
-      callback(null) // Handle error case
+      callback(null)
     },
   )
 
-  // Return the unsubscribe function
   return unsubscribe
 }
 
@@ -124,11 +146,10 @@ export const listenToUsers = (callback: (users: TUser[]) => void) => {
     },
     (error) => {
       console.error('Error listening to users:', error)
-      callback([]) // Handle error case by returning an empty array
+      callback([])
     },
   )
 
-  // Return the unsubscribe function
   return unsubscribe
 }
 

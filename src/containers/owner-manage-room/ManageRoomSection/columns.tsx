@@ -82,6 +82,7 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
         is_seen: false,
         updateAt: Timestamp.now(),
         image: '',
+        link: `/dorm/${dormId}`,
       }
 
       try {
@@ -137,6 +138,7 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
         is_seen: false,
         updateAt: Timestamp.now(),
         image: '',
+        link: `/dorm/${dormId}`,
       }
 
       try {

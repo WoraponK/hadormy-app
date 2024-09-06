@@ -45,6 +45,7 @@ const handleDecline = async (dormId: string, roomBookingId: string, userId: stri
       is_seen: false,
       updateAt: Timestamp.now(),
       image: '',
+      link: `/dorm/${dormId}`
     }
 
     try {
@@ -93,6 +94,7 @@ const handleSubmit = async (
       is_seen: false,
       updateAt: Timestamp.now(),
       image: '',
+      link: `/dorm/${dormId}`
     }
 
     try {

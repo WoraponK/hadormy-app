@@ -1,5 +1,5 @@
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, where, query } from 'firebase/firestore'
 import { TCardAnnounce } from '@/lib/type'
 import { Timestamp } from 'firebase/firestore'
 
@@ -26,7 +26,12 @@ export const subscribeToAnnounces = (callback: (dorms: TCardAnnounce[]) => void)
 }
 
 export const addAnnouce = async (post: TCardAnnounce) => {
-  await addDoc(announcementsCollection, post)
+  try {
+    const docRef = await addDoc(announcementsCollection, post)
+    return docRef.id
+  } catch (error) {
+    console.error('Error adding announcement:', error)
+  }
 }
 
 export const updateAnnouce = async (id: string, updatedAnnouce: Partial<TCardAnnounce>) => {
@@ -37,4 +42,18 @@ export const updateAnnouce = async (id: string, updatedAnnouce: Partial<TCardAnn
 export const deleteAnnouce = async (id: string) => {
   const announceDoc = doc(db, 'announcements', id)
   await deleteDoc(announceDoc)
+}
+
+export const deleteAllUserAnnouncements = async (userId: string) => {
+  const announcementsRef = collection(db, 'announcements')
+  const q = query(announcementsRef, where('user_id', '==', userId)) // Adjust 'userId' to the actual field name used in your announcements collection
+
+  try {
+    const querySnapshot = await getDocs(q)
+    const deletePromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref))
+
+    await Promise.all(deletePromises)
+  } catch (error) {
+    console.error('Error deleting announcements:', error)
+  }
 }

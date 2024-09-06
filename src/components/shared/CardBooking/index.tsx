@@ -99,6 +99,7 @@ const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable
         is_seen: false,
         updateAt: Timestamp.now(),
         image: '',
+        link: '/owner/approval',
       }
 
       try {

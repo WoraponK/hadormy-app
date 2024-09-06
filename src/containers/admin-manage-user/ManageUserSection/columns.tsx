@@ -23,9 +23,17 @@ import { deleteUser } from '@/collections/usersCollection'
 
 const handleDelete = async (userId: string) => {
   try {
+    const response = await fetch(`/api/users/${userId}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to delete user')
+    }
+
     await deleteUser(userId)
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting user:', error)
   }
 }
 
