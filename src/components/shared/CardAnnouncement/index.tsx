@@ -127,7 +127,11 @@ const CardAnnouncement: React.FC<Props> = ({
         {user && user?.uid === user_id && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <IoCloseCircleOutline className="absolute top-2 right-2 text-2xl text-background z-10 cursor-pointer" />
+              <IoCloseCircleOutline
+                className={`absolute top-2 right-2 text-2xl z-10 cursor-pointer ${
+                  role === 'ADMIN' ? 'text-background' : ' text-foreground'
+                }`}
+              />
             </AlertDialogTrigger>
             <AlertDialogContent className="space-y-2">
               <AlertDialogHeader className="space-y-4">
