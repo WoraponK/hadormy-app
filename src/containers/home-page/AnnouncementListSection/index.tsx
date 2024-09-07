@@ -39,6 +39,7 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList, onLoadMore, curren
                   role={card?.role as TUserRole}
                   timestamp={card.timestamp}
                   thumbnail={card?.thumbnail}
+                  user_id={card?.user_id}
                 />
               ))}
               {cardList.length >= currentLimit && (

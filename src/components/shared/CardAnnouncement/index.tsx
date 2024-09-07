@@ -1,10 +1,14 @@
+'use client'
+
 // Lib
 import React from 'react'
 import Image from 'next/image'
+import { useAuth } from '@/context/authContext'
 
 // Images
 import { FaEarthAsia } from 'react-icons/fa6'
 import { IoIosWarning } from 'react-icons/io'
+import { IoCloseCircleOutline } from 'react-icons/io5'
 import { imagePlaceholder } from '@/lib/others'
 import HadormyLogoSVG from '@/images/logos/hadormy-logo-mini-yellow.svg'
 
@@ -22,6 +26,7 @@ import {
 } from '@/components/ui/dialog'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import FirebaseImage from '@/components/common/FirebaseImage'
+import { deleteAnnouce } from '@/collections/announcementCollection'
 
 import TooltipMain from '@/components/ui/tooltip-main'
 
@@ -32,6 +37,7 @@ type Props = {
   role: TUserRole
   timestamp: string
   author: string
+  user_id: string
 }
 
 const CardAnnouncement: React.FC<Props> = ({
@@ -41,14 +47,28 @@ const CardAnnouncement: React.FC<Props> = ({
   role,
   timestamp,
   author,
+  user_id,
 }) => {
+  const { user } = useAuth()
+
+  const handleDelete = async (announceId: string) => {
+    try {
+      await deleteAnnouce(announceId)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const Preview = () => {
     return (
       <div
-        className={`w-[305px] h-[175px]  p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2 ${
+        className={`w-[305px] h-[175px]  p-4 rounded-lg shadow-md grid grid-rows-[105px_1fr] gap-2 relative ${
           role === 'ADMIN' ? 'bg-primary' : 'bg-[#FFFADE]'
         }`}
       >
+        {user && user?.uid === user_id && (
+          <IoCloseCircleOutline className='absolute top-2 right-2 text-2xl text-background' />
+        )}
         <div className="grid grid-cols-[105px_1fr] gap-3">
           <div className={`rounded-lg overflow-hidden ${role === 'ADMIN' ? '' : 'shadow-md'}`}>
             {role === 'ADMIN' ? (

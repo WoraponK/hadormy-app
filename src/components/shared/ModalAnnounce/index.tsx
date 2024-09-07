@@ -95,11 +95,7 @@ const ModalAnnounce: React.FC = () => {
         }
 
         try {
-          const announcementDocId = await addAnnouce(newAnnouncement)
-
-          await fetch(`/api/announcements/${announcementDocId}`, {
-            method: 'DELETE',
-          })
+          await addAnnouce(newAnnouncement)
 
           toast({
             icon: <HiSpeakerphone className="text-primary" />,

@@ -27,8 +27,7 @@ export const subscribeToAnnounces = (callback: (dorms: TCardAnnounce[]) => void)
 
 export const addAnnouce = async (post: TCardAnnounce) => {
   try {
-    const docRef = await addDoc(announcementsCollection, post)
-    return docRef.id
+    await addDoc(announcementsCollection, post)
   } catch (error) {
     console.error('Error adding announcement:', error)
   }
