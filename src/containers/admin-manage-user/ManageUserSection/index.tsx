@@ -13,7 +13,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-
 // Images
 import { IoSearch } from 'react-icons/io5'
 
@@ -34,6 +33,9 @@ const ManageUserSection: React.FC<Props> = ({ data }) => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      sorting: [{ id: 'role', desc: false }],
+    },
   })
 
   return (

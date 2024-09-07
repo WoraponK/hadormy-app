@@ -55,6 +55,9 @@ const ManageRoomSection: React.FC<Props> = ({ dormId, data }) => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      sorting: [{ id: 'name', desc: false }],
+    },
   })
 
   return (

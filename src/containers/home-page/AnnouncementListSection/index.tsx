@@ -33,6 +33,7 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList, onLoadMore, curren
               {cardList.map((card) => (
                 <CardAnnouncement
                   key={card?.id}
+                  id={card?.id as string}
                   author={card?.author}
                   title={card?.title}
                   description={card?.description}

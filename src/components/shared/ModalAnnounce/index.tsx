@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -29,16 +29,35 @@ import { HiSpeakerphone } from 'react-icons/hi'
 
 // Include in project
 import { addAnnouce } from '@/collections/announcementCollection'
-import { TCardAnnounce, TUserRole } from '@/lib/type'
+import { TCardAnnounce, TDorm, TNotification, TUserRole } from '@/lib/type'
 import { storage } from '@/lib/firebase'
 import { getDownloadURL, ref, uploadBytes, listAll, list } from 'firebase/storage'
 import { useAuth } from '@/context/authContext'
 import { getUserById } from '@/collections/usersCollection'
+import { getDormIdByUserId, getUserIdByDormId } from '@/collections/checkCollection'
+import { getDormById } from '@/collections/dormsCollection'
+import { addNotificationForMembership } from '@/collections/notificationCollection'
 
 const ModalAnnounce: React.FC = () => {
   const { user } = useAuth()
   const { toast } = useToast()
   const [isOpen, setIsOpen] = useState(false)
+  const [dormData, setDormData] = useState<TDorm | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!user) return
+        const dormId = await getDormIdByUserId(user?.uid)
+        const dormData = await getDormById(dormId as string)
+        setDormData(dormData)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchData()
+  }, [user])
 
   const form = useForm<z.infer<typeof announceSchema>>({
     resolver: zodResolver(announceSchema),
@@ -96,6 +115,39 @@ const ModalAnnounce: React.FC = () => {
 
         try {
           await addAnnouce(newAnnouncement)
+
+          if (!dormData) return
+
+          const ownerId = await getUserIdByDormId(dormData.id as string)
+
+          if (!ownerId) return
+
+          const storagePath = `dorms/${ownerId}/`
+          const imagesRef = ref(storage, storagePath)
+
+          const newNotification = {
+            title: `ประกาศจาก ${dormData.name}`,
+            description: `${values.title} - ${values.description}`,
+            is_seen: false,
+            updateAt: Timestamp.now(),
+            image: '',
+            link: `/dorm/${dormData.id}`,
+          }
+
+          try {
+            const imageList = await listAll(imagesRef)
+            if (imageList.items.length > 0) {
+              const firstImageRef = imageList.items[0]
+              const firstImageURL = await getDownloadURL(firstImageRef)
+              newNotification.image = firstImageURL
+            } else {
+              console.warn('No images found in storage.')
+            }
+          } catch (error) {
+            console.error('Error retrieving images:', error)
+          }
+
+          await addNotificationForMembership(dormData?.id as string, newNotification)
 
           toast({
             icon: <HiSpeakerphone className="text-primary" />,

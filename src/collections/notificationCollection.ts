@@ -20,10 +20,43 @@ const getAdminUsers = async () => {
   return querySnapshot.docs.map((doc) => doc.id)
 }
 
-export const addNotificationForAdminUsers = async (post: any) => {
-  const adminUserIds = await getAdminUsers()
+const getMemberUsers = async (dormId: string | null) => {
+  try {
+    if (!dormId) return
+    const roomsCollection = collection(db, 'dorms', dormId, 'rooms')
+    const querySnapshot = await getDocs(roomsCollection)
 
-  await Promise.all(adminUserIds.map((userId) => addNotification(userId, post)))
+    return querySnapshot.docs.map((doc) => doc.data().user_id)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const addNotificationForAdminUsers = async (post: any) => {
+  try {
+    const adminUserIds = await getAdminUsers()
+
+    await Promise.all(adminUserIds.map((userId) => addNotification(userId, post)))
+  } catch (error) {
+    console.error
+  }
+}
+
+export const addNotificationForMembership = async (dormId: string | null, post: any) => {
+  try {
+    if (!dormId) return
+    const userIds = await getMemberUsers(dormId)
+    if (!userIds) return
+    await Promise.all(
+      userIds.map((id) => {
+        if (id) {
+          addNotification(id, post)
+        }
+      }),
+    )
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const updateNotification = async (
