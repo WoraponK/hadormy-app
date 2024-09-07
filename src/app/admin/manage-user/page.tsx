@@ -29,8 +29,7 @@ const AdminManageUser = () => {
           role: user.role as EUserRole,
         }))
 
-        const filteredUsers = formattedUsers.filter((user) => user.role !== EUserRole.Admin)
-        setUserData(filteredUsers)
+        setUserData(formattedUsers)
       } catch (error) {
         console.error(error)
       }
