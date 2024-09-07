@@ -9,6 +9,7 @@ export enum EDormType {
   All = 'ALL',
   Male = 'MALE',
   Female = 'FEMALE',
+  AllData = 'ALLDATA'
 }
 
 export enum ESort {

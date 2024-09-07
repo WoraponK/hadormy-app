@@ -41,6 +41,8 @@ export const convertDormTypeToName = (dormType: string) => {
       return 'หอพักหญิงล้วน'
     case 'ALL':
       return 'หอพักรวม'
+    case 'ALLDATA':
+      return 'หอพักทั้งหมด'
   }
 }
 

@@ -33,12 +33,14 @@ const AnnouncementListSection: React.FC<Props> = ({ cardList, onLoadMore, curren
               {cardList.map((card) => (
                 <CardAnnouncement
                   key={card?.id}
+                  id={card?.id as string}
                   author={card?.author}
                   title={card?.title}
                   description={card?.description}
                   role={card?.role as TUserRole}
                   timestamp={card.timestamp}
                   thumbnail={card?.thumbnail}
+                  user_id={card?.user_id}
                 />
               ))}
               {cardList.length >= currentLimit && (

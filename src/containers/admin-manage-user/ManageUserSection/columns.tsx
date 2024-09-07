@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { TUserTable } from '@/lib/type'
+import { TUserRole, TUserTable } from '@/lib/type'
 import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
@@ -16,10 +16,36 @@ import Link from 'next/link'
 
 import { formatPhoneNumber, convertDateFormat, convertRoleToName } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
-import { FaRegTrashCan } from 'react-icons/fa6'
+import { FaRegTrashCan, FaShieldHalved, FaShop, FaUser } from 'react-icons/fa6'
 import { CgWebsite } from 'react-icons/cg'
 
 import { deleteUser } from '@/collections/usersCollection'
+
+const convertRole = (role: TUserRole) => {
+  switch (role) {
+    case 'ADMIN':
+      return (
+        <>
+          <FaShieldHalved className='text-primary'/>
+          <span className='font-semibold text-primary'>ผู้ดูแลระบบ</span>
+        </>
+      )
+    case 'SUPERUSER':
+      return (
+        <>
+          <FaShop className='text-info'/>
+          <span className='font-semibold text-info'>เจ้าของหอพัก</span>
+        </>
+      )
+    case 'USER':
+      return (
+        <>
+          <FaUser />
+          <span className='font-semibold'>ผู้เช่า</span>
+        </>
+      )
+  }
+}
 
 const handleDelete = async (userId: string) => {
   try {
@@ -52,7 +78,7 @@ export const columns: ColumnDef<TUserTable>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="text-center">{convertRoleToName(row.getValue('role'))}</div>,
+    cell: ({ row }) => <div className="flex justify-center items-center space-x-1">{convertRole(row.getValue('role'))}</div>,
   },
   {
     accessorKey: 'name',
@@ -117,12 +143,13 @@ export const columns: ColumnDef<TUserTable>[] = [
     header: () => <div className="text-center text-destructive">ลบบัญชี</div>,
     cell: ({ row }) => {
       const user = row.original
+      const role = row.original.role
 
       return (
         <div className="flex justify-center">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="icon" className="text-lg text-center">
+              <Button variant="destructive" size="icon" className="text-lg text-center" disabled={role === 'ADMIN'}>
                 <FaRegTrashCan className="text-background" />
               </Button>
             </AlertDialogTrigger>
