@@ -56,6 +56,9 @@ const DormTypeSort: React.FC<DormTypeSortProps> = ({ dormType, setDormType }) =>
         <DropdownMenuRadioGroup value={dormType} onValueChange={setDormType}>
           <DropdownMenuLabel>ประเภทหอพัก</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuRadioItem value="ALLDATA" className="cursor-pointer">
+            หอพักทั้งหมด
+          </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="ALL" className="cursor-pointer">
             หอพักรวม
           </DropdownMenuRadioItem>
@@ -114,7 +117,7 @@ const GeneralSort: React.FC<GeneralSortProps> = ({ minSort, setMinSort, generalS
 }
 
 const DormListLoadingSection: React.FC = () => {
-  const [dormType, setDormType] = useState<string>('ALL')
+  const [dormType, setDormType] = useState<string>('ALLDATA')
   const [minSort, setMinSort] = useState<boolean>(false)
   const [generalSort, setGeneralSort] = useState<string>('TIME')
 
