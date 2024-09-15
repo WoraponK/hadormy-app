@@ -70,9 +70,6 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
       const ownerId = await getUserIdByDormId(dormId)
       if (!ownerId) return
 
-      const userData = await getUserById(userId)
-      if (!userData) return
-
       const storagePath = `dorms/${ownerId}/`
       const imagesRef = ref(storage, storagePath)
 
@@ -98,13 +95,18 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
         console.error('Error retrieving images:', error)
       }
 
-      await addNotification(userId, newNotification)
       await updateRoom(dormId, roomId, {
         isAvailable: true,
         user_ref: null,
         user_id: null,
         username: null,
       })
+
+      const userData = await getUserById(userId)
+
+      if (userData) {
+        await addNotification(userId, newNotification)
+      }
     } catch (error) {
       console.error(error)
     }
@@ -119,6 +121,9 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
   }
 
   const handleDelete = async (roomId: string, userId: string, roomName: string) => {
+    console.log("🚀 ~ handleDelete ~ roomName:", roomName)
+    console.log("🚀 ~ handleDelete ~ userId:", userId)
+    console.log("🚀 ~ handleDelete ~ roomId:", roomId)
     try {
       const dormName = await getDormById(dormId).then((dorm) => dorm?.name)
       if (!dormName) return
@@ -126,9 +131,7 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
       const ownerId = await getUserIdByDormId(dormId)
       if (!ownerId) return
 
-      const userData = await getUserById(userId)
-      if (!userData) return
-
+ 
       const storagePath = `dorms/${ownerId}/`
       const imagesRef = ref(storage, storagePath)
 
@@ -154,8 +157,14 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
         console.error('Error retrieving images:', error)
       }
 
-      await addNotification(userId, newNotification)
       await deleteRoom(dormId, roomId)
+
+      const userData = await getUserById(userId)
+
+      if (userData) {
+        await addNotification(userId, newNotification)
+      }
+      
     } catch (error) {
       console.error(error)
     }
