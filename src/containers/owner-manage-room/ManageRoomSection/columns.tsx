@@ -121,9 +121,6 @@ export const columns = (dormId: string): ColumnDef<TRoom>[] => {
   }
 
   const handleDelete = async (roomId: string, userId: string, roomName: string) => {
-    console.log("🚀 ~ handleDelete ~ roomName:", roomName)
-    console.log("🚀 ~ handleDelete ~ userId:", userId)
-    console.log("🚀 ~ handleDelete ~ roomId:", roomId)
     try {
       const dormName = await getDormById(dormId).then((dorm) => dorm?.name)
       if (!dormName) return
