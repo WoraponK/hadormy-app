@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
+import { isEqual } from 'lodash'
 
 // Images
 import { IoCheckmarkCircle } from 'react-icons/io5'
@@ -75,12 +76,13 @@ const ManageUserByIdSection: React.FC<Props> = ({ userId }) => {
 
   useEffect(() => {
     if (userData) {
-      const isSame =
-        currentValues.email === userData.email &&
-        currentValues.name === userData.name &&
-        currentValues.password === userData.password &&
-        currentValues.phoneNumber === userData.phone &&
-        currentValues.userRole === userData.role
+      const isSame = isEqual(currentValues, {
+        email: userData.email,
+        name: userData.name,
+        password: userData.password,
+        phoneNumber: userData.phone,
+        userRole: userData.role as EUserRole,
+      })
 
       setIsDirty(!isSame)
     }
@@ -171,38 +173,40 @@ const ManageUserByIdSection: React.FC<Props> = ({ userId }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="userRole"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>บทบาท</FormLabel>
-                  <FormControl>
-                    <RadioGroup value={field.value} onValueChange={field.onChange} className="flex space-x-4">
-                      <FormItem className="flex items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={EUserRole.User} />
-                        </FormControl>
-                        <FormLabel className="font-normal">ผู้ใช้งานทั่วไป</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={EUserRole.Superuser} />
-                        </FormControl>
-                        <FormLabel className="font-normal">เจ้าของหอพัก</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={EUserRole.Admin} />
-                        </FormControl>
-                        <FormLabel className="font-normal">ผู้ดูแลระบบ</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {userData?.role !== EUserRole.Admin && (
+              <FormField
+                control={form.control}
+                name="userRole"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>บทบาท</FormLabel>
+                    <FormControl>
+                      <RadioGroup value={field.value} onValueChange={field.onChange} className="flex space-x-4">
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={EUserRole.User} />
+                          </FormControl>
+                          <FormLabel className="font-normal">ผู้ใช้งานทั่วไป</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={EUserRole.Superuser} />
+                          </FormControl>
+                          <FormLabel className="font-normal">เจ้าของหอพัก</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={EUserRole.Admin} />
+                          </FormControl>
+                          <FormLabel className="font-normal">ผู้ดูแลระบบ</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <div className="flex justify-between items-center pt-16">
               <BackButton />
               <Button variant="success" type="submit" disabled={!isDirty}>

@@ -1,7 +1,7 @@
 'use client'
 
 // Lib
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
+import { isEqual } from 'lodash'
 
 // Images
 import { CgWebsite } from 'react-icons/cg'
@@ -51,6 +52,9 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
     },
   })
 
+  // State to track if the form is dirty
+  const [isDirty, setIsDirty] = useState(false)
+
   useEffect(() => {
     if (dormData) {
       form.reset({
@@ -66,8 +70,31 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
         phoneContact: dormData.phoneNumber || '',
         description: dormData.description || '',
       })
+      setIsDirty(false)
     }
   }, [dormData, form])
+
+  const currentValues = form.watch()
+
+  useEffect(() => {
+    if (dormData) {
+      const isSame = isEqual(currentValues, {
+        name: dormData.name,
+        priceStart: dormData.priceStart,
+        priceEnd: dormData.priceEnd,
+        address: dormData.address,
+        billElectric: dormData.bill.electric,
+        billWater: dormData.bill.water,
+        billInternet: dormData.bill.internet,
+        billService: dormData.bill.service,
+        distance: dormData.distance,
+        phoneContact: dormData.phoneNumber,
+        description: dormData.description,
+      })
+
+      setIsDirty(!isSame)
+    }
+  }, [currentValues, dormData])
 
   const onSubmit = async (values: z.infer<typeof editDormSchema>) => {
     try {
@@ -225,7 +252,7 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
               />
               <FormField
                 control={form.control}
-                name="billWater"
+                name="billInternet"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>ค่าอินเทอร์เน็ต</FormLabel>
@@ -321,7 +348,7 @@ const ManageDormSection: React.FC<Props> = ({ dormId, dormData }) => {
             />
             <div className="flex justify-between items-center">
               <BackButton />
-              <Button variant="success" type="submit">
+              <Button variant="success" type="submit" disabled={!isDirty}>
                 บันทึก
               </Button>
             </div>
