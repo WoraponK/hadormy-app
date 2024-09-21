@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import debounce from 'lodash.debounce'
-import { collection, query, where, getDocs, limit } from 'firebase/firestore'
+import { collection, query, getDocs } from 'firebase/firestore'
 
 // Images
 import { IoSearch } from 'react-icons/io5'

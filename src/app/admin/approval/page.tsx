@@ -1,14 +1,11 @@
 'use client'
 // Lib
 import React, { useEffect, useState } from 'react'
-import { collection, onSnapshot } from 'firebase/firestore'
 
 // Include in project
 import { ManageApprovalSection } from '@/containers/admin-approval'
-import { TDorm, TDormTable } from '@/lib/type'
+import { TDormTable } from '@/lib/type'
 import RoleBasedAccess from '@/components/common/RoleBasedAccess'
-import { getDorms } from '@/collections/dormsCollection'
-import { db } from '@/lib/firebase'
 
 import { subscribeToDorms } from '@/collections/dormsCollection'
 

@@ -1,6 +1,5 @@
 // Lib
 import React from 'react'
-import Image from 'next/image'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
