@@ -37,9 +37,9 @@ import { useToast } from '@/components/ui/use-toast'
 import { getDormById } from '@/collections/dormsCollection'
 import { getUserIdByDormId } from '@/collections/checkCollection'
 import { getUserById } from '@/collections/usersCollection'
-import { db, storage } from '@/lib/firebase'
+import { storage } from '@/lib/firebase'
 import { getDownloadURL, listAll, ref } from 'firebase/storage'
-import { doc, Timestamp } from 'firebase/firestore'
+import { Timestamp } from 'firebase/firestore'
 import { addNotification } from '@/collections/notificationCollection'
 
 export const columns = (dormId: string): ColumnDef<TRoom>[] => {

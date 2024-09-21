@@ -37,10 +37,24 @@ type Props = {
   price: number
   isAvailable?: boolean
   isBooking?: boolean
+  isCreator?: boolean
+  isSuperuser?: boolean
+  isAdmin?: boolean
   disabled?: boolean
 }
 
-const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable, isBooking, disabled }) => {
+const CardBooking: React.FC<Props> = ({
+  dormId,
+  roomId,
+  name,
+  price,
+  isAvailable,
+  isBooking,
+  disabled,
+  isAdmin,
+  isCreator,
+  isSuperuser,
+}) => {
   const { user } = useAuth()
   const { toast } = useToast()
   const [userPhoneNumber, setUserPhoneNumber] = useState<string>('')
@@ -134,7 +148,11 @@ const CardBooking: React.FC<Props> = ({ dormId, roomId, name, price, isAvailable
       <div className="py-2 px-2 flex flex-col items-end justify-between">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size={'sm'} className="w-fit" disabled={!isAvailable || isBooking || !user}>
+            <Button
+              size={'sm'}
+              className="w-fit"
+              disabled={!isAvailable || isBooking || !user || isAdmin || isCreator || isSuperuser}
+            >
               {isBooking ? 'จองแล้ว' : 'จองห้องนี้'}
             </Button>
           </AlertDialogTrigger>

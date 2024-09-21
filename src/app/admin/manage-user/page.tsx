@@ -5,10 +5,10 @@ import React, { useEffect, useState } from 'react'
 // Images
 
 // Include in project
-import { EUserRole, TUserRole, TUserTable } from '@/lib/type'
+import { EUserRole, TUserTable } from '@/lib/type'
 import { ManageUserSection } from '@/containers/admin-manage-user'
 import RoleBasedAccess from '@/components/common/RoleBasedAccess'
-import { getUsers, listenToUsers } from '@/collections/usersCollection'
+import { listenToUsers } from '@/collections/usersCollection'
 
 const AdminManageUser = () => {
   const [userData, setUserData] = useState<TUserTable[]>([])

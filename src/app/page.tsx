@@ -14,7 +14,6 @@ import {
 } from '@/containers/home-page'
 import { TCardAnnounce, TDorm } from '@/lib/type'
 import { getDorms } from '@/collections/dormsCollection'
-import { getAnnounces } from '@/collections/announcementCollection'
 import { subscribeToAnnounces } from '@/collections/announcementCollection'
 
 const Home = () => {
@@ -44,7 +43,6 @@ const Home = () => {
 
   useEffect(() => {
     fetchDorms()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limitDorms])
 
   useEffect(() => {

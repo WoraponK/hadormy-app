@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, addDoc, getDoc, onSnapshot } from 'firebase/firestore'
+import { collection, doc, addDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 
 const getDormRatingsCollection = (dormId: string) => {

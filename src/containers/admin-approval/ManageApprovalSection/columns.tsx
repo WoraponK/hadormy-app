@@ -20,7 +20,7 @@ import { Timestamp } from 'firebase/firestore'
 import { formatPhoneNumber, convertDateFormat } from '@/lib/others'
 import { CaretSortIcon } from '@radix-ui/react-icons'
 import { FaCheck, FaXmark } from 'react-icons/fa6'
-import { CgWebsite } from 'react-icons/cg'
+import { TbExternalLink } from 'react-icons/tb'
 
 import { updateDorm, deleteDorm } from '@/collections/dormsCollection'
 import { addNotification } from '@/collections/notificationCollection'
@@ -114,15 +114,16 @@ export const columns: ColumnDef<TDormTable>[] = [
   },
   {
     id: 'preview',
-    header: () => <div className="text-center text-primary">รายละเอียด</div>,
+    header: () => <div className="text-center">รายละเอียด</div>,
     cell: ({ row }) => {
       const user = row.original
       return (
         <div className="flex justify-center">
           <Link href={`/dorm/${user.id}`} target="_blank">
-            <Button size="icon" className="text-lg text-center">
-              <CgWebsite className="text-background" />
-            </Button>
+            <span className="flex items-center justify-center space-x-2 text-foreground underline-offset-2 hover:underline">
+              <span>รายละเอียดหอพัก</span>
+              <TbExternalLink />
+            </span>
           </Link>
         </div>
       )

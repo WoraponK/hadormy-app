@@ -69,9 +69,9 @@ const ManageApprovalSection: React.FC<Props> = ({ data }) => {
               <SelectValue placeholder="Select page size" />
             </SelectTrigger>
             <SelectContent>
-              {[10, 20, 30, 40, 50, data.length].map((pageSize) => (
+              {[10, 20, 30, 40, 50].map((pageSize) => (
                 <SelectItem key={pageSize} value={pageSize.toString()} className="hover:cursor-pointer">
-                  {pageSize !== data.length ? `แสดง ${pageSize} รายการ` : 'แสดงทั้งหมด'}
+                  {`แสดง ${pageSize} รายการ`}
                 </SelectItem>
               ))}
             </SelectContent>

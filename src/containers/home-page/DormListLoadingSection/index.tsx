@@ -20,15 +20,10 @@ import { FaListUl } from 'react-icons/fa6'
 import { FaSortAmountDown, FaSortAmountDownAlt } from 'react-icons/fa'
 
 // Include in project
-import { CardDorm } from '@/components/shared'
 import CardDormLoading from '@/components/shared/CardDorm/loading'
-import { ESort, TDorm } from '@/lib/type'
+import { ESort} from '@/lib/type'
 import { convertDormTypeToName, convertSortToName } from '@/lib/others'
 import { IoReloadCircle } from 'react-icons/io5'
-
-type Props = {
-  cardList: TDorm[]
-}
 
 type DormTypeSortProps = {
   dormType: string

@@ -1,6 +1,6 @@
 'use client'
 // Lib
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 // Include in project
@@ -8,7 +8,6 @@ import { CreateDormSection } from '@/containers/owner-create-dorm'
 import RoleBasedAccess from '@/components/common/RoleBasedAccess'
 import { useAuth } from '@/context/authContext'
 import { getUserById } from '@/collections/usersCollection'
-import { LoadingSpinner } from '@/components/shared'
 
 const OwnerCreateDorm = () => {
   const { user } = useAuth()
