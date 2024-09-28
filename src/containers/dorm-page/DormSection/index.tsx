@@ -100,7 +100,7 @@ const DormSection: React.FC<Props> = ({ dormId, dataDorm }) => {
                 <p className="text-gray-500">บาท/เดือน</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 max-md:justify-start bg-foreground w-fit py-2 px-4 rounded-full">
+            <div className="flex items-center gap-2 max-md:justify-start bg-transparent w-fit py-2 rounded-full">
               <Image src={IconVerifiedSVG} alt="IconVerifiedSVG" />
               <h5 className="text-success">ลงทะเบียนที่พักแล้ว</h5>
             </div>
